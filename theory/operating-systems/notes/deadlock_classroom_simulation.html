@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deadlock: Classroom Simulation</title>
+<style>
+  :root { color-scheme: light; --ink:#172033; --muted:#5b6475; --line:#d8deea; --panel:#f4f6fa; --accent:#2457c5; --good:#18794e; --warn:#b42318; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--ink); background:#eef1f6; line-height:1.5; }
+  main { max-width:900px; margin:32px auto; padding:0 18px 40px; }
+  header { margin-bottom:22px; }
+  h1 { margin:0 0 8px; font-size:clamp(1.7rem, 4vw, 2.4rem); }
+  h2 { margin:0 0 8px; font-size:1.25rem; }
+  p { margin:8px 0; }
+  .muted { color:var(--muted); }
+  .card { background:white; border:1px solid var(--line); border-radius:16px; padding:20px; margin:16px 0; box-shadow:0 4px 16px #1720330a; }
+  .choices { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin:14px 0; }
+  button { font:inherit; cursor:pointer; border-radius:10px; border:1px solid #c7cfde; background:white; padding:10px 14px; color:var(--ink); }
+  button:hover { border-color:var(--accent); }
+  button:focus-visible { outline:3px solid #91b4ff; outline-offset:2px; }
+  button[aria-pressed="true"] { background:#eaf0ff; border-color:var(--accent); color:#163d96; font-weight:650; }
+  .primary { background:var(--accent); color:white; border-color:var(--accent); }
+  .primary:hover { background:#1947a8; color:white; }
+  .step { background:var(--panel); border-radius:12px; padding:14px 16px; margin:10px 0; border-left:4px solid var(--accent); }
+  .step strong { display:block; margin-bottom:4px; }
+  .step p { margin:3px 0; }
+  .flow { display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; margin:18px 0; }
+  .node { border:1px solid var(--line); background:var(--panel); padding:14px; border-radius:12px; min-width:180px; text-align:center; }
+  .arrow { font-size:1.6rem; color:var(--warn); font-weight:700; }
+  .status { font-weight:700; margin-top:10px; }
+  .success { color:var(--good); }
+  .danger { color:var(--warn); }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  table { width:100%; border-collapse:collapse; margin-top:10px; }
+  th,td { text-align:left; border-bottom:1px solid var(--line); padding:10px 8px; vertical-align:top; }
+  th { background:var(--panel); }
+  footer { color:var(--muted); font-size:.9rem; margin-top:22px; }
+  @media(max-width:520px) { .card { padding:15px; } th,td { font-size:.9rem; } }
+  @media print { body { background:white; } main { margin:0 auto; } .card { box-shadow:none; break-inside:avoid; } button { display:none; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Deadlock: Classroom Simulation</h1>
+    <p class="muted">An interactive teaching demo for Operating Systems: Deadlock, Prevention, Avoidance, and Detection &amp; Recovery.</p>
+  </header>
+
+  <section class="card">
+    <h2>Scenario: Two students, one printer and one scanner</h2>
+    <p>Student A and Student B need both resources. Each resource can be used by only one student at a time.</p>
+    <div class="flow" aria-label="Printer and scanner resources">
+      <div class="node"><strong>R1: Printer</strong><div class="muted">One student at a time</div></div>
+      <div class="node"><strong>R2: Scanner</strong><div class="muted">One student at a time</div></div>
+    </div>
+    <p><strong>Teaching prompt:</strong> What happens if A holds the printer and waits for the scanner, while B holds the scanner and waits for the printer?</p>
+  </section>
+
+  <section class="card">
+    <h2>Choose an approach</h2>
+    <p class="muted">Select a scenario, then reveal each step. Ask students to explain the policy being used.</p>
+    <div class="choices" role="group" aria-label="Choose a deadlock scenario">
+      <button data-mode="deadlock" aria-pressed="true">1. Demonstrate deadlock</button>
+      <button data-mode="prevention" aria-pressed="false">2. Prevention</button>
+      <button data-mode="avoidance" aria-pressed="false">3. Avoidance</button>
+      <button data-mode="recovery" aria-pressed="false">4. Detection &amp; recovery</button>
+    </div>
+    <div id="steps" aria-live="polite"></div>
+    <div id="status" class="status danger">Scenario not yet complete.</div>
+    <div class="controls">
+      <button id="prev">Previous</button>
+      <button id="next" class="primary">Next step</button>
+      <button id="reset">Reset scenario</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Quick comparison</h2>
+    <table>
+      <thead><tr><th>Approach</th><th>What the OS does</th><th>When?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Prevention</strong></td><td>Design rules so at least one necessary deadlock condition cannot hold; e.g., enforce a global resource order.</td><td>Before deadlock</td></tr>
+        <tr><td><strong>Avoidance</strong></td><td>Grant a request only if the resulting state remains safe; e.g., Banker’s algorithm.</td><td>Before granting a request</td></tr>
+        <tr><td><strong>Detection &amp; recovery</strong></td><td>Allow allocations, detect deadlock, then break it by aborting/rolling back a process or preempting a resource where possible.</td><td>After deadlock occurs</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Memory aid:</strong> Prevention = stop the conditions; Avoidance = check safety first; Detection &amp; recovery = find and fix.</p>
+  </section>
+
+  <footer>Classroom note: An unsafe state is not necessarily a deadlocked state. Avoidance checks whether a safe completion sequence remains possible.</footer>
+</main>
+<script>
+const scenarios = {
+  deadlock: {
+    steps: [
+      ["Step 1 — Acquire resources", "Student A acquires the printer.", "Student B acquires the scanner."],
+      ["Step 2 — Request the other resource", "A requests the scanner and waits.", "B requests the printer and waits."],
+      ["Step 3 — Deadlock", "Both students are blocked.", "Neither can proceed until the situation is changed."]
+    ],
+    done: "Deadlock demonstrated: each student holds a resource the other needs."
+  },
+  prevention: {
+    steps: [
+      ["Step 1 — Set a rule", "The lab requires everyone to request the printer before the scanner.", "No student may acquire the scanner first."],
+      ["Step 2 — Follow the order", "A acquires the printer.", "B must wait for the printer before acquiring either resource."],
+      ["Step 3 — Finish in turn", "A acquires the scanner, finishes, and releases both resources.", "B can then proceed. Circular wait is prevented by the ordering rule."]
+    ],
+    done: "Prevention: change the rules so circular wait cannot occur."
+  },
+  avoidance: {
+    steps: [
+      ["Step 1 — A request arrives", "A holds the printer.", "B requests the scanner."],
+      ["Step 2 — Check safety", "The manager considers remaining resource needs and whether a safe completion order exists.", "If granting the request would make the state unsafe, the manager delays it."],
+      ["Step 3 — Grant when safe", "A finishes and releases resources.", "B proceeds when its request can be granted without entering an unsafe state."]
+    ],
+    done: "Avoidance: check that granting a request preserves a safe state. Unsafe does not automatically mean deadlocked."
+  },
+  recovery: {
+    steps: [
+      ["Step 1 — Allocate freely", "A acquires the printer.", "B acquires the scanner."],
+      ["Step 2 — Detect the cycle", "A waits for the scanner; B waits for the printer.", "The manager detects that neither can proceed."],
+      ["Step 3 — Recover", "The manager aborts or rolls back one job, or preempts a resource if safe and possible.", "The other job can proceed; the interrupted job may restart."]
+    ],
+    done: "Detection & recovery: detect the deadlock after it occurs, then break the cycle."
+  }
+};
+let mode = "deadlock", step = 0;
+const stepsEl = document.getElementById("steps");
+const statusEl = document.getElementById("status");
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+function render() {
+  const s = scenarios[mode].steps;
+  stepsEl.innerHTML = s.slice(0, step + 1).map((item, i) =>
+    `<div class="step"><strong>${item[0]}</strong><p>${item[1]}</p><p>${item[2]}</p></div>`
+  ).join("");
+  prevBtn.disabled = step === 0;
+  nextBtn.disabled = step === s.length - 1;
+  statusEl.textContent = step === s.length - 1 ? scenarios[mode].done : "Continue to reveal the next step.";
+  statusEl.className = "status " + (step === s.length - 1 ? "success" : "");
+}
+document.querySelectorAll("[data-mode]").forEach(btn => btn.addEventListener("click", () => {
+  mode = btn.dataset.mode; step = 0;
+  document.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+  render();
+}));
+nextBtn.addEventListener("click", () => { step = Math.min(step + 1, scenarios[mode].steps.length - 1); render(); });
+prevBtn.addEventListener("click", () => { step = Math.max(step - 1, 0); render(); });
+document.getElementById("reset").addEventListener("click", () => { step = 0; render(); });
+render();
+</script>
+</body>
+</html>
