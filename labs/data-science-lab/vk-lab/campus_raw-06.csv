@@ -1,0 +1,19 @@
+StudentID, Name,Gender,Age,Department ,Marks,Attendance,JoiningDate,Fee_Paid
+S101,  Aditi Rao,F,19.0,CSE,78,92%,01/08/2021,Yes
+S102,rohan Mehta,Male,20.0, CSE ,65%,88%,01/08/2021,1
+S103,Kabir Singh,M,21.0,ece,N/A,-,1-Aug-2021,No
+S101,  Aditi Rao,F,19.0,CSE,78,92%,01/08/2021,Yes
+S105,Sana Iqbal,female,,ECE,82,95%,02/08/2021,yes
+S106,Vivek  Nair,male,22.0,MECH,-5,70%,02-08-2021,0
+S107,Priya Das,F,20.0,cse,91,unknown,03/08/2021,Yes
+S108,  Arjun Kapoor  ,M,200.0,MECH,58,60%,03/08/2021,No
+S109,Meera Pillai,,21.0,ECE,N/A,89%,04/08/2021,1
+S110,Rohan Mehta,Male,20.0,CSE,65%,88%,01/08/2021,1
+S111,Divya Shah,Female,19.0, ECE,88,91%,4-Aug-2021,Yes
+S112,Karan Verma,M,,mech,72,N/A,05/08/2021,no
+S113,Neha Joshi,F,20.0,CSE,105,97%,05-08-2021,Yes
+S114,Farhan Ali,male,23.0,ECE,69,84%,6-Aug-2021,0
+S115,Isha Kulkarni,F,20.0,CSE,,90%,07/08/2021,Yes
+S116,Sameer Khan,M,21.0,MECH,74,-,07-08-2021,1
+S117,Tanvi Deshpande,Female,20.0,ece,80,93%,08/08/2021,yes
+S118,  Yash Thakur,Male,22.0,CSE ,63,78%,08-08-2021,No

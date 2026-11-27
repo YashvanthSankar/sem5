@@ -1,0 +1,306 @@
+student_id,section,branch,hostel,commute_min,hours_studied,attendance_pct,sleep_hours,screen_hours,internal_marks,grade,feedback,placed,package_lpa
+S001,B,CSE,No,54.0,6.9,69.0,6.8,5.9,53,B,Disagree,Yes,42.0
+S002,A,CIVIL,Yes,13.0,4.8,68.0,7.2,2.9,46,C,Agree,No,
+S003,B,CSE,No,39.0,4.9,71.0,6.2,5.2,47,C,Strongly agree,Yes,38.5
+S004,C,CSE,No,36.0,6.6,80.0,8.0,4.4,44,C,Agree,Yes,3.0
+S005,B,CSE,No,61.0,11.0,78.0,6.6,4.5,92,O,Neutral,No,
+S006,A,cse,Yes,13.0,7.1,85.0,7.3,3.8,75,A,Agree,Yes,8.2
+S007,C,MECH,Yes,8.0,9.5,100.0,6.7,5.5,83,A+,Strongly agree,Yes,5.6
+S008,C,CSE,No,43.0,4.5,72.0,7.8,5.3,58,B,Agree,Yes,6.1
+S009,A,CIVIL,Yes,9.0,10.3,95.0,5.0,8.8,absent,,Agree,No,
+S010,A,CIVIL,No,53.0,5.6,79.0,4.9,3.9,42,C,Strongly agree,No,
+S011,A,CSE,No,46.0,4.7,72.0,6.5,3.6,54,B,Neutral,No,
+S012,C,ECE,Yes,5.0,4.1,65.0,4.6,2.5,43,C,Neutral,Yes,5.6
+S013,B,CSE,No,70.0,4.0,69.0,,11.2,32,C,Strongly agree,Yes,15.8
+S014,A,CSE,No,60.0,6.3,91.0,6.2,3.1,68,B+,Disagree,Yes,6.4
+S015,C,ECE,No,48.0,4.2,68.0,6.4,6.1,37,C,Neutral,No,
+S016,B,ECE,No,52.0,6.8,66.0,7.2,6.0,66,B+,Strongly agree,Yes,10.0
+S017,A,ECE,No,35.0,2.9,60.0,5.6,2.5,46,C,Agree,No,
+S018,C,CIVIL,No,68.0,11.7,91.0,6.5,13.5,59,B,Strongly disagree,No,
+S019,A,CSE,No,64.0,2.5,58.0,7.7,5.9,35,C,Disagree,Yes,9.0
+S020,A,CSE,No,46.0,8.1,84.0,8.2,4.2,64,B+,Strongly agree,Yes,4.5
+S021,B,MECH,Yes,12.0,6.1,78.0,5.9,2.4,69,B+,Disagree,No,
+S022,B,CIVIL,No,25.0,4.6,70.0,6.4,4.5,54,B,Neutral,No,
+S023,A,CIVIL,No,60.0,5.7,86.0,8.2,8.3,44,C,Disagree,No,
+S024,B,CIVIL,Yes,10.0,2.4,51.0,5.8,4.9,43,C,Agree,No,
+S025,B,CSE,No,53.0,6.0,66.0,7.7,5.4,56,B,Strongly agree,No,
+S026,C,CIVIL,Yes,10.0,9.9,78.0,6.9,7.4,64,B+,Agree,Yes,7.5
+S027,A,MECH,Yes,9.0,3.2,69.0,6.7,11.0,34,C,Agree,Yes,8.3
+S028,B,CIVIL,Yes,13.0,1.5,49.0,5.3,4.3,54,B,Neutral,Yes,6.3
+S029,A,ECE,No,43.0,6.0,66.0,5.6,3.2,59,B,Neutral,Yes,8.0
+S030,B,CSE,No,48.0,2.8,76.0,6.0,4.1,47,C,Strongly agree,Yes,13.8
+S031,C,MECH,Yes,10.0,4.5,64.0,7.4,3.4,40,C,Strongly agree,No,
+S032,A,MECH,No,50.0,7.7,83.0,7.7,2.3,56,B,Agree,No,
+S033,A,MECH,Yes,6.0,7.9,73.0,6.1,3.9,65,B+,Neutral,Yes,7.0
+S034,C,CSE,No,54.0,6.5,,7.2,2.7,55,B,Agree,Yes,6.5
+S035,C,CSE,No,38.0,3.8,71.0,6.7,7.2,34,C,Neutral,No,
+S036,C,MECH,Yes,11.0,4.8,80.0,5.9,4.0,55,B,Agree,No,
+S037,A,CSE,Yes,5.0,6.7,72.0,6.0,1.3,67,B+,Neutral,Yes,6.2
+S038,C,CIVIL,No,40.0,7.8,63.0,5.1,2.6,65,B+,Disagree,No,
+S039,C,CSE,No,52.0,7.6,67.0,5.7,4.8,55,B,Agree,Yes,4.8
+S040,C,ECE,No,61.0,7.6,70.0,6.1,3.2,72,A,Disagree,Yes,3.8
+S041,C,ECE,No,55.0,3.5,63.0,8.0,2.8,47,C,Neutral,Yes,14.3
+S042,C,CSE,No,70.0,2.3,54.0,7.6,3.2,29,C,Agree,Yes,6.1
+S043,C,CSE,No,36.0,6.0,77.0,6.7,2.8,56,B,Agree,Yes,14.5
+S044,A,MECH,Yes,10.0,4.5,58.0,6.9,5.2,53,B,Neutral,No,
+S045,A,CIVIL,Yes,10.0,8.8,86.0,6.0,3.2,68,B+,Agree,No,
+S046,C,MECH,No,59.0,3.6,56.0,4.7,2.7,105,B,Strongly agree,Yes,9.1
+S047,B,ECE,Yes,8.0,7.3,65.0,6.8,5.8,59,B,Agree,Yes,20.5
+S048,A,MECH,Yes,12.0,1.6,71.0,7.4,2.3,26,C,Agree,Yes,4.7
+S049,A,ECE,No,36.0,8.6,83.0,6.0,4.4,76,A,Disagree,Yes,6.0
+S050,B,ECE,No,46.0,8.6,73.0,7.9,2.5,71,A,Strongly disagree,No,
+S051,C,CIVIL,Yes,9.0,4.7,62.0,7.7,3.3,46,C,Strongly agree,Yes,8.4
+S052,C,CSE,Yes,12.0,3.1,62.0,7.5,3.2,38,C,Strongly agree,Yes,6.7
+S053,C,CSE,No,51.0,5.2,69.0,5.1,2.4,60,B+,Strongly agree,No,
+S054,C,CIVIL,Yes,12.0,4.8,70.0,6.8,3.0,49,C,Agree,Yes,3.0
+S055,A,CIVIL,Yes,10.0,3.7,75.0,7.0,7.5,49,C,Agree,Yes,9.6
+S056,A,ECE,No,55.0,3.5,58.0,6.0,2.4,39,C,Strongly agree,No,
+S057,A,MECH,Yes,8.0,1.8,62.0,5.8,9.5,28,C,Neutral,No,
+S058,A,MECH,Yes,8.0,4.8,69.0,7.3,5.7,44,C,Strongly agree,Yes,6.3
+S059,C,CIVIL,No,47.0,2.7,51.0,8.3,7.9,27,C,Agree,No,
+S060,B,CSE,No,48.0,2.5,74.0,7.5,3.1,66,B+,Strongly disagree,Yes,5.3
+S061,C,CIVIL,Yes,13.0,7.9,90.0,6.8,6.3,55,B,Strongly agree,No,
+S062,B,ECE,Yes,13.0,4.3,67.0,6.2,4.3,56,B,Disagree,Yes,11.5
+S063,B,ECE,No,57.0,5.5,53.0,5.3,9.8,43,C,Neutral,No,
+S064,A,MECH,No,52.0,2.9,56.0,6.0,3.2,44,C,Strongly agree,Yes,13.3
+S065,C,C.S.E,No,59.0,7.2,82.0,6.9,6.8,49,C,Strongly disagree,Yes,4.9
+S066,A,ECE,Yes,11.0,7.5,55.0,6.4,3.0,56,B,Agree,Yes,7.0
+S067,B,CSE,No,49.0,0.6,40.0,7.7,7.4,12,C,Neutral,Yes,13.8
+S068,C,CIVIL,No,41.0,11.7,78.0,5.6,3.3,89,A+,Agree,No,
+S069,A,MECH,Yes,10.0,3.9,70.0,5.8,2.4,50,B,Agree,No,
+S070,B,CSE,Yes,7.0,5.2,76.0,6.9,2.1,64,B+,Strongly agree,Yes,6.9
+S071,C,ECE,No,46.0,3.3,74.0,7.0,3.0,33,C,Strongly disagree,No,
+S072,B,MECH,Yes,13.0,10.2,58.0,6.6,7.8,81,A+,Agree,Yes,7.1
+S073,B,CIVIL,Yes,5.0,6.3,66.0,5.9,2.2,73,A,Agree,Yes,5.9
+S074,A,CIVIL,Yes,11.0,6.4,62.0,6.2,2.8,55,B,Agree,Yes,5.1
+S075,B,CSE,Yes,9.0,2.2,53.0,7.7,3.7,44,C,Agree,Yes,3.7
+S076,A,CIVIL,Yes,16.0,4.4,74.0,6.4,4.0,48,C,Disagree,No,
+S077,C,MECH,Yes,10.0,7.9,78.0,6.3,4.3,69,B+,Strongly agree,Yes,8.8
+S078,C,CSE,No,40.0,4.1,59.0,7.1,8.0,absent,,Strongly agree,Yes,4.7
+S079,B,CSE,No,60.0,3.0,66.0,7.2,3.5,50,B,Strongly disagree,No,
+S080,C,CSE,No,62.0,4.4,69.0,7.0,2.0,50,B,Agree,Yes,8.6
+S081,C,CSE,No,55.0,3.6,77.0,8.2,5.4,48,C,Agree,Yes,3.6
+S082,B,MECH,Yes,7.0,7.9,70.0,5.6,3.2,62,B+,Agree,Yes,4.5
+S083,A,CSE,No,63.0,2.1,68.0,7.2,3.5,34,C,Neutral,Yes,5.2
+S084,B,MECH,Yes,9.0,6.7,65.0,6.2,4.2,54,B,Disagree,Yes,4.8
+S085,C,CSE,Yes,12.0,14.8,94.0,7.4,8.0,96,O,Strongly agree,Yes,3.4
+S086,C,CIVIL,Yes,10.0,4.8,68.0,5.7,6.8,46,C,Strongly agree,No,
+S087,B,MECH,Yes,9.0,2.1,64.0,7.4,4.0,52,B,Agree,No,
+S088,B,MECH,Yes,9.0,5.0,68.0,6.5,3.4,64,B+,Agree,Yes,4.7
+S089,B,ECE,Yes,7.0,2.8,77.0,9.0,4.8,54,B,Disagree,Yes,6.6
+S090,A,ECE,No,57.0,8.8,71.0,7.1,2.8,61,B+,Agree,Yes,9.5
+S091,B,CSE,No,64.0,3.7,57.0,9.0,1.8,51,B,Neutral,No,
+S092,A,CIVIL,Yes,9.0,1.6,56.0,6.3,2.9,47,C,Disagree,Yes,3.5
+S093,C,CSE,No,51.0,6.4,76.0,6.1,6.1,55,B,Strongly agree,Yes,4.3
+S094,C,ECE,Yes,9.0,8.3,83.0,7.2,2.9,60,B+,Agree,Yes,5.1
+S095,A,CSE,No,42.0,3.9,66.0,5.3,3.1,42,C,Neutral,No,
+S096,C,CSE,Yes,10.0,1.9,56.0,5.7,7.6,23,C,Disagree,Yes,7.3
+S097,C,MECH,Yes,7.0,2.6,60.0,7.9,7.6,28,C,Agree,Yes,6.2
+S098,A,CIVIL,Yes,8.0,7.0,67.0,7.5,7.7,55,B,Disagree,No,
+S099,B,ECE,No,42.0,4.2,72.0,6.7,2.8,57,B,Agree,Yes,3.0
+S100,C,MECH,Yes,8.0,10.2,80.0,,5.0,75,A,Neutral,Yes,6.8
+S101,C,CIVIL,No,61.0,1.7,64.0,7.0,7.3,36,C,Strongly agree,No,
+S102,A,ECE,No,26.0,3.9,67.0,7.1,6.3,49,C,Strongly agree,Yes,11.3
+S103,C,MECH,No,41.0,4.1,68.0,6.0,3.4,38,C,Agree,Yes,7.5
+S104,C,CSE,No,40.0,0.8,70.0,7.7,3.6,48,C,Agree,Yes,7.3
+S105,C,CSE,Yes,9.0,5.6,66.0,6.4,2.8,51,B,Neutral,Yes,3.0
+S106,B,CSE,No,35.0,2.2,67.0,8.2,3.1,42,C,Strongly agree,Yes,3.0
+S107,C,CSE,No,43.0,2.6,68.0,5.8,4.7,46,C,Strongly disagree,Yes,5.7
+S108,B,CSE,No,73.0,5.0,63.0,9.0,4.7,66,B+,Neutral,Yes,27.6
+S109,C,MECH,Yes,12.0,3.2,80.0,6.3,2.7,50,B,Strongly agree,No,
+S110,C,CIVIL,Yes,9.0,3.5,68.0,5.5,5.4,50,B,Strongly agree,No,
+S111,A,CSE,No,52.0,7.7,65.0,5.8,4.4,61,B+,Strongly agree,Yes,4.0
+S112,C,MECH,Yes,12.0,10.2,89.0,6.9,7.1,70,A,Agree,No,
+S113,C,MECH,Yes,10.0,5.1,74.0,7.1,3.1,43,C,Strongly agree,No,
+S114,B,MECH,No,60.0,6.0,77.0,6.2,4.4,72,A,Neutral,No,
+S115,A,ECE,No,30.0,14.1,87.0,7.7,1.5,98,O,Agree,No,
+S116,C,ECE,Yes,11.0,7.7,72.0,8.4,5.6,72,A,Strongly agree,No,
+S117,C,MECH,Yes,9.0,9.8,81.0,6.8,5.2,68,B+,Strongly agree,Yes,4.4
+S118,B,CSE,No,43.0,2.8,52.0,7.4,5.9,51,B,Strongly disagree,Yes,7.2
+S119,C,MECH,Yes,10.0,5.2,71.0,7.6,4.1,51,B,Agree,No,
+S120,A,CSE,No,46.0,4.5,68.0,7.6,4.1,64,B+,Strongly agree,Yes,6.4
+S121,B,CSE,No,69.0,6.5,80.0,5.3,3.9,68,B+,Neutral,Yes,6.6
+S122,C,CIVIL,Yes,10.0,10.9,80.0,7.9,7.0,83,A+,Strongly agree,Yes,4.0
+S123,B,CSE,Yes,3.0,9.9,85.0,6.9,2.6,77,A,Agree,Yes,4.3
+S124,C,Mech,Yes,5.0,2.1,50.0,7.0,3.9,29,C,Agree,No,
+S125,B,CSE,No,47.0,1.6,55.0,7.8,5.3,35,C,Neutral,Yes,4.6
+S126,B,CSE,No,46.0,1.5,68.0,4.5,3.4,53,B,Agree,No,
+S127,C,CSE,No,59.0,4.1,80.0,7.7,2.7,34,C,Strongly agree,Yes,3.3
+S128,A,CIVIL,Yes,9.0,4.4,75.0,7.2,3.5,44,C,Strongly agree,No,
+S129,C,MECH,Yes,15.0,3.3,52.0,8.3,4.7,39,C,Agree,Yes,3.9
+S130,C,ECE,Yes,12.0,7.0,64.0,6.9,8.2,50,B,Neutral,No,
+S131,C,CSE,No,29.0,4.8,63.0,8.2,3.2,48,C,Strongly agree,Yes,5.1
+S132,C,CIVIL,Yes,11.0,10.1,91.0,8.0,1.5,84,A+,Neutral,Yes,4.3
+S133,A,ECE,No,55.0,8.7,71.0,5.6,6.4,64,B+,Strongly disagree,Yes,7.8
+S134,A,CIVIL,Yes,17.0,2.0,64.0,6.8,4.0,45,C,Neutral,Yes,9.8
+S135,B,ECE,No,54.0,3.2,69.0,6.1,5.3,59,B,Strongly agree,No,
+S136,B,CSE,No,47.0,6.6,76.0,6.8,3.9,60,B+,Neutral,Yes,11.0
+S137,C,CSE,No,30.0,7.2,72.0,6.1,4.0,69,B+,Strongly agree,Yes,7.1
+S138,B,MECH,Yes,12.0,11.1,85.0,5.7,1.7,86,A+,Agree,Yes,10.0
+S139,C,CSE,No,56.0,8.2,83.0,6.6,5.2,54,B,Strongly agree,Yes,11.6
+S140,A,CSE,No,59.0,5.7,72.0,6.7,2.4,59,B,Neutral,Yes,4.8
+S141,B,ECE,No,53.0,4.6,67.0,7.2,5.3,53,B,Strongly disagree,No,
+S142,C,CSE,Yes,12.0,5.5,77.0,8.5,1.7,59,B,Neutral,No,
+S143,C,CSE,No,53.0,12.1,98.0,5.6,15.0,59,B,Neutral,Yes,11.6
+S144,A,MECH,Yes,11.0,2.7,85.0,6.7,3.7,47,C,Agree,No,
+S145,A,ECE,No,34.0,12.1,74.0,8.2,1.4,83,A+,Agree,Yes,15.7
+S146,C,CIVIL,Yes,9.0,9.5,81.0,7.7,4.2,79,A,Neutral,No,
+S147,B,CSE,No,45.0,7.2,75.0,5.4,4.1,69,B+,Neutral,Yes,3.0
+S148,B,CSE,No,46.0,5.4,60.0,6.8,4.1,52,B,Disagree,Yes,5.7
+S149,B,CIVIL,Yes,17.0,5.2,67.0,5.6,2.4,52,B,Neutral,Yes,3.6
+S150,C,ECE,No,41.0,8.8,71.0,5.5,10.7,54,B,Strongly agree,Yes,17.8
+S151,B,MECH,No,46.0,4.5,59.0,6.4,3.1,69,B+,Strongly agree,Yes,4.9
+S152,A,ECE,No,54.0,2.9,59.0,6.5,6.1,24,C,Disagree,Yes,4.5
+S153,C,ECE,No,55.0,4.1,72.0,6.7,1.3,44,C,Agree,No,
+S154,B,CIVIL,Yes,8.0,5.0,60.0,6.9,5.2,63,B+,Strongly agree,No,
+S155,C,CSE,Yes,11.0,3.8,61.0,7.0,4.9,48,C,Strongly agree,Yes,6.8
+S156,C,ECE,Yes,9.0,3.9,65.0,8.2,3.9,41,C,Agree,Yes,8.6
+S157,A,ECE,No,39.0,2.4,54.0,7.3,6.8,32,C,Neutral,Yes,6.7
+S158,A,CSE,No,49.0,7.6,64.0,5.9,3.0,60,B+,Agree,Yes,3.8
+S159,A,CSE,No,29.0,13.8,74.0,7.9,4.8,83,A+,Agree,No,
+S160,A,CSE,No,58.0,4.7,61.0,7.1,3.8,47,C,Neutral,Yes,5.8
+S161,A,CSE,No,55.0,7.4,86.0,5.7,4.4,-3,A,Agree,Yes,5.5
+S162,B,MECH,Yes,10.0,6.7,57.0,6.0,2.5,67,B+,Agree,Yes,11.2
+S163,B,ECE,No,39.0,6.0,78.0,6.7,5.2,50,B,Agree,Yes,6.8
+S164,C,CSE,No,45.0,3.0,56.0,6.8,5.0,34,C,Strongly agree,Yes,3.0
+S165,A,ECE,No,50.0,3.3,56.0,7.0,4.5,36,C,Agree,Yes,8.4
+S166,B,CSE,Yes,12.0,5.1,75.0,5.4,4.5,68,B+,Agree,Yes,3.0
+S167,B,ECE,No,39.0,3.7,70.0,6.5,3.3,43,C,Agree,Yes,3.3
+S168,C,CIVIL,Yes,9.0,5.5,75.0,8.7,3.0,45,C,Agree,No,
+S169,A,CSE,No,51.0,7.2,73.0,5.2,3.6,53,B,Agree,Yes,6.7
+S170,C,MECH,No,43.0,9.9,87.0,5.5,4.7,98,O,Agree,Yes,7.5
+S171,A,MECH,Yes,6.0,7.9,69.0,6.9,2.3,81,A+,Agree,Yes,4.9
+S172,B,CSE,Yes,8.0,2.2,65.0,7.0,3.8,44,C,Agree,No,
+S173,A,CSE,Yes,15.0,3.2,73.0,5.9,7.9,48,C,Strongly agree,Yes,7.7
+S174,B,CSE,No,48.0,9.2,77.0,6.8,5.5,62,B+,Neutral,Yes,5.2
+S175,A,ECE,No,47.0,3.7,58.0,6.8,2.6,45,C,Neutral,No,
+S176,B,ECE,No,66.0,8.4,91.0,5.8,6.9,91,O,Neutral,No,
+S177,C,CSE,No,53.0,4.5,65.0,6.9,1.9,48,C,Neutral,No,
+S178,B,ece ,No,56.0,2.6,55.0,6.5,3.6,35,C,Agree,Yes,3.9
+S179,C,CSE,No,52.0,4.1,72.0,6.9,6.5,37,C,Strongly agree,Yes,4.5
+S180,C,CIVIL,Yes,10.0,6.4,83.0,7.2,5.4,51,B,Agree,No,
+S181,A,ECE,Yes,15.0,4.2,72.0,5.9,4.7,48,C,Agree,Yes,3.0
+S182,A,ECE,No,47.0,7.5,63.0,6.8,2.5,63,B+,Disagree,No,
+S183,A,ECE,No,51.0,6.1,71.0,6.0,1.9,57,B,Agree,No,
+S184,C,ECE,No,28.0,6.3,74.0,6.3,5.0,42,C,Strongly agree,Yes,4.1
+S185,C,CIVIL,Yes,9.0,5.7,76.0,6.8,4.5,52,B,Agree,No,
+S186,B,ECE,No,57.0,4.1,54.0,7.0,8.4,43,C,Agree,Yes,15.8
+S187,B,CSE,Yes,14.0,4.6,56.0,6.1,3.1,42,C,Disagree,Yes,7.0
+S188,A,CSE,No,42.0,9.0,79.0,7.4,2.4,79,A,Agree,Yes,4.0
+S189,A,CSE,Yes,14.0,3.2,65.0,6.7,3.1,44,C,Disagree,Yes,4.3
+S190,B,CSE,No,33.0,3.9,70.0,6.7,1.8,71,A,Disagree,Yes,11.5
+S191,C,ECE,Yes,16.0,10.3,,6.6,3.3,81,A+,Agree,Yes,6.1
+S192,A,CSE,Yes,11.0,2.3,51.0,6.2,3.8,32,C,Neutral,Yes,3.3
+S193,C,CIVIL,Yes,14.0,4.3,57.0,7.1,3.6,36,C,Neutral,Yes,21.0
+S194,A,CIVIL,Yes,12.0,4.2,62.0,5.2,8.7,54,B,Neutral,Yes,9.6
+S195,A,CSE,No,69.0,6.3,85.0,6.7,9.0,64,B+,Strongly agree,Yes,4.4
+S196,C,MECH,No,52.0,7.8,73.0,6.3,3.4,67,B+,Disagree,No,
+S197,C,MECH,Yes,5.0,3.9,75.0,8.1,3.1,54,B,Agree,No,
+S198,B,CIVIL,No,55.0,4.6,47.0,6.1,6.9,36,C,Disagree,No,
+S199,B,CSE,No,44.0,4.1,68.0,6.8,6.3,60,B+,Agree,No,
+S200,C,MECH,No,48.0,1.3,68.0,7.5,2.3,35,C,Neutral,No,
+S201,C,CSE,No,53.0,7.1,86.0,7.5,2.8,64,B+,Neutral,No,
+S202,C,CSE,No,62.0,4.5,61.0,8.2,2.8,absent,,Strongly agree,No,
+S203,B,CSE,No,58.0,6.4,89.0,8.4,2.2,76,A,Agree,No,
+S204,B,CIVIL,No,47.0,8.3,69.0,6.7,3.0,62,B+,Agree,No,
+S205,C,ECE,No,62.0,5.5,83.0,6.5,2.2,63,B+,Agree,Yes,3.0
+S206,B,ECE,No,46.0,5.6,85.0,7.9,5.5,61,B+,Strongly agree,Yes,8.1
+S207,A,CIVIL,No,35.0,7.3,73.0,7.1,4.9,72,A,Agree,Yes,3.0
+S208,B,CIVIL,Yes,12.0,2.2,51.0,6.9,1.8,47,C,Neutral,No,
+S209,A,CIVIL,Yes,9.0,6.3,91.0,6.9,2.9,71,A,Strongly agree,Yes,3.0
+S210,B,CSE,Yes,7.0,1.9,65.0,7.7,3.0,39,C,Strongly disagree,Yes,3.8
+S211,C,CIVIL,Yes,9.0,10.2,70.0,7.3,7.3,60,B+,Neutral,No,
+S212,A,MECH,Yes,6.0,2.9,69.0,5.0,3.0,38,C,Agree,Yes,4.8
+S213,C,CIVIL,Yes,7.0,3.2,56.0,6.0,5.8,39,C,Neutral,Yes,9.3
+S214,A,MECH,Yes,12.0,2.6,65.0,6.0,8.1,29,C,Agree,Yes,6.0
+S215,A,CIVIL,Yes,11.0,4.0,57.0,6.0,2.7,46,C,Strongly agree,No,
+S216,B,CIVIL,Yes,6.0,4.7,48.0,7.7,5.0,68,B+,Agree,No,
+S217,C,MECH,No,62.0,10.1,86.0,7.9,4.1,83,A+,Strongly agree,No,
+S218,A,CSE,Yes,11.0,6.9,67.0,6.6,5.9,79,A,Agree,Yes,16.5
+S219,C,MECH,No,46.0,5.0,67.0,8.2,2.2,48,C,Disagree,Yes,3.4
+S220,C,CSE,No,46.0,9.5,80.0,6.6,3.4,67,B+,Agree,Yes,16.2
+S221,B,ECE,No,48.0,4.0,65.0,8.3,1.9,55,B,Agree,Yes,5.1
+S222,C,CSE,No,39.0,8.4,70.0,7.5,5.5,69,B+,Agree,No,
+S223,B,CSE,Yes,10.0,5.6,73.0,7.3,1.7,61,B+,Agree,Yes,25.9
+S224,B,MECH,Yes,9.0,9.7,84.0,7.4,4.1,98,O,Neutral,Yes,5.0
+S225,C,CIVIL,Yes,13.0,7.8,77.0,6.6,2.0,62,B+,Neutral,No,
+S226,B,CIVIL,Yes,13.0,5.0,66.0,8.0,2.9,73,A,Agree,Yes,8.9
+S227,A,ECE,Yes,15.0,4.9,69.0,6.7,2.8,49,C,Agree,No,
+S228,C,MECH,Yes,13.0,6.1,85.0,7.4,4.1,53,B,Agree,Yes,9.9
+S229,B,CSE,No,62.0,4.9,79.0,6.1,5.1,64,B+,Agree,Yes,10.1
+S230,C,CSE,Yes,6.0,6.0,69.0,6.0,6.7,51,B,Agree,No,
+S231,B,MECH,Yes,6.0,3.3,71.0,,7.4,46,C,Neutral,Yes,3.0
+S232,C,ECE,No,52.0,3.7,71.0,7.1,4.1,42,C,Neutral,No,
+S233,B,ECE,No,48.0,5.5,76.0,8.2,2.4,69,B+,Agree,No,
+S234,A,MECH,Yes,6.0,2.1,63.0,6.6,7.0,32,C,Agree,No,
+S235,C,CSE,No,67.0,2.9,69.0,7.4,2.3,60,B+,Agree,No,
+S236,C,CIVIL,Yes,9.0,9.0,75.0,7.3,4.0,75,A,Agree,Yes,5.3
+S237,C,MECH,Yes,12.0,5.7,77.0,8.8,2.9,62,B+,Agree,Yes,6.4
+S238,B,CSE,No,65.0,2.5,69.0,7.2,3.0,43,C,Agree,Yes,6.3
+S239,C,ECE,Yes,15.0,3.6,72.0,5.9,4.4,68,B+,Agree,No,
+S240,B,CIVIL,Yes,10.0,3.4,72.0,5.8,2.4,59,B,Strongly agree,Yes,4.7
+S241,C,Civil,No,65.0,12.8,92.0,6.6,3.8,84,A+,Agree,Yes,7.3
+S242,A,CSE,No,48.0,4.7,62.0,7.0,3.9,44,C,Strongly agree,Yes,3.9
+S243,C,CSE,Yes,6.0,9.3,69.0,5.6,6.5,44,C,Agree,Yes,10.7
+S244,C,ECE,Yes,8.0,7.0,75.0,5.6,6.7,50,B,Agree,No,
+S245,C,CSE,No,57.0,3.0,62.0,5.8,5.7,21,C,Agree,Yes,5.5
+S246,C,CSE,No,63.0,8.8,84.0,6.8,4.1,57,B,Agree,Yes,6.5
+S247,B,CSE,No,41.0,5.9,66.0,7.0,8.8,64,B+,Agree,Yes,3.0
+S248,B,CIVIL,Yes,11.0,5.1,66.0,6.0,6.3,51,B,Neutral,No,
+S249,C,CIVIL,Yes,9.0,2.8,53.0,6.2,2.3,32,C,Strongly agree,No,
+S250,C,CSE,No,65.0,3.2,64.0,7.9,4.6,53,B,Agree,No,
+S251,B,ECE,No,46.0,3.7,63.0,8.3,5.0,44,C,Agree,Yes,5.6
+S252,C,MECH,No,42.0,1.9,73.0,7.3,2.8,55,B,Neutral,No,
+S253,B,CSE,No,50.0,7.7,76.0,6.2,4.5,68,B+,Disagree,Yes,6.2
+S254,A,CIVIL,Yes,10.0,12.8,99.0,6.3,3.5,97,O,Strongly agree,No,
+S255,A,MECH,No,35.0,5.9,65.0,7.5,2.7,55,B,Agree,Yes,5.9
+S256,C,MECH,Yes,5.0,5.8,57.0,4.5,12.8,31,C,Agree,Yes,5.4
+S257,C,ECE,No,64.0,4.5,78.0,5.4,3.1,52,B,Neutral,Yes,5.3
+S258,A,MECH,No,50.0,3.0,69.0,7.7,2.3,58,B,Disagree,Yes,6.9
+S259,B,CIVIL,Yes,3.0,7.8,90.0,5.4,4.1,76,A,Strongly agree,No,
+S260,B,CSE,No,59.0,5.1,64.0,6.2,1.8,53,B,Disagree,Yes,3.4
+S261,A,CSE,Yes,11.0,4.3,53.0,8.3,6.8,28,C,Strongly agree,Yes,7.9
+S262,B,CIVIL,Yes,15.0,4.9,83.0,6.3,3.5,72,A,Neutral,No,
+S263,C,ECE,No,55.0,4.3,71.0,7.9,4.2,41,C,Strongly disagree,No,
+S264,C,ECE,No,47.0,4.6,64.0,6.3,6.3,34,C,Neutral,No,
+S265,B,CIVIL,Yes,14.0,1.3,81.0,5.6,6.2,46,C,Agree,No,
+S266,C,MECH,Yes,11.0,2.5,65.0,7.2,3.5,42,C,Neutral,No,
+S267,A,MECH,Yes,9.0,4.6,62.0,6.6,4.7,54,B,Strongly agree,Yes,9.2
+S268,B,MECH,No,38.0,7.1,78.0,7.3,6.3,61,B+,Agree,No,
+S269,B,CIVIL,Yes,10.0,4.3,64.0,5.1,7.7,33,C,Strongly agree,No,
+S270,A,MECH,Yes,8.0,1.7,56.0,7.3,2.8,43,C,Agree,Yes,4.3
+S271,A,CIVIL,Yes,13.0,2.2,68.0,6.9,4.6,40,C,Neutral,No,
+S272,A,MECH,No,39.0,8.1,77.0,7.6,2.5,70,A,Agree,No,
+S273,B,CIVIL,No,43.0,3.6,65.0,7.1,2.7,46,C,Agree,Yes,4.0
+S274,B,CIVIL,Yes,13.0,7.3,74.0,5.9,3.9,74,A,Agree,No,
+S275,B,CSE,Yes,14.0,3.7,55.0,8.0,3.7,50,B,Agree,Yes,3.0
+S276,C,CIVIL,No,48.0,4.1,75.0,7.7,2.5,52,B,Agree,No,
+S277,B,MECH,Yes,10.0,6.5,90.0,7.7,2.7,82,A+,Disagree,Yes,8.5
+S278,A,CSE,No,45.0,3.8,70.0,7.3,3.9,47,C,Agree,Yes,5.3
+S279,A,MECH,Yes,10.0,3.0,77.0,7.2,2.1,47,C,Strongly agree,Yes,4.1
+S280,C,MECH,No,49.0,10.1,99.0,6.2,4.3,75,A,Agree,No,
+S281,B,ECE,No,47.0,3.2,64.0,5.3,2.3,39,C,Neutral,Yes,12.7
+S282,B,CSE,No,61.0,1.8,57.0,5.1,7.5,33,C,Agree,Yes,16.3
+S283,C,ECE,No,62.0,1.8,55.0,6.6,4.3,39,C,Neutral,No,
+S284,C,CSE,Yes,8.0,6.2,69.0,4.6,5.5,58,B,Agree,No,
+S285,C,ECE,Yes,11.0,6.0,79.0,6.2,3.4,52,B,Strongly agree,Yes,6.6
+S286,A,MECH,Yes,7.0,9.2,78.0,7.3,6.5,59,B,Agree,No,
+S287,B,MECH,No,39.0,4.1,79.0,5.8,5.0,58,B,Agree,No,
+S288,B,ECE,No,38.0,5.5,66.0,8.3,5.5,57,B,Agree,Yes,13.2
+S289,B,CIVIL,Yes,10.0,7.8,91.0,,4.2,76,A,Neutral,No,
+S290,C,CIVIL,Yes,7.0,5.1,68.0,7.2,5.3,58,B,Agree,No,
+S291,A,CIVIL,Yes,10.0,8.1,76.0,5.0,3.8,66,B+,Agree,No,
+S292,A,CSE ,No,64.0,2.9,66.0,6.9,5.2,50,B,Agree,Yes,8.3
+S293,A,CSE,No,67.0,12.9,85.0,8.3,3.5,93,O,Neutral,No,
+S294,A,CSE,No,41.0,3.0,65.0,6.5,3.4,51,B,Strongly agree,Yes,4.4
+S295,A,ECE,No,44.0,2.5,70.0,5.6,4.3,36,C,Strongly agree,Yes,9.9
+S296,B,ECE,No,52.0,1.7,62.0,5.7,4.2,41,C,Agree,No,
+S297,A,CSE,No,51.0,4.7,73.0,7.3,3.9,55,B,Neutral,Yes,3.3
+S298,B,CSE,Yes,6.0,2.3,57.0,7.6,2.8,44,C,Strongly disagree,Yes,5.2
+S299,A,CIVIL,Yes,7.0,3.9,61.0,7.1,3.5,47,C,Strongly agree,No,
+S300,A,MECH,Yes,12.0,6.8,62.0,6.1,6.1,53,B,Agree,No,
+S011,A,CSE,No,46.0,4.7,72.0,6.5,3.6,54,B,Neutral,No,
+S051,C,CIVIL,Yes,9.0,4.7,62.0,7.7,3.3,46,C,Strongly agree,Yes,8.4
+S151,B,MECH,No,46.0,4.5,59.0,6.4,3.1,69,B+,Strongly agree,Yes,4.9
+S251,B,ECE,No,46.0,3.7,63.0,8.3,5.0,44,C,Agree,Yes,5.6
+S300,A,MECH,Yes,12.0,6.8,62.0,6.1,6.1,53,B,Agree,No,

@@ -1,0 +1,30 @@
+1. The Hostel Mess Committee
+
+The IIITDM hostel mess committee tracked what every student ate for dinner over one week, as a giant list of (day, student_name, dish) entries — like ("Monday", "Priya", "Idli"). The warden wants to know three things before renewing the menu contract: which dish was served most often overall, which students never repeated a dish the entire week (the "adventurous eaters"), and whether any two dishes were served on the exact same set of days (so the committee can drop one to save cost). Write a program that reads the week's dinner log (using names like Priya, Karthik, Farhan, Lakshmi, Aaditya) and answers all three questions for the warden.
+
+After answering all the questions in the HTML file, click the Submit button. This will download a .py file. Copy the contents of that .py file and submit them here.
+ The Library Fine Dispute
+
+The campus library keeps a record of book return dates, but their system just crashed and dumped everything into one messy log: entries like "B101 Asha 5" meaning book B101 was returned by Asha 5 days late. Some students had genuine emergencies and the librarian wants to waive fines for anyone whose total lateness across all their books is under 3 days, but only if they didn't have any single book over 10 days late (repeat offenders don't get waivers even if their total is small). Given the raw log as a list of strings, write a program that prints the final fine amount (₹10/day) for every student, along with a note "WAIVED" where applicable.
+
+
+After answering all the questions in the HTML file, click the Submit button. This will download a .py file. Copy the contents of that .py file and submit them here.
+The Placement Drive Shortlist
+
+A company visiting IIITDM for placements gave the coordinator a shortlist criterion: a student qualifies for the interview only if they cleared every single subject in their transcript with 60+ marks, AND their CGPA (average of all subject marks) is in the top 20% of the class. The coordinator has each student's data as their name mapped to a collection of subject-mark pairs. Write a program that produces the final interview call list, sorted by CGPA descending, and also prints how many students were disqualified for failing a single subject versus how many were disqualified purely for CGPA.
+
+After answering all the questions in the HTML file, click the Submit button. This will download a .py file. Copy the contents of that .py file and submit them here.
+The Snake and the Grid Garden
+
+A robotic gardener moves across a square plot of land represented as an n×n grid, starting at the top-left corner. It receives a sequence of moves like "R R D D L U" (Right, Right, Down, Down, Left, Up) and waters every cell it passes through, including its starting cell. Some cells already have rocks in them (given as a separate list of coordinates) — if the gardener's path would step onto a rock, it must stop immediately and report exactly how many cells it managed to water before hitting the rock. Write a program that simulates this and prints the final watered-grid, marking watered cells, rocks, and untouched soil differently.
+
+After answering all the questions in the HTML file, click the Submit button. This will download a .py file. Copy the contents of that .py file and submit them here.
+The Snake and the Grid Garden
+
+A robotic gardener moves across a square plot of land represented as an n×n grid, starting at the top-left corner. It receives a sequence of moves like "R R D D L U" (Right, Right, Down, Down, Left, Up) and waters every cell it passes through, including its starting cell. Some cells already have rocks in them (given as a separate list of coordinates) — if the gardener's path would step onto a rock, it must stop immediately and report exactly how many cells it managed to water before hitting the rock. Write a program that simulates this and prints the final watered-grid, marking watered cells, rocks, and untouched soil differently.
+
+After answering all the questions in the HTML file, click the Submit button. This will download a .py file. Copy the contents of that .py file and submit them here.
+The Group Project Conflict
+
+A professor is assigning students into project groups of exactly 4, but there's a constraint: no group can contain two students who were in the same group during last semester's project (to force new collaborations), and every group must contain at least one student who has prior experience with Python (marked in the student records). Given the full student roster with last semester's group history and their skill tags, write a program that either produces a valid grouping for this semester or reports precisely which constraint made it impossible if no valid grouping exists.
+
