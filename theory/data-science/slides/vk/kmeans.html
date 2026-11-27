@@ -1,0 +1,1172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>k-means clustering from scratch · CS3006</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--paper:#EEF2F4;--ink:#15233B;--mu:#4F5D70;--ln:#C9D3DB;--card:#F8FAFB;--blue:#2468A8;--or:#D9822B;--ort:#9A5410;--dark:#15233B;--dtx:#EEF2F4;--dmu:#A6B3C2;--dor:#F0A04B;--dcard:#1F3253}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0c1320;overflow:hidden;font-family:'Atkinson Hyperlegible','Segoe UI',system-ui,sans-serif;color:var(--ink)}
+#vp{position:fixed;inset:0}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper);overflow:hidden}
+.slide{position:absolute;inset:0;padding:84px 128px 100px;display:none;flex-direction:column;gap:20px;background:var(--paper);color:var(--ink)}
+.slide.on{display:flex}
+.slide.dark{background:var(--dark);color:var(--dtx)}
+.abs{position:absolute}
+h1,h2{font-family:'Bricolage Grotesque','Segoe UI',sans-serif;margin:0;letter-spacing:-.5px}
+h2{font-size:60px;line-height:1.08;font-weight:700}
+h1{font-size:128px;line-height:1.0;font-weight:700}
+.t{font-size:34px;line-height:1.35;color:var(--mu);margin:0}
+.t b{color:var(--ink)}
+.t.s{font-size:28px}
+.q{font:700 40px/1.2 'Bricolage Grotesque','Segoe UI',sans-serif;color:var(--ort);margin:0}
+.fx{font:500 34px/1.35 'JetBrains Mono',Consolas,monospace;background:var(--card);border:2px solid var(--ln);border-radius:12px;padding:12px 20px;margin:0;color:var(--ink)}
+.mono{font-family:'JetBrains Mono',Consolas,monospace}
+.f{opacity:0;transform:translateY(12px);transition:opacity .3s,transform .3s;pointer-events:none}
+.f.on{opacity:1;transform:none;pointer-events:auto}
+.notes{display:none}
+.w{background:var(--card);border:2px solid var(--ln);border-radius:18px;overflow:hidden}
+.w canvas{display:block}
+.w.dk{background:#1F3253;border-color:#2D4673}
+.row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.b{font:700 26px 'Atkinson Hyperlegible','Segoe UI',sans-serif;padding:9px 22px;border-radius:999px;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer}
+.b:hover{filter:brightness(.95)}
+.b.p{background:var(--or);border-color:var(--or)}
+.b.on,.b.sel{background:var(--ink);color:#fff}
+.b:disabled{opacity:.38;cursor:default}
+.lab{font-size:26px;color:var(--mu)}
+.big{font:700 72px/1 'JetBrains Mono',Consolas,monospace;color:var(--ink)}
+.stat{font:500 30px/1.3 'JetBrains Mono',Consolas,monospace;color:var(--ink)}
+.stat span{color:var(--ort);font-weight:700}
+.chip{display:inline-flex;align-items:center;gap:10px;font:700 26px 'Atkinson Hyperlegible',sans-serif;background:var(--card);border:2px solid var(--ln);border-radius:999px;padding:6px 16px;margin:0 10px 10px 0}
+.dot{width:20px;height:20px;border-radius:50%;display:inline-block}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:12px;border-radius:8px;background:#C9D3DB;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;border-radius:50%;background:var(--or);border:3px solid var(--ink);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:var(--or);border:3px solid var(--ink);cursor:pointer}
+table.tb{border-collapse:collapse;font:500 28px/1.3 'JetBrains Mono',Consolas,monospace;width:100%}
+table.tb th{font:700 24px 'Atkinson Hyperlegible',sans-serif;color:var(--mu);text-align:left;padding:8px 12px;border-bottom:3px solid var(--ink)}
+table.tb td{padding:8px 12px;border-bottom:2px solid var(--ln)}
+table.tb tr.hl td{background:#CFDCE8}
+.bar{height:22px;border-radius:12px;background:#DCE4EA;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blue);width:0;transition:width .2s}
+.eyebrow{font:700 30px 'Atkinson Hyperlegible',sans-serif;color:var(--dor);letter-spacing:2px;margin:0}
+.sub{font:400 44px/1.3 'Atkinson Hyperlegible',sans-serif;color:var(--dmu);margin:0}
+.by{font:400 30px 'Atkinson Hyperlegible',sans-serif;color:var(--dmu);margin:0}
+.card{background:var(--card);border:2px solid var(--ln);border-radius:18px;padding:26px 30px}
+.dark .card{background:var(--dcard);border:0}
+.dark .card h3{color:var(--dtx)}
+.card h3{font:700 36px/1.15 'Bricolage Grotesque',sans-serif;margin:0 0 12px;display:flex;gap:16px;align-items:center}
+.card p{margin:0;font-size:31px;line-height:1.38;color:var(--mu)}
+.dark .card p{color:var(--dmu)}
+.num{display:inline-flex;width:56px;height:56px;border-radius:50%;background:var(--dor);color:var(--dark);font:700 32px 'Bricolage Grotesque',sans-serif;align-items:center;justify-content:center;flex:none}
+.code{font:500 29px/1.5 'JetBrains Mono',Consolas,monospace;background:#15233B;color:#EEF2F4;border-radius:18px;padding:26px 32px;margin:0;white-space:pre}
+.code .c{color:#8FA3BC}.code .k{color:#F0A04B}.code .s{color:#8FD0A8}.code .n{color:#7DB2E0}
+/* HUD */
+#prog{position:fixed;left:0;top:0;height:5px;background:var(--or);width:0;z-index:30}
+#hud{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:6px;align-items:center;background:rgba(21,35,59,.92);color:#EEF2F4;border-radius:999px;padding:6px 10px;font:600 14px system-ui,sans-serif;opacity:.3;transition:opacity .2s;z-index:30}
+body.show #hud,#hud:hover{opacity:1}
+#hud button{font:inherit;color:#EEF2F4;background:transparent;border:0;border-radius:999px;padding:6px 12px;cursor:pointer}
+#hud button:hover{background:rgba(255,255,255,.16)}
+#cnt{padding:0 8px;min-width:120px;text-align:center}
+#nav{position:fixed;left:0;top:0;bottom:0;width:min(440px,90vw);background:#15233B;color:#EEF2F4;transform:translateX(-100%);transition:transform .22s;z-index:40;overflow:auto;padding:18px 0 40px;font:17px/1.35 system-ui,sans-serif}
+#nav.on{transform:none}
+#nav li{list-style:none;padding:9px 22px;cursor:pointer;display:flex;gap:12px}
+#nav li b{color:#F0A04B;min-width:26px}
+#nav li:hover,#nav li.on{background:rgba(255,255,255,.12)}
+#nav ul{margin:0;padding:0}
+#navX{position:absolute;right:12px;top:8px;background:none;border:0;color:#EEF2F4;font-size:26px;cursor:pointer}
+#notes{position:fixed;left:0;right:0;bottom:0;background:rgba(21,35,59,.97);color:#EEF2F4;padding:18px 32px 62px;font:21px/1.5 'Atkinson Hyperlegible',system-ui,sans-serif;display:none;max-height:36vh;overflow:auto;z-index:25}
+#notes.on{display:block}
+#notes h4{margin:0 0 6px;font:700 15px system-ui;letter-spacing:2px;color:#F0A04B}
+
+table.tb.nw td,table.tb.nw th{white-space:nowrap}
+
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div id="vp"><div id="stage">
+<!-- 1 ============================================================ cover -->
+<section class="slide dark" data-id="cover">
+  <p class="eyebrow abs" style="left:128px;top:228px">CS3006 · UNSUPERVISED LEARNING</p>
+  <h1 class="abs" style="left:128px;top:290px;width:900px;color:#EEF2F4">k-means<br>clustering</h1>
+  <p class="sub abs" style="left:128px;top:600px;width:860px">Finding groups<br>without labels</p>
+  <p class="by abs" style="left:128px;top:790px">Dr. Vijaya Kumar S</p>
+  <div class="w dk abs" style="left:1040px;top:170px;width:752px;height:752px"><canvas id="cv-cover"></canvas></div>
+  <aside class="notes">Today’s topic is clustering: finding groups in data when nobody has told us the groups. The animation on the right is the whole algorithm running by itself: three centres, every point joins its nearest centre, the centres move to the middle of their points, and again, until nothing changes. We will build it from scratch, and every picture in this lecture is live: drag, click and slide.</aside>
+</section>
+
+<!-- 2 ============================================================ data -->
+<section class="slide" data-id="data">
+  <h2>24 students, two numbers each</h2>
+  <div class="w abs" style="left:128px;top:188px;width:784px;height:774px"><canvas id="cv-data"></canvas></div>
+  <p class="t abs" style="left:960px;top:200px;width:832px">Each dot is a student: <b>hours studied</b> and a <b>mock-test score</b>.</p>
+  <p class="t abs f" data-at="1" style="left:960px;top:330px;width:832px">There is no pass/fail column. Nobody has told us the groups.</p>
+  <p class="q abs f" data-at="2" style="left:960px;top:470px;width:832px">How many groups do you see?</p>
+  <div class="row abs f" data-at="2" style="left:960px;top:556px" id="kvote"><button class="b" data-k="2">2</button><button class="b" data-k="3">3</button><button class="b" data-k="4">4</button><button class="b" data-k="5">5</button></div>
+  <p class="t abs" id="kmsg" style="left:960px;top:690px;width:832px;visibility:hidden"></p>
+  <aside class="notes">This is the same kind of data as the SVM lecture, but with the pass/fail column removed. Hover over a dot to see the student. Ask the class how many groups they see; click a button to record a guess. When someone says they see three groups, what they really mean is that there are at least three reference points, and the other students sit close to one of them. Those reference points are the centres that k-means looks for, and the number of them is k, which we must supply before the algorithm starts. We will return to how to choose k near the end.</aside>
+</section>
+
+<!-- 3 ============================================================ place -->
+<section class="slide" data-id="place">
+  <h2>Pick three centres</h2>
+  <div class="w abs" style="left:128px;top:188px;width:784px;height:774px"><canvas id="cv-place"></canvas></div>
+  <p class="t abs" style="left:960px;top:200px;width:832px">We want <b>k = 3</b> groups. Each group will have a <b>centre</b>, the ✕ markers. Drag them anywhere.</p>
+  <div class="row abs" style="left:960px;top:400px"><button class="b" id="pl-reset">Reset centres</button><button class="b" id="pl-shade">Show territories</button></div>
+  <p class="t abs f" data-at="1" style="left:960px;top:510px;width:832px"><b>Rule 1.</b> Every student joins the <b>nearest</b> centre.</p>
+  <div class="abs f" data-at="1" id="pl-sizes" style="left:960px;top:630px;width:832px"></div>
+  <p class="t abs f" data-at="2" style="left:960px;top:760px;width:832px">Where would you put the centres so that every student is close to one?</p>
+  <aside class="notes">A centre is just a point in the plot. Drag the three crosses and watch what happens: every student takes the colour and shape of the nearest centre. Switch on territories to see the region each centre owns. This is Rule 1 of k-means: a student belongs to its nearest centre. Ask: where would you put the centres?</aside>
+</section>
+
+<!-- 4 ============================================================ score -->
+<section class="slide" data-id="score">
+  <h2>How good are the centres?</h2>
+  <div class="w abs" style="left:128px;top:188px;width:784px;height:774px"><canvas id="cv-score"></canvas></div>
+  <p class="t abs" style="left:960px;top:200px;width:832px">A good centre is close to its students. So add up how far away they are.</p>
+  <p class="fx abs f" data-at="1" style="left:960px;top:330px;width:832px">SSE = Σ (distance to own centre)²</p>
+  <p class="t s abs f" data-at="1" style="left:960px;top:432px;width:832px">Sum of squared errors. Squaring makes far-away students count most.</p>
+  <div class="abs f" data-at="2" style="left:960px;top:520px;width:832px">
+    <p class="lab" style="margin:0">Your SSE</p><p class="big" id="sc-your" style="margin:0 0 6px">0</p>
+    <div class="bar"><i id="sc-bar"></i></div>
+    <p class="stat" style="margin:10px 0 0">best that k-means finds: <span id="sc-best">0</span></p>
+    <p class="t s" id="sc-msg" style="margin:8px 0 0;min-height:40px"></p>
+  </div>
+  <div class="row abs f" data-at="2" style="left:960px;top:830px"><button class="b" id="sc-lines">Show distances</button><button class="b" id="sc-reset">Reset</button></div>
+  <p class="q abs f" data-at="3" style="left:960px;top:910px;width:832px">Make the SSE as small as you can.</p>
+  <aside class="notes">We need a score for a set of centres. Measure, for each student, the distance to its own centre, square it, and add them all up. That is the SSE, the sum of squared errors. Click show distances to see the segments being measured. Challenge: drag the centres to get the SSE as low as you can; the number beneath is the best that k-means itself finds, so you know the target. Why squared? It punishes far-away students and, as the next slide shows, it gives a very simple best centre.</aside>
+</section>
+
+<!-- 5 ============================================================ mean -->
+<section class="slide" data-id="mean">
+  <h2>The best centre is the mean</h2>
+  <div class="w abs" style="left:128px;top:188px;width:924px;height:774px"><canvas id="cv-mean"></canvas></div>
+  <p class="t abs" style="left:1100px;top:200px;width:692px">One cluster of five students. Their hours studied: <b class="mono">2, 3, 5, 8, 12</b>.</p>
+  <p class="t abs f" data-at="1" style="left:1100px;top:340px;width:692px">Drag the centre <b class="mono">c</b>. Each square’s area is one squared distance.</p>
+  <div class="abs" style="left:1100px;top:490px;width:692px"><input id="mn-slider" type="range" min="0" max="14" step="0.1" value="9"></div>
+  <p class="stat abs" style="left:1100px;top:550px;width:692px;margin:0">c = <span id="mn-c">9.0</span><br>SSE = <span id="mn-sse">0</span></p>
+  <div class="row abs f" data-at="2" style="left:1100px;top:690px"><button class="b p" id="mn-snap">Snap to the mean</button></div>
+  <p class="fx abs f" data-at="3" style="left:1100px;top:780px;width:692px;font-size:27px">d/dc Σ(xᵢ − c)² = −2 Σ(xᵢ − c) = 0</p>
+  <p class="t abs f" data-at="4" style="left:1100px;top:870px;width:692px"><b>Rule 2.</b> The best centre is the <b>mean</b>.</p>
+  <aside class="notes">Rule 1 told us how to assign students to centres. Rule 2 tells us where a centre should go. Take one cluster, five numbers, and drag the centre. Each coloured square has side equal to the distance from a student to the centre, so its area is the squared distance; the total area is the SSE. The curve underneath shows SSE against c: it is a parabola with its minimum exactly at the mean, six. Calculus agrees: differentiate the sum of squares, set it to zero, and the solution is the average of the numbers. So Rule 2: move each centre to the mean of its students.</aside>
+</section>
+
+<!-- 6 ============================================================ loop -->
+<section class="slide" data-id="loop">
+  <h2>Two steps, repeated</h2>
+  <svg class="abs" style="left:128px;top:190px" width="780" height="770" viewBox="0 0 780 770">
+    <defs><marker id="ah" markerWidth="12" markerHeight="12" refX="8" refY="6" orient="auto"><path d="M0,0 L10,6 L0,12 z" fill="#15233B"/></marker></defs>
+    <rect x="190" y="10" width="400" height="96" rx="48" fill="#F8FAFB" stroke="#15233B" stroke-width="4"/>
+    <text x="390" y="72" text-anchor="middle" font-family="Bricolage Grotesque,Segoe UI,sans-serif" font-weight="700" font-size="38" fill="#15233B">Start: k centres</text>
+    <g class="f" data-at="1"><path d="M390,106 L390,190" stroke="#15233B" stroke-width="4" fill="none" marker-end="url(#ah)"/>
+      <rect x="130" y="196" width="520" height="150" rx="26" fill="#D6E4F2" stroke="#2468A8" stroke-width="5"/>
+      <text x="390" y="262" text-anchor="middle" font-family="Bricolage Grotesque,Segoe UI,sans-serif" font-weight="700" font-size="44" fill="#15233B">1 · Assign</text>
+      <text x="390" y="312" text-anchor="middle" font-family="Atkinson Hyperlegible,Segoe UI,sans-serif" font-size="30" fill="#4F5D70">each student → nearest centre</text></g>
+    <g class="f" data-at="2"><path d="M390,346 L390,430" stroke="#15233B" stroke-width="4" fill="none" marker-end="url(#ah)"/>
+      <rect x="130" y="436" width="520" height="150" rx="26" fill="#F8E6D2" stroke="#D9822B" stroke-width="5"/>
+      <text x="390" y="502" text-anchor="middle" font-family="Bricolage Grotesque,Segoe UI,sans-serif" font-weight="700" font-size="44" fill="#15233B">2 · Update</text>
+      <text x="390" y="552" text-anchor="middle" font-family="Atkinson Hyperlegible,Segoe UI,sans-serif" font-size="30" fill="#4F5D70">each centre → mean of its students</text></g>
+    <g class="f" data-at="3"><path d="M650,511 C760,511 760,271 654,271" stroke="#15233B" stroke-width="4" fill="none" marker-end="url(#ah)"/>
+      <text x="720" y="392" text-anchor="middle" font-family="Atkinson Hyperlegible,Segoe UI,sans-serif" font-size="28" fill="#4F5D70" transform="rotate(90 720 392)">repeat</text>
+      <path d="M390,586 L390,660" stroke="#15233B" stroke-width="4" fill="none" marker-end="url(#ah)"/>
+      <rect x="110" y="666" width="560" height="90" rx="45" fill="#F8FAFB" stroke="#15233B" stroke-width="4"/>
+      <text x="390" y="722" text-anchor="middle" font-family="Bricolage Grotesque,Segoe UI,sans-serif" font-weight="700" font-size="34" fill="#15233B">Stop: no one changes cluster</text></g>
+  </svg>
+  <p class="t abs" style="left:960px;top:210px;width:832px"><b>0 ·</b> Choose k starting centres.</p>
+  <p class="t abs f" data-at="1" style="left:960px;top:330px;width:832px"><b>1 · Assign.</b> Every student joins the nearest centre. <span style="color:var(--blue)">(Rule 1)</span></p>
+  <p class="t abs f" data-at="2" style="left:960px;top:490px;width:832px"><b>2 · Update.</b> Every centre moves to the mean of its students. <span style="color:var(--ort)">(Rule 2)</span></p>
+  <p class="t abs f" data-at="3" style="left:960px;top:690px;width:832px"><b>3 ·</b> Repeat 1 and 2 until no student changes cluster.</p>
+  <aside class="notes">Put the two rules together and you have the whole algorithm, called Lloyd’s algorithm. Start with k centres, anywhere. Assign every student to the nearest centre. Move every centre to the mean of its students. Because the centres moved, some students may now be nearer a different centre, so repeat. Stop when an assign step changes nobody. That is it. Next slide: run it yourself.</aside>
+</section>
+
+<!-- 7 ============================================================ main -->
+<section class="slide" data-id="main">
+  <h2>k-means in action</h2>
+  <div class="w abs" style="left:128px;top:188px;width:784px;height:774px"><canvas id="cv-main"></canvas></div>
+  <p class="t abs" id="km-phase" style="left:960px;top:196px;width:832px;height:100px;font-size:32px"></p>
+  <div class="row abs" style="left:960px;top:312px"><button class="b" id="km-assign">Assign</button><button class="b" id="km-update">Update</button><button class="b p" id="km-step">Step</button><button class="b" id="km-run">Run</button></div>
+  <div class="row abs" style="left:960px;top:392px"><button class="b" id="km-reset">Reset</button><button class="b" id="km-new">New start</button><button class="b" id="km-shade">Territories</button></div>
+  <div class="abs" style="left:960px;top:480px"><canvas id="cv-mainchart"></canvas></div>
+  <div class="abs f" data-at="1" style="left:960px;top:790px;width:832px" id="km-table"></div>
+  <aside class="notes">Now run it. Assign colours every student by its nearest centre. Update moves each centre to the mean of its students; the dashed trail shows where it came from. Step does the next action; Run keeps going until nobody changes cluster. The chart records the SSE after every step: it only ever goes down, which is no accident, as we will see. New start picks three random students as the starting centres. Click once more to show the table of centres.</aside>
+</section>
+
+<!-- 8 ============================================================ hand -->
+<section class="slide" data-id="hand">
+  <h2>By hand: six students, two centres</h2>
+  <div class="w abs" style="left:128px;top:188px;width:600px;height:600px"><canvas id="cv-hand"></canvas></div>
+  <div class="row abs" style="left:128px;top:812px"><button class="b" id="hd-back">◀ Back</button><button class="b p" id="hd-next">Next ▶</button></div>
+  <p class="stat abs" id="hd-state" style="left:128px;top:900px;width:620px;margin:0;font-size:26px"></p>
+  <div class="abs" id="hd-table" style="left:800px;top:196px;width:992px"></div>
+  <p class="t abs" id="hd-new" style="left:800px;top:700px;width:992px;font-size:30px"></p>
+  <aside class="notes">The same algorithm with numbers you can check on paper. Six students; the starting centres are the first two students. Iteration 1: compute each student’s distance to both centres (Pythagoras), pick the smaller. Then each new centre is the average of its students. Iteration 2 repeats with the new centres; the student at (2, 1) now prefers the left centre. Iteration 3: nobody changes, so we stop. Press Next to step through; the table and the plot show the same thing.</aside>
+</section>
+
+<!-- 9 ============================================================ stops -->
+<section class="slide" data-id="stops">
+  <h2>Does it always stop?</h2>
+  <p class="t abs" style="left:128px;top:200px;width:760px"><b>Assign</b> moves a student only to a <b>nearer</b> centre, so the SSE cannot go up.</p>
+  <p class="t abs f" data-at="1" style="left:128px;top:400px;width:760px"><b>Update</b> moves a centre to the <b>mean</b>, the best spot for its students, so the SSE cannot go up.</p>
+  <p class="t abs f" data-at="2" style="left:128px;top:620px;width:760px">There are only finitely many ways to split 24 students into groups, and the SSE never repeats. So the loop <b>must</b> stop.</p>
+  <div class="w abs" style="left:940px;top:188px;width:852px;height:620px"><canvas id="cv-stops"></canvas></div>
+  <div class="row abs f" data-at="3" style="left:940px;top:830px"><button class="b p" id="st-run">Run 6 random starts</button></div>
+  <p class="t s abs f" data-at="3" id="st-note" style="left:940px;top:910px;width:852px"></p>
+  <aside class="notes">Two short arguments. One: assigning each student to its nearest centre can only reduce the total squared distance. Two: moving a centre to the mean of its students can only reduce it, because the mean is the minimiser. So SSE goes down every step, and since there are finitely many ways to split the students, it must stop. Click to reveal the chart and press the button: six random starts, six curves, every one of them non-increasing. But look at where they end: not all at the same height. That is the next slide.</aside>
+</section>
+
+<!-- 10 =========================================================== minima -->
+<section class="slide" data-id="minima">
+  <h2>Different starts, different answers</h2>
+  <div class="w abs" style="left:128px;top:188px;width:784px;height:774px"><canvas id="cv-min"></canvas></div>
+  <p class="t abs" style="left:960px;top:196px;width:832px">Run k-means from a random start. Hollow rings: where the centres began.</p>
+  <div class="row abs" style="left:960px;top:316px"><button class="b p" id="mi-one">Another random start</button><button class="b" id="mi-many">Run 20 starts</button><button class="b" id="mi-clear">Clear</button></div>
+  <div class="abs" id="mi-log" style="left:960px;top:400px;width:832px"></div>
+  <p class="stat abs" id="mi-sum" style="left:960px;top:790px;width:832px;margin:0;font-size:27px"></p>
+  <p class="q abs f" data-at="1" style="left:960px;top:850px;width:832px;font-size:36px">A <b>local</b> minimum: not always the best.</p>
+  <p class="t s abs f" data-at="2" style="left:960px;top:910px;width:832px">Fix: run several starts, keep the lowest SSE.</p>
+  <aside class="notes">Press Another random start several times. Sometimes k-means finds three sensible groups. Sometimes it ends with two centres sharing one real group and one centre stretched across two others, and it stays there, because from that position neither rule can improve things. SSE is lower for the good answers. The algorithm always stops, but only at a local minimum. The usual remedy is simple: run it several times from different starts and keep the answer with the lowest SSE. Run 20 starts shows how often each answer appears.</aside>
+</section>
+
+<!-- 11 =========================================================== pp -->
+<section class="slide" data-id="pp">
+  <h2>Better starts: k-means++</h2>
+  <div class="w abs" style="left:128px;top:188px;width:784px;height:774px"><canvas id="cv-pp"></canvas></div>
+  <p class="t abs" style="left:960px;top:196px;width:832px">Choose starting centres that are <b>far apart</b>.</p>
+  <p class="t s abs f" data-at="1" style="left:960px;top:270px;width:832px">First centre: a random student. Each next centre: a student chosen with probability proportional to (distance to the nearest centre so far)². Big dots = likely.</p>
+  <div class="row abs f" data-at="1" style="left:960px;top:446px"><button class="b p" id="pp-add">Add a centre</button><button class="b" id="pp-run">Run k-means</button><button class="b" id="pp-reset">Restart</button></div>
+  <p class="stat abs f" data-at="1" id="pp-stat" style="left:960px;top:530px;width:832px;margin:0;font-size:28px"></p>
+  <div class="row abs f" data-at="2" style="left:960px;top:626px"><button class="b" id="pp-cmp">Compare 300 starts each</button></div>
+  <div class="abs f" data-at="2" style="left:960px;top:704px"><canvas id="cv-ppcmp"></canvas></div>
+  <aside class="notes">Random starts fail because two centres can begin in the same group. k-means++ makes that unlikely: pick the first centre at random, then pick each next centre with probability proportional to its squared distance from the nearest centre already chosen, so far-away students are likely and nearby ones are not. Press Add a centre and watch the dot sizes. Then compare: 300 runs from random students against 300 runs from k-means++. The bars show how often each reaches the best SSE. scikit-learn uses k-means++ by default.</aside>
+</section>
+
+<!-- 12 =========================================================== choosek -->
+<section class="slide" data-id="choosek">
+  <h2>How many clusters?</h2>
+  <div class="w abs" style="left:128px;top:188px;width:784px;height:774px"><canvas id="cv-ck"></canvas></div>
+  <p class="t abs" style="left:960px;top:200px;width:832px">k-means needs <b>k</b> before it starts. Slide it.</p>
+  <div class="abs" style="left:960px;top:290px;width:832px"><p class="stat" style="margin:0 0 12px">k = <span id="ck-k">3</span></p><input id="ck-slider" type="range" min="1" max="8" step="1" value="3"></div>
+  <p class="lab abs" style="left:960px;top:440px;margin:0">SSE with the best of 20 starts</p>
+  <p class="big abs" id="ck-sse" style="left:960px;top:480px;margin:0">0</p>
+  <p class="t abs f" data-at="1" style="left:960px;top:620px;width:832px">More clusters always means a <b>smaller</b> SSE.</p>
+  <p class="t abs f" data-at="2" style="left:960px;top:730px;width:832px">At k = 24 every student is its own cluster and SSE = 0. Useless. We need a better rule than “smallest SSE”.</p>
+  <aside class="notes">Drag k from 1 to 8. For each k the picture shows the best clustering from twenty k-means++ starts. The SSE keeps falling as k grows, because more centres always sit closer to students. Taken to the extreme, k equal to 24 gives every student a private cluster and SSE zero. So the smallest SSE cannot choose k. We look instead for the point where adding a cluster stops paying off.</aside>
+</section>
+
+<!-- 13 =========================================================== elbow -->
+<section class="slide" data-id="elbow">
+  <h2>Look for the elbow</h2>
+  <div class="w abs" style="left:128px;top:188px;width:784px;height:774px"><canvas id="cv-el"></canvas></div>
+  <div class="abs" style="left:960px;top:196px;width:832px"><p class="stat" style="margin:0 0 8px">k = <span id="el-k">3</span></p><input id="el-slider" type="range" min="1" max="8" step="1" value="3"></div>
+  <div class="abs" style="left:960px;top:318px"><canvas id="cv-elsse"></canvas></div>
+  <p class="t s abs f" data-at="1" style="left:960px;top:582px;width:832px"><b>Elbow:</b> stop where one more cluster stops paying off. Here: k = 3.</p>
+  <div class="abs f" data-at="2" style="left:960px;top:650px"><canvas id="cv-elsil"></canvas></div>
+  <p class="t s abs f" data-at="2" style="left:960px;top:912px;width:832px"><b>Silhouette:</b> how much closer a student is to its own cluster than to the next one (−1 to 1). Pick the peak.</p>
+  <aside class="notes">The first chart is SSE against k. It drops steeply from one to three clusters, then flattens: that bend is the elbow, and it suggests k equals three. The second chart is the average silhouette: for each student, compare its average distance to its own cluster with its average distance to the nearest other cluster; one means a perfect fit, zero means on the border, negative means probably in the wrong cluster. It peaks at k equal to three too. Real data is rarely this clean, so treat both as hints, and ask whether the clusters make sense for the problem.</aside>
+</section>
+
+<!-- 14b ========================================================== six students, raw -->
+<section class="slide" data-id="scaleraw">
+  <h2>Six students, raw units</h2>
+  <div class="w abs" style="left:128px;top:188px;width:600px;height:600px"><canvas id="cv-sr"></canvas></div>
+  <div class="row abs" style="left:128px;top:806px"><button class="b" id="sr-back">◀ Back</button><button class="b p" id="sr-next">Next ▶</button></div>
+  <p class="stat abs" id="sr-state" style="left:128px;top:884px;width:620px;margin:0;font-size:26px"></p>
+  <p class="t abs" style="left:128px;top:932px;width:640px;margin:0;font-size:24px">colour = cluster · shape = real group: ● few hours, ■ many hours</p>
+  <div class="abs" id="sr-body" style="left:772px;top:188px;width:1020px"></div>
+  <aside class="notes">Six students, k = 2, and the same starting centres as before: the first two students. We use raw units, so one hour counts the same as one mark. Look at each squared distance, split into its hours part and its score part. The score part is hundreds; the hours part is tens at most, so the score decides which centre is nearer. Step through: assign, update, assign, update, assign. The two final centres have almost the same hours (5.5 and 5.25): the clusters differ only in score. But the real groups, shown by the shapes, are defined by hours, and the colours do not match them.</aside>
+</section>
+
+<!-- 14c ========================================================== six students, standardised -->
+<section class="slide" data-id="scalestd">
+  <h2>The same six, standardised</h2>
+  <div class="w abs" style="left:128px;top:188px;width:600px;height:600px"><canvas id="cv-ss"></canvas></div>
+  <div class="row abs" style="left:128px;top:806px"><button class="b" id="ss-back">◀ Back</button><button class="b p" id="ss-next">Next ▶</button></div>
+  <p class="stat abs" id="ss-state" style="left:128px;top:884px;width:620px;margin:0;font-size:26px"></p>
+  <p class="t abs" style="left:128px;top:932px;width:640px;margin:0;font-size:24px">colour = cluster · shape = real group: ● few hours, ■ many hours</p>
+  <div class="abs" id="ss-body" style="left:772px;top:188px;width:1020px"></div>
+  <aside class="notes">Now the same six students and the same starting students, but first standardise each feature: subtract its mean and divide by its standard deviation. Hours and score now both have mean zero and standard deviation one, so the two parts of each squared distance are of comparable size: hours supply around a third of the total instead of three percent. Step through assign and update again. This time the assignment follows hours, the final clusters are exactly the real groups, and the two centres sit far apart in hours.</aside>
+</section>
+
+<!-- 14d ========================================================== comparison -->
+<section class="slide" data-id="scalecmp">
+  <h2>Same students, two answers</h2>
+  <div class="w abs" style="left:128px;top:188px;width:780px;height:600px"><canvas id="cv-cmp1"></canvas></div>
+  <div class="w abs" style="left:1012px;top:188px;width:780px;height:600px"><canvas id="cv-cmp2"></canvas></div>
+  <p class="t abs" id="cmp-c1" style="left:128px;top:804px;width:780px;font-size:28px;line-height:1.35"></p>
+  <p class="t abs" id="cmp-c2" style="left:1012px;top:804px;width:780px;font-size:28px;line-height:1.35"></p>
+  <p class="q abs f" data-at="1" style="left:128px;top:930px;width:1664px;font-size:36px">Same students, same algorithm. Only the units changed.</p>
+  <aside class="notes">The two final answers on the same picture. Shading shows the territory of each centre. In raw units the territories are separated by a horizontal line: the score alone decides, and the clusters mix the two real groups. After standardising, the dividing line is nearly vertical and the clusters are exactly the real groups. The data and the algorithm are identical; only the units differ. So standardise whenever features are on different scales.</aside>
+</section>
+
+<!-- 15 =========================================================== outlier -->
+<section class="slide" data-id="outlier">
+  <h2>One outlier drags the mean</h2>
+  <div class="w abs" style="left:128px;top:188px;width:784px;height:774px"><canvas id="cv-ou"></canvas></div>
+  <p class="t abs" style="left:960px;top:200px;width:832px">One cluster of nine students and one unusual student. <b>Drag the red one.</b></p>
+  <p class="stat abs" id="ou-stat" style="left:960px;top:360px;width:832px;margin:0"></p>
+  <p class="t abs f" data-at="1" style="left:960px;top:590px;width:832px">The <b>mean</b> (✕) follows the outlier. The <b>median</b> (◇) hardly moves.</p>
+  <p class="t abs f" data-at="2" style="left:960px;top:720px;width:832px">k-means centres are means, so outliers pull them. Remove outliers first, or use <b>k-medoids</b>.</p>
+  <aside class="notes">A cluster of nine ordinary students and one outlier. Drag the red student far away: the mean, which is what k-means uses as the centre, follows it, and the cluster’s centre ends up far from the nine students it is supposed to describe. The median, shown as a hollow diamond, barely moves. This is why outliers hurt k-means, and why variants such as k-medoids exist, which use an actual student as the centre.</aside>
+</section>
+
+<!-- 16 =========================================================== shapes -->
+<section class="slide" data-id="shapes">
+  <h2>k-means likes round clusters</h2>
+  <div class="w abs" style="left:128px;top:188px;width:784px;height:774px"><canvas id="cv-sh"></canvas></div>
+  <div class="row abs" style="left:960px;top:200px"><button class="b sel" data-ds="blobs">Three blobs</button><button class="b" data-ds="moons">Two moons</button></div>
+  <div class="row abs" style="left:960px;top:280px"><button class="b" data-ds="rings">Two rings</button><button class="b" data-ds="bars">Two bars</button></div>
+  <div class="row abs" style="left:960px;top:376px"><button class="b" id="sh-true">Show real groups (shapes)</button></div>
+  <p class="stat abs" id="sh-stat" style="left:960px;top:470px;width:832px;margin:0;font-size:28px"></p>
+  <p class="t abs" id="sh-msg" style="left:960px;top:560px;width:832px;min-height:140px"></p>
+  <p class="t abs f" data-at="1" style="left:960px;top:760px;width:832px">k-means draws <b>straight borders</b> between round blobs of similar size. For other shapes, try DBSCAN or Gaussian mixtures.</p>
+  <aside class="notes">Every centre owns the region closest to it, so the borders between clusters are straight lines. That works when clusters are round blobs of similar spread. Try the other data sets: two interleaved moons, two concentric rings and two long bars are all cut in the wrong place, even with the best of ten starts. Switch on the real groups: colours are what k-means found, shapes are the truth. When your clusters are not blob-shaped, use a different method, such as DBSCAN or a Gaussian mixture.</aside>
+</section>
+
+<!-- 17 =========================================================== palette -->
+<section class="slide" data-id="palette">
+  <h2>Compress an image to k colours</h2>
+  <div class="w abs" style="left:128px;top:188px;width:804px;height:504px"><canvas id="cv-pal0"></canvas></div>
+  <div class="w abs" style="left:988px;top:188px;width:804px;height:504px"><canvas id="cv-pal1"></canvas></div>
+  <p class="lab abs" style="left:128px;top:704px;margin:0">original: 16.7 million possible colours</p>
+  <p class="lab abs" id="pal-cap" style="left:988px;top:704px;margin:0"></p>
+  <div class="abs" style="left:128px;top:790px;width:800px"><p class="stat" style="margin:0 0 10px">k = <span id="pal-k">8</span> colours</p><input id="pal-slider" type="range" min="0" max="5" step="1" value="3"></div>
+  <div class="abs f" data-at="1" id="pal-sw" style="left:988px;top:790px;width:804px;display:flex;flex-wrap:wrap;gap:8px"></div>
+  <p class="t abs f" data-at="2" style="left:128px;top:920px;width:1664px;font-size:30px">Each pixel is a point in (red, green, blue) space. The k centres become the palette, and every pixel takes the colour of its nearest centre.</p>
+  <aside class="notes">A real use of k-means. Every pixel of this picture is a point in three-dimensional colour space: its red, green and blue values. Run k-means on all the pixels with k colours; the centres are the palette, and every pixel is replaced by its nearest centre. At k equal to eight the picture still looks like the original but needs only three bits per pixel instead of twenty-four. The same idea is used for image compression, and for finding the dominant colours of a photo.</aside>
+</section>
+
+<!-- 18 =========================================================== code -->
+<section class="slide" data-id="code">
+  <h2>In scikit-learn</h2>
+<pre class="code abs" style="left:128px;top:196px;width:1020px"><span class="k">from</span> sklearn.cluster <span class="k">import</span> KMeans
+<span class="k">from</span> sklearn.preprocessing <span class="k">import</span> StandardScaler
+<span class="k">from</span> sklearn.pipeline <span class="k">import</span> make_pipeline
+
+X = df[[<span class="s">"hours"</span>, <span class="s">"score"</span>]]
+model = make_pipeline(
+    StandardScaler(),                   <span class="c"># one scale</span>
+    KMeans(n_clusters=<span class="n">3</span>, n_init=<span class="n">10</span>,
+           random_state=<span class="n">0</span>))
+labels = model.fit_predict(X)
+
+km = model[-<span class="n">1</span>]
+km.cluster_centers_   <span class="c"># the k centres</span>
+km.inertia_           <span class="c"># the SSE</span></pre>
+  <p class="t abs f" data-at="1" style="left:1196px;top:210px;width:596px"><b class="mono">n_clusters</b> is k. You choose it.</p>
+  <p class="t abs f" data-at="2" style="left:1196px;top:350px;width:596px"><b class="mono">n_init</b> random starts; the lowest <span class="mono">inertia_</span> wins. k-means++ is the default.</p>
+  <p class="t abs f" data-at="3" style="left:1196px;top:560px;width:596px"><b class="mono">StandardScaler</b> first, because distances need comparable units.</p>
+  <p class="t s abs f" data-at="4" style="left:1196px;top:760px;width:596px"><span class="mono">inertia_</span> is exactly the SSE we met today.</p>
+  <aside class="notes">In practice you do not write the loop yourself. KMeans takes n_clusters, which is k, and n_init, the number of random starts; it keeps the best one, measured by inertia, which is exactly our SSE. Put a StandardScaler in front in a pipeline, so that distances are computed on comparable scales. The fitted model gives you cluster_centers_, labels_ and inertia_.</aside>
+</section>
+
+<!-- 19 =========================================================== summary -->
+<section class="slide dark" data-id="summary">
+  <h2 style="color:#EEF2F4">What to remember</h2>
+  <div class="card abs f" data-at="1" style="left:128px;top:196px;width:528px;height:340px"><h3><span class="num">1</span>Two steps</h3><p>Assign every student to the nearest centre. Move every centre to the mean of its students.</p></div>
+  <div class="card abs f" data-at="2" style="left:696px;top:196px;width:528px;height:340px"><h3><span class="num">2</span>One score</h3><p>SSE, the sum of squared distances to the centres. Both steps lower it, so the loop stops.</p></div>
+  <div class="card abs f" data-at="3" style="left:1264px;top:196px;width:528px;height:340px"><h3><span class="num">3</span>Starts matter</h3><p>It stops at a local minimum. Use k-means++ and several starts (n_init).</p></div>
+  <div class="card abs f" data-at="4" style="left:128px;top:576px;width:528px;height:340px"><h3><span class="num">4</span>Choose k</h3><p>Not by the smallest SSE. Look for the elbow and the silhouette peak.</p></div>
+  <div class="card abs f" data-at="5" style="left:696px;top:576px;width:528px;height:340px"><h3><span class="num">5</span>Scale first</h3><p>Distances need comparable units. Standardise the features.</p></div>
+  <div class="card abs f" data-at="6" style="left:1264px;top:576px;width:528px;height:340px"><h3><span class="num">6</span>Know the limits</h3><p>Round blobs of similar size, and means are pulled by outliers.</p></div>
+  <aside class="notes">Six ideas. One: the two steps. Two: the SSE that both steps lower. Three: local minima and how to fight them. Four: choosing k with the elbow and silhouette. Five: standardise the features. Six: k-means assumes round, similar-sized clusters and is sensitive to outliers.</aside>
+</section>
+
+</div></div>
+<div id="hud"><button id="bNav">≡ Slides</button><button id="bPrev">◀</button><span id="cnt"></span><button id="bNext">▶</button><button id="bNotes">Notes</button><button id="bFs">Full screen</button></div>
+<div id="nav"><button id="navX" aria-label="Close">×</button><ul id="navL"></ul></div>
+<div id="notes"><h4>SPEAKER NOTES</h4><span id="notesTxt"></span></div>
+<script>
+const STU = [[2.7, 3.3], [2.7, 1.6], [3.1, 3.0], [2.0, 3.1], [2.7, 2.8], [2.4, 3.0], [1.8, 2.5], [2.0, 3.1], [7.7, 7.3], [7.1, 7.3], [7.7, 7.3], [8.7, 8.3], [5.5, 6.0], [7.6, 7.2], [7.9, 7.7], [9.4, 6.6], [2.5, 9.0], [3.3, 7.9], [2.4, 6.1], [2.9, 7.5], [1.8, 6.9], [2.7, 6.6], [2.7, 7.5], [2.8, 7.0]];
+
+'use strict';
+const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+const INK = '#15233B', MU = '#4F5D70', LN = '#C9D3DB', GRIDC = '#E4EAEF', CARD = '#F8FAFB', OR = '#D9822B', ORT = '#9A5410', BLUE = '#2468A8';
+const COL = ['#2468A8', '#D9822B', '#2E9B6F', '#B5559A', '#6C5CE7', '#C4472E', '#0E9AA7', '#8A8F2A'];
+const NEUTRAL = '#7A8899';
+let SCALE = 1;
+const CVS = [];
+
+// ------------------------------------------------------------------ random numbers
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function gauss(rng) { let u = 0, v = 0; while (u === 0) u = rng(); while (v === 0) v = rng(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+
+// ------------------------------------------------------------------ k-means
+const d2 = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) { const t = a[i] - b[i]; s += t * t; } return s; };
+function nearest(p, C) { let b = 0, bd = Infinity; for (let j = 0; j < C.length; j++) { const d = d2(p, C[j]); if (d < bd) { bd = d; b = j; } } return [b, bd]; }
+function assign(P, C) { return P.map(p => nearest(p, C)[0]); }
+function means(P, L, C) {
+  const k = C.length, dim = P[0].length, S = C.map(() => new Array(dim).fill(0)), n = new Array(k).fill(0);
+  for (let i = 0; i < P.length; i++) { n[L[i]]++; for (let d = 0; d < dim; d++) S[L[i]][d] += P[i][d]; }
+  return C.map((c, j) => n[j] ? S[j].map(v => v / n[j]) : c.slice());
+}
+function sse(P, L, C) { let s = 0; for (let i = 0; i < P.length; i++) s += d2(P[i], C[L[i]]); return s; }
+function sameLabels(a, b) { for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false; return true; }
+function lloyd(P, C0, maxIter) {
+  maxIter = maxIter || 100;
+  let C = C0.map(c => c.slice()), L = assign(P, C); const hist = [sse(P, L, C)]; let it = 0;
+  for (; it < maxIter; it++) {
+    const C2 = means(P, L, C), L2 = assign(P, C2), same = sameLabels(L, L2);
+    C = C2; L = L2; hist.push(sse(P, L, C)); if (same) break;
+  }
+  return { C, L, sse: sse(P, L, C), hist, iters: it + 1 };
+}
+function pickDistinct(n, k, rng) { const idx = [...Array(n).keys()]; for (let i = 0; i < k; i++) { const j = i + Math.floor(rng() * (n - i)); [idx[i], idx[j]] = [idx[j], idx[i]]; } return idx.slice(0, k); }
+function initRandom(P, k, rng) { return pickDistinct(P.length, k, rng).map(i => P[i].slice()); }
+function ppProbs(P, C) { const D = P.map(p => nearest(p, C)[1]); const s = D.reduce((a, b) => a + b, 0); return s > 0 ? D.map(d => d / s) : D.map(() => 1 / P.length); }
+function ppPick(P, C, rng) { const pr = ppProbs(P, C); let r = rng(), a = 0; for (let i = 0; i < pr.length; i++) { a += pr[i]; if (r < a) return i; } return pr.length - 1; }
+function initPP(P, k, rng) { const C = [P[Math.floor(rng() * P.length)].slice()]; while (C.length < k) C.push(P[ppPick(P, C, rng)].slice()); return C; }
+function bestOf(P, k, n, rng, init) { let best = null; for (let t = 0; t < n; t++) { const r = lloyd(P, (init || initPP)(P, k, rng)); if (!best || r.sse < best.sse) best = r; } return best; }
+function silhouette(P, L, k) {
+  let tot = 0;
+  for (let i = 0; i < P.length; i++) {
+    const sum = new Array(k).fill(0), cnt = new Array(k).fill(0);
+    for (let j = 0; j < P.length; j++) if (j !== i) { sum[L[j]] += Math.sqrt(d2(P[i], P[j])); cnt[L[j]]++; }
+    if (cnt[L[i]] === 0) continue;
+    const a = sum[L[i]] / cnt[L[i]]; let b = Infinity;
+    for (let c = 0; c < k; c++) if (c !== L[i] && cnt[c]) b = Math.min(b, sum[c] / cnt[c]);
+    tot += (b - a) / Math.max(a, b);
+  }
+  return tot / P.length;
+}
+function standardise(P) {
+  const n = P.length, dim = P[0].length, m = new Array(dim).fill(0), v = new Array(dim).fill(0);
+  P.forEach(p => p.forEach((x, d) => m[d] += x / n)); P.forEach(p => p.forEach((x, d) => v[d] += (x - m[d]) ** 2 / n));
+  return P.map(p => p.map((x, d) => (x - m[d]) / Math.sqrt(v[d])));
+}
+
+// ------------------------------------------------------------------ canvas with crisp scaling and pointer mapping
+class Cv {
+  constructor(el, W, H, draw) { this.el = el; this.W = W; this.H = H; this.drawFn = draw; el.style.width = W + 'px'; el.style.height = H + 'px'; this.ctx = el.getContext('2d'); CVS.push(this); this.fit(); }
+  fit() { const sc = Math.max(1, SCALE * (window.devicePixelRatio || 1)); this.el.width = Math.round(this.W * sc); this.el.height = Math.round(this.H * sc); this.ctx.setTransform(sc, 0, 0, sc, 0, 0); this.draw(); }
+  draw() { const c = this.ctx; c.clearRect(0, 0, this.W, this.H); if (this.drawFn) this.drawFn(c, this); }
+  pos(e) { const r = this.el.getBoundingClientRect(); return [(e.clientX - r.left) * this.W / r.width, (e.clientY - r.top) * this.H / r.height]; }
+  drag(down, move, up) {
+    const el = this.el; el.style.touchAction = 'none'; let on = false;
+    el.addEventListener('pointerdown', e => { const [x, y] = this.pos(e); if (down(x, y, e)) { on = true; el.setPointerCapture(e.pointerId); e.preventDefault(); } });
+    el.addEventListener('pointermove', e => { const [x, y] = this.pos(e); if (on) move(x, y, e); else if (this.hover) this.hover(x, y, e); });
+    const end = e => { if (on) { on = false; if (up) up(e); } };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('pointerleave', () => { if (this.leave) this.leave(); });
+  }
+}
+
+class Plot {
+  constructor(x, y, w, h, xr, yr) { Object.assign(this, { x, y, w, h, xr, yr }); }
+  X(v) { return this.x + (v - this.xr[0]) / (this.xr[1] - this.xr[0]) * this.w; }
+  Y(v) { return this.y + this.h - (v - this.yr[0]) / (this.yr[1] - this.yr[0]) * this.h; }
+  ix(px) { return this.xr[0] + (px - this.x) / this.w * (this.xr[1] - this.xr[0]); }
+  iy(py) { return this.yr[0] + (this.y + this.h - py) / this.h * (this.yr[1] - this.yr[0]); }
+  frame(c, o) {
+    o = o || {};
+    c.fillStyle = o.bg || '#FFFFFF'; c.fillRect(this.x, this.y, this.w, this.h);
+    const tx = o.tx || [0, 2, 4, 6, 8, 10], ty = o.ty || [0, 2, 4, 6, 8, 10];
+    c.strokeStyle = GRIDC; c.lineWidth = 2; c.beginPath();
+    tx.forEach(v => { c.moveTo(this.X(v), this.y); c.lineTo(this.X(v), this.y + this.h); });
+    ty.forEach(v => { c.moveTo(this.x, this.Y(v)); c.lineTo(this.x + this.w, this.Y(v)); });
+    c.stroke();
+    c.strokeStyle = LN; c.lineWidth = 2; c.strokeRect(this.x, this.y, this.w, this.h);
+    c.fillStyle = MU; c.font = '22px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'center'; c.textBaseline = 'top';
+    tx.forEach(v => c.fillText(o.fx ? o.fx(v) : v, this.X(v), this.y + this.h + 8));
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    ty.forEach(v => c.fillText(o.fy ? o.fy(v) : v, this.x - 10, this.Y(v)));
+    c.font = '24px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'center'; c.textBaseline = 'top';
+    if (o.xl) c.fillText(o.xl, this.x + this.w / 2, this.y + this.h + 36);
+    if (o.yl) { c.save(); c.translate(this.x - 62, this.y + this.h / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'bottom'; c.fillText(o.yl, 0, 6); c.restore(); }
+  }
+}
+
+// ------------------------------------------------------------------ markers
+function shapePath(c, s, x, y, r) {
+  c.beginPath();
+  const poly = (n, rot, rr) => { for (let i = 0; i < n; i++) { const a = rot + i * 2 * Math.PI / n; const px = x + rr * Math.cos(a), py = y + rr * Math.sin(a); i ? c.lineTo(px, py) : c.moveTo(px, py); } c.closePath(); };
+  switch (s % 8) {
+    case 0: c.arc(x, y, r, 0, 7); break;
+    case 1: c.rect(x - r * .88, y - r * .88, r * 1.76, r * 1.76); break;
+    case 2: poly(3, -Math.PI / 2, r * 1.25); break;
+    case 3: poly(4, 0, r * 1.3); break;
+    case 4: poly(5, -Math.PI / 2, r * 1.15); break;
+    case 5: poly(6, 0, r * 1.1); break;
+    case 6: poly(3, Math.PI / 2, r * 1.25); break;
+    default: { const a = r * 1.15, b = r * .45; c.moveTo(x - b, y - a); c.lineTo(x + b, y - a); c.lineTo(x + b, y - b); c.lineTo(x + a, y - b); c.lineTo(x + a, y + b); c.lineTo(x + b, y + b); c.lineTo(x + b, y + a); c.lineTo(x - b, y + a); c.lineTo(x - b, y + b); c.lineTo(x - a, y + b); c.lineTo(x - a, y - b); c.lineTo(x - b, y - b); c.closePath(); }
+  }
+}
+function marker(c, s, x, y, r, fill, stroke, lw) { shapePath(c, s, x, y, r); if (fill) { c.fillStyle = fill; c.fill(); } if (stroke) { c.strokeStyle = stroke; c.lineWidth = lw || 2; c.stroke(); } }
+function centreMark(c, x, y, color, big, out) {
+  const r = big || 15; c.lineCap = 'round';
+  c.strokeStyle = out || INK; c.lineWidth = 12; c.beginPath(); c.moveTo(x - r, y - r); c.lineTo(x + r, y + r); c.moveTo(x - r, y + r); c.lineTo(x + r, y - r); c.stroke();
+  c.strokeStyle = color; c.lineWidth = 6; c.stroke();
+  c.lineCap = 'butt';
+}
+
+// shade the plane by nearest centre (opaque tints, so overlapping cells leave no seams)
+const _tint = {};
+function tint(hex, a) { const k = hex + a; if (_tint[k]) return _tint[k]; const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, m = v => Math.round(255 + (v - 255) * a); return _tint[k] = 'rgb(' + m(r) + ',' + m(g) + ',' + m(b) + ')'; }
+function shade(c, pl, C, step) {
+  step = step || 12; c.save(); c.beginPath(); c.rect(pl.x, pl.y, pl.w, pl.h); c.clip();
+  for (let px = pl.x; px < pl.x + pl.w; px += step) for (let py = pl.y; py < pl.y + pl.h; py += step) {
+    const j = nearest([pl.ix(px + step / 2), pl.iy(py + step / 2)], C)[0]; c.fillStyle = tint(COL[j % 8], 0.14); c.fillRect(px, py, step + 1, step + 1);
+  }
+  c.restore();
+}
+
+// generic scatter of clustered points
+function drawPts(c, pl, P, o) {
+  o = o || {};
+  const r = o.r || 11;
+  if (o.shade && o.C) shade(c, pl, o.C);
+  if (o.lines && o.C && o.L) { c.lineWidth = 2; P.forEach((p, i) => { c.strokeStyle = COL[o.L[i] % 8] + '88'; c.beginPath(); c.moveTo(pl.X(p[0]), pl.Y(p[1])); c.lineTo(pl.X(o.C[o.L[i]][0]), pl.Y(o.C[o.L[i]][1])); c.stroke(); }); }
+  if (o.trails) o.trails.forEach((tr, j) => {
+    c.strokeStyle = COL[j % 8]; c.globalAlpha = .55; c.lineWidth = 3; c.setLineDash([8, 7]); c.beginPath();
+    tr.forEach((q, i) => i ? c.lineTo(pl.X(q[0]), pl.Y(q[1])) : c.moveTo(pl.X(q[0]), pl.Y(q[1]))); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+    tr.slice(0, -1).forEach(q => { c.beginPath(); c.arc(pl.X(q[0]), pl.Y(q[1]), 6, 0, 7); c.fillStyle = '#fff'; c.fill(); c.strokeStyle = COL[j % 8]; c.lineWidth = 3; c.stroke(); });
+  });
+  P.forEach((p, i) => {
+    const x = pl.X(p[0]), y = pl.Y(p[1]), l = o.L ? o.L[i] : -1;
+    const sh = o.shapeBy ? o.shapeBy[i] : (l >= 0 ? l : 0);
+    const rr = o.rad ? o.rad[i] : r;
+    marker(c, sh, x, y, rr, l >= 0 ? COL[l % 8] : NEUTRAL, '#fff', 2.5);
+    if (o.hi === i) { c.beginPath(); c.arc(x, y, rr + 8, 0, 7); c.strokeStyle = INK; c.lineWidth = 3; c.stroke(); }
+  });
+  if (o.C) o.C.forEach((q, j) => centreMark(c, pl.X(q[0]), pl.Y(q[1]), COL[j % 8], o.cr, o.cout));
+}
+
+// ------------------------------------------------------------------ small chart helpers
+function lineChart(c, x, y, w, h, xs, ys, o) {
+  o = o || {};
+  const xmin = o.xmin !== undefined ? o.xmin : Math.min(...xs), xmax = o.xmax !== undefined ? o.xmax : Math.max(...xs);
+  const ymin = o.ymin !== undefined ? o.ymin : 0, ymax = o.ymax !== undefined ? o.ymax : Math.max(...ys.filter(v => v !== null)) * 1.08;
+  const X = v => x + (v - xmin) / (xmax - xmin || 1) * w, Y = v => y + h - (v - ymin) / (ymax - ymin || 1) * h;
+  c.fillStyle = '#fff'; c.fillRect(x, y, w, h); c.strokeStyle = LN; c.lineWidth = 2; c.strokeRect(x, y, w, h);
+  c.fillStyle = MU; c.font = '20px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'center'; c.textBaseline = 'top';
+  (o.xt || xs).forEach(v => c.fillText(o.fx ? o.fx(v) : v, X(v), y + h + 6));
+  c.textAlign = 'right'; c.textBaseline = 'middle'; (o.yt || []).forEach(v => { c.fillText(o.fy ? o.fy(v) : v, x - 8, Y(v)); c.strokeStyle = GRIDC; c.beginPath(); c.moveTo(x, Y(v)); c.lineTo(x + w, Y(v)); c.stroke(); });
+  c.strokeStyle = o.color || BLUE; c.lineWidth = 4; c.lineJoin = 'round'; c.beginPath(); let st = false;
+  xs.forEach((v, i) => { if (ys[i] === null) return; st ? c.lineTo(X(v), Y(ys[i])) : (c.moveTo(X(v), Y(ys[i])), st = true); }); c.stroke();
+  xs.forEach((v, i) => { if (ys[i] === null) return; c.beginPath(); c.arc(X(v), Y(ys[i]), o.hi === v ? 9 : 5.5, 0, 7); c.fillStyle = o.hi === v ? OR : (o.color || BLUE); c.fill(); if (o.hi === v) { c.strokeStyle = INK; c.lineWidth = 3; c.stroke(); } });
+  if (o.title) { c.fillStyle = INK; c.font = '700 22px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText(o.title, x + w - 12, y + 8); }
+  return { X, Y };
+}
+
+// ------------------------------------------------------------------ deck engine
+const slides = $$('.slide'), NS = slides.length;
+let cur = 0, stp = 0;
+const ENTER = {};      // slide id -> function called when the slide appears
+const STEP = {};       // slide id -> {pos, max, next, prev}: slides whose arrow keys step through a worked example first
+const LEAVE = {};
+slides.forEach(s => { s._f = $$('.f', s); s._f.forEach((e, i) => { e._at = e.dataset.at ? +e.dataset.at : i + 1; }); s._max = s._f.length ? Math.max(...s._f.map(e => e._at)) : 0; s._id = s.dataset.id; s._title = ($('h2', s) || $('h1', s) || { textContent: s._id }).textContent.replace(/\s+/g, ' ').trim(); });
+
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080); SCALE = s;
+  const st = $('#stage'); st.style.transform = 'translate(' + ((innerWidth - 1920 * s) / 2) + 'px,' + ((innerHeight - 1080 * s) / 2) + 'px) scale(' + s + ')';
+  CVS.forEach(c => c.fit());
+}
+function render(noHash) {
+  const prevOn = slides.findIndex(s => s.classList.contains('on'));
+  slides.forEach((s, i) => s.classList.toggle('on', i === cur));
+  const s = slides[cur]; s._f.forEach(e => e.classList.toggle('on', e._at <= stp));
+  const stw = STEP[s._id]; $('#cnt').textContent = (cur + 1) + ' / ' + NS + (s._max ? '  ·  step ' + stp + '/' + s._max : '') + (stw ? '  ·  step ' + stw.pos() + '/' + stw.max() : '');
+  $('#prog').style.width = ((cur + (s._max ? stp / s._max : 1)) / NS * 100) + '%';
+  $$('#navL li').forEach((li, i) => li.classList.toggle('on', i === cur));
+  const nt = $('.notes', s); $('#notesTxt').textContent = nt ? nt.textContent.trim() : '';
+  if (!noHash) { try { history.replaceState(null, '', '#' + (cur + 1) + (stp ? '.' + stp : '')); } catch (e) { } }
+  if (prevOn !== cur) { if (prevOn >= 0 && LEAVE[slides[prevOn]._id]) LEAVE[slides[prevOn]._id](); if (ENTER[s._id]) ENTER[s._id](); }
+  CVS.forEach(c => { if (c.el.closest('.slide') === s) c.draw(); });
+}
+function next() { const w = STEP[slides[cur]._id]; if (stp < slides[cur]._max) stp++; else if (w && w.pos() < w.max()) { w.next(); render(true); return; } else if (cur < NS - 1) { cur++; stp = 0; } render(); }
+function prev() { const w = STEP[slides[cur]._id]; if (w && w.pos() > 0) { w.prev(); render(true); return; } if (stp > 0) stp--; else if (cur > 0) { cur--; stp = slides[cur]._max; } render(); }
+function go(i, s) { cur = Math.max(0, Math.min(NS - 1, i)); stp = Math.max(0, Math.min(slides[cur]._max, s || 0)); render(); }
+function toggleFs() { const d = document; if (!d.fullscreenElement) (d.documentElement.requestFullscreen || function () { }).call(d.documentElement); else d.exitFullscreen(); }
+
+function bootEngine() {
+  const li = slides.map((s, i) => '<li data-i="' + i + '"><b>' + (i + 1) + '</b>' + s._title + '</li>').join('');
+  $('#navL').innerHTML = li;
+  $('#navL').addEventListener('click', e => { const l = e.target.closest('li'); if (l) { go(+l.dataset.i); $('#nav').classList.remove('on'); } });
+  $('#bPrev').onclick = () => prev(); $('#bNext').onclick = () => next();
+  $('#bNav').onclick = () => $('#nav').classList.toggle('on'); $('#bNotes').onclick = () => $('#notes').classList.toggle('on'); $('#bFs').onclick = toggleFs;
+  $('#navX').onclick = () => $('#nav').classList.remove('on');
+  addEventListener('keydown', e => {
+    const t = e.target.tagName; if (t === 'INPUT' || t === 'SELECT' || t === 'TEXTAREA') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if ((k === ' ' || k === 'Enter') && t === 'BUTTON') return;
+    if (k === 'ArrowRight' || k === 'PageDown' || k === ' ') { next(); e.preventDefault(); }
+    else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'Backspace') { prev(); e.preventDefault(); }
+    else if (k === 'Home') go(0); else if (k === 'End') go(NS - 1, slides[NS - 1]._max);
+    else if (k === 'f' || k === 'F') toggleFs(); else if (k === 'n' || k === 'N') $('#notes').classList.toggle('on');
+    else if (k === 'Escape') { $('#nav').classList.remove('on'); $('#notes').classList.remove('on'); }
+  });
+  $('#stage').addEventListener('click', e => {
+    if (e.target.closest('.w,button,input,select,a,label,.noadv')) return;
+    const r = $('#stage').getBoundingClientRect(); if ((e.clientX - r.left) / r.width < .18) prev(); else next();
+  });
+  let hide; addEventListener('mousemove', () => { document.body.classList.add('show'); clearTimeout(hide); hide = setTimeout(() => document.body.classList.remove('show'), 2500); });
+  addEventListener('click', e => { const b = e.target.closest('button'); if (b) setTimeout(() => b.blur(), 0); });
+  addEventListener('resize', fit); fit();
+  addEventListener('hashchange', () => { const m = location.hash.match(/#(\d+)(?:\.(\d+))?/); if (m) go(+m[1] - 1, +(m[2] || 0)); });
+  const m = location.hash.match(/#(\d+)(?:\.(\d+))?/); if (m) { cur = Math.min(NS - 1, +m[1] - 1); stp = Math.min(slides[cur]._max, +(m[2] || 0)); }
+  render(true);
+}
+
+// ================================================================== shared helpers for the widgets
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const SPL = new Plot(76, 22, 676, 676, [0, 10], [0, 10]);      // plot area inside the 780 x 770 student canvases
+const SPO = { xl: 'hours studied', yl: 'mock-test score' };
+function chips(el, L, k) {
+  const n = new Array(k).fill(0); L.forEach(l => n[l]++);
+  el.innerHTML = n.map((c, j) => '<span class="chip"><span class="dot" style="background:' + COL[j] + '"></span>cluster ' + (j + 1) + ': ' + c + '</span>').join('');
+}
+function roundRect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function nearIndex(pl, P, x, y, maxd) { let b = -1, bd = maxd * maxd; P.forEach((p, i) => { const d = (pl.X(p[0]) - x) ** 2 + (pl.Y(p[1]) - y) ** 2; if (d < bd) { bd = d; b = i; } }); return b; }
+// the best clustering for k = 1..8 on the students (used by several slides)
+const BESTK = [null]; for (let k = 1; k <= 8; k++) BESTK.push(bestOf(STU, k, 300, mulberry32(100 + k)));
+const SIL = BESTK.map((r, k) => (k >= 2 ? silhouette(STU, r.L, k) : null));   // index = k
+
+// ================================================================== 1 cover: the algorithm running by itself
+function initCover() {
+  const rng = mulberry32(5), P = [];
+  [[2.8, 3.0], [7.4, 3.6], [5.0, 7.6]].forEach(c => { for (let i = 0; i < 20; i++) P.push([clamp(c[0] + gauss(rng) * .85, .3, 9.7), clamp(c[1] + gauss(rng) * .85, .3, 9.7)]); });
+  const pl = new Plot(24, 24, 700, 700, [0, 10], [0, 10]);
+  let C = null, L = null, trails = null, phase = 'init', timer = null;
+  const cv = new Cv($('#cv-cover'), 748, 748, draw);
+  function restart() { C = initRandom(P, 3, mulberry32((Math.random() * 1e9) | 0)); L = null; trails = C.map(c => [c.slice()]); phase = 'init'; }
+  function tick() {
+    if (phase === 'init' || phase === 'updated') { const L2 = assign(P, C); const same = L && sameLabels(L, L2); L = L2; phase = same ? 'done' : 'assigned'; return same ? 2200 : 900; }
+    if (phase === 'assigned') { const C2 = means(P, L, C); trails.forEach((t, j) => t.push(C2[j].slice())); C = C2; phase = 'updated'; return 900; }
+    restart(); return 900;
+  }
+  function loop() { const d = tick(); cv.draw(); timer = setTimeout(loop, d); }
+  function draw(c) {
+    c.fillStyle = '#1F3253'; c.fillRect(0, 0, 748, 748);
+    c.strokeStyle = '#2D4673'; c.lineWidth = 2; c.beginPath(); for (let v = 2; v < 10; v += 2) { c.moveTo(pl.X(v), 24); c.lineTo(pl.X(v), 724); c.moveTo(24, pl.Y(v)); c.lineTo(724, pl.Y(v)); } c.stroke();
+    drawPts(c, pl, P, { L, C, trails: phase === 'init' ? null : trails, r: 10, cout: '#EEF2F4' });
+  }
+  restart(); cv.draw();
+  ENTER.cover = () => { restart(); cv.draw(); clearTimeout(timer); timer = setTimeout(loop, 1000); };
+  LEAVE.cover = () => clearTimeout(timer);
+  if (slides[cur]._id === 'cover') ENTER.cover();
+}
+
+// ================================================================== 2 data
+function initData() {
+  let hi = -1;
+  const cv = new Cv($('#cv-data'), 780, 770, c => {
+    SPL.frame(c, SPO); drawPts(c, SPL, STU, { hi });
+    if (hi >= 0) {
+      const p = STU[hi], x = SPL.X(p[0]), y = SPL.Y(p[1]), txt = 'student ' + (hi + 1) + ': ' + p[0].toFixed(1) + ' h, score ' + p[1].toFixed(1);
+      c.font = '700 22px "Atkinson Hyperlegible",system-ui,sans-serif'; const w = c.measureText(txt).width + 26;
+      const bx = clamp(x - w / 2, SPL.x + 4, SPL.x + SPL.w - w - 4); let by = y - 56; if (by < SPL.y + 4) by = y + 24;
+      c.fillStyle = INK; roundRect(c, bx, by, w, 38, 10); c.fill(); c.fillStyle = '#fff'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(txt, bx + 13, by + 20);
+    }
+  });
+  cv.hover = (x, y) => { const h = nearIndex(SPL, STU, x, y, 20); if (h !== hi) { hi = h; cv.draw(); } };
+  cv.leave = () => { if (hi !== -1) { hi = -1; cv.draw(); } };
+  cv.drag(() => false, () => { }, () => { });
+  $$('#kvote .b').forEach(b => b.onclick = () => {
+    $$('#kvote .b').forEach(x => x.classList.toggle('sel', x === b));
+    const k = +b.dataset.k, m = $('#kmsg'); m.style.visibility = 'visible';
+    m.innerHTML = 'Seeing <b>' + k + ' groups</b> really means there are at least <b>' + k + ' reference points</b>, and the other students sit close to one of them. These reference points are the <b>centres</b> that k-means looks for.';
+  });
+}
+
+// ================================================================== 3 pick three centres
+function initPlace() {
+  const C0 = [[5, 9], [5, 5], [5, 1]]; let C = C0.map(c => c.slice()), sh = false, d = -1;
+  const sizes = () => chips($('#pl-sizes'), assign(STU, C), 3);
+  const cv = new Cv($('#cv-place'), 780, 770, c => { SPL.frame(c, SPO); drawPts(c, SPL, STU, { L: assign(STU, C), C, shade: sh }); });
+  cv.drag((x, y) => { let b = -1, bd = 52 * 52; C.forEach((q, j) => { const e = (SPL.X(q[0]) - x) ** 2 + (SPL.Y(q[1]) - y) ** 2; if (e < bd) { bd = e; b = j; } }); d = b; return b >= 0; },
+    (x, y) => { C[d] = [clamp(SPL.ix(x), 0, 10), clamp(SPL.iy(y), 0, 10)]; cv.draw(); sizes(); }, () => { d = -1; });
+  $('#pl-reset').onclick = () => { C = C0.map(c => c.slice()); cv.draw(); sizes(); };
+  $('#pl-shade').onclick = () => { sh = !sh; $('#pl-shade').classList.toggle('sel', sh); cv.draw(); };
+  sizes();
+}
+
+// ================================================================== 4 the SSE challenge
+function initScore() {
+  const best = bestOf(STU, 3, 40, mulberry32(3)).sse; $('#sc-best').textContent = best.toFixed(1);
+  const C0 = [[3.5, 3.5], [6.5, 6.5], [8, 2.5]]; let C = C0.map(c => c.slice()), lines = false, d = -1;
+  function read() {
+    const L = assign(STU, C), s = sse(STU, L, C), r = s / best;
+    $('#sc-your').textContent = s.toFixed(1); $('#sc-bar').style.width = clamp(100 / r, 2, 100) + '%';
+    $('#sc-msg').textContent = r < 1.02 ? 'As good as k-means.' : r < 1.1 ? 'Almost there: within 10% of the best.' : r < 2 ? 'Getting closer.' : 'Far away: put one centre in the middle of each group.';
+  }
+  const cv = new Cv($('#cv-score'), 780, 770, c => { SPL.frame(c, SPO); const L = assign(STU, C); drawPts(c, SPL, STU, { L, C, lines }); });
+  cv.drag((x, y) => { let b = -1, bd = 52 * 52; C.forEach((q, j) => { const e = (SPL.X(q[0]) - x) ** 2 + (SPL.Y(q[1]) - y) ** 2; if (e < bd) { bd = e; b = j; } }); d = b; return b >= 0; },
+    (x, y) => { C[d] = [clamp(SPL.ix(x), 0, 10), clamp(SPL.iy(y), 0, 10)]; cv.draw(); read(); }, () => { d = -1; });
+  $('#sc-lines').onclick = () => { lines = !lines; $('#sc-lines').classList.toggle('sel', lines); cv.draw(); };
+  $('#sc-reset').onclick = () => { C = C0.map(c => c.slice()); cv.draw(); read(); };
+  read();
+}
+
+// ================================================================== 5 the best centre is the mean
+function initMean() {
+  const xs = [2, 3, 5, 8, 12], mean = 6; let c = 9, snapped = false, anim = null;
+  const X = v => 60 + v / 14 * 800, sseAt = v => xs.reduce((a, x) => a + (x - v) ** 2, 0), cy = v => 722 - v / 420 * 210;
+  const cv = new Cv($('#cv-mean'), 920, 770, ctx => {
+    ctx.font = '700 22px "Atkinson Hyperlegible",system-ui,sans-serif'; ctx.fillStyle = MU; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('squared distances: area of each square', 30, 18);
+    let x = 50; const base = 300;
+    xs.forEach((v, i) => {
+      const d = Math.abs(v - c), s = d * 20;
+      ctx.fillStyle = COL[i] + '66'; ctx.fillRect(x, base - s, s, s); ctx.strokeStyle = COL[i]; ctx.lineWidth = 3; ctx.strokeRect(x, base - s, s, s);
+      ctx.fillStyle = INK; ctx.font = '600 22px "JetBrains Mono",monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText((d * d).toFixed(1), x + Math.max(s, 40) / 2, base - s - 6);
+      x += Math.max(s, 40) + 22;
+    });
+    // distances on the number line
+    ctx.lineCap = 'round';
+    xs.forEach((v, i) => {
+      const y = 330 + i * 15; ctx.strokeStyle = COL[i]; ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(X(v), y); ctx.lineTo(X(c), y); ctx.stroke();
+      ctx.strokeStyle = COL[i] + '66'; ctx.lineWidth = 2; ctx.setLineDash([4, 5]); ctx.beginPath(); ctx.moveTo(X(v), y); ctx.lineTo(X(v), 420); ctx.stroke(); ctx.setLineDash([]);
+    });
+    ctx.lineCap = 'butt';
+    ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X(0), 420); ctx.lineTo(X(14), 420); ctx.stroke();
+    ctx.fillStyle = MU; ctx.font = '22px "Atkinson Hyperlegible",system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 0; v <= 14; v += 2) { ctx.beginPath(); ctx.moveTo(X(v), 414); ctx.lineTo(X(v), 428); ctx.stroke(); ctx.fillText(v, X(v), 434); }
+    xs.forEach((v, i) => { ctx.beginPath(); ctx.arc(X(v), 420, 13, 0, 7); ctx.fillStyle = COL[i]; ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke(); });
+    centreMark(ctx, X(c), 420, OR, 15);
+    // SSE against c
+    ctx.fillStyle = '#fff'; ctx.fillRect(60, 512, 800, 216); ctx.strokeStyle = LN; ctx.lineWidth = 2; ctx.strokeRect(60, 512, 800, 216);
+    ctx.fillStyle = MU; ctx.font = '700 22px "Atkinson Hyperlegible",system-ui,sans-serif'; ctx.textAlign = 'left'; ctx.fillText('SSE as the centre moves', 72, 520);
+    ctx.strokeStyle = BLUE; ctx.lineWidth = 4; ctx.beginPath(); for (let v = 0; v <= 14.01; v += .2) { v ? ctx.lineTo(X(v), cy(sseAt(v))) : ctx.moveTo(X(v), cy(sseAt(v))); } ctx.stroke();
+    if (snapped) { ctx.setLineDash([8, 7]); ctx.strokeStyle = ORT; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X(mean), 512); ctx.lineTo(X(mean), 728); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = ORT; ctx.font = '700 22px "Atkinson Hyperlegible",system-ui,sans-serif'; ctx.textAlign = 'left'; ctx.fillText('mean = 6: SSE = 66', X(mean) + 12, 548); }
+    ctx.beginPath(); ctx.arc(X(c), cy(sseAt(c)), 11, 0, 7); ctx.fillStyle = OR; ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.stroke();
+  });
+  function set(v) { c = clamp(Math.round(v * 10) / 10, 0, 14); $('#mn-slider').value = c; $('#mn-c').textContent = c.toFixed(1); $('#mn-sse').textContent = sseAt(c).toFixed(1); cv.draw(); }
+  cv.drag((x, y) => { if (y < 300) return false; set((x - 60) / 800 * 14); return true; }, x => set((x - 60) / 800 * 14), () => { });
+  $('#mn-slider').addEventListener('input', e => set(+e.target.value));
+  $('#mn-snap').onclick = () => {
+    snapped = true; const from = c, t0 = performance.now(); cancelAnimationFrame(anim);
+    const stepA = t => { const u = clamp((t - t0) / 500, 0, 1); set(from + (mean - from) * (1 - (1 - u) ** 3)); if (u < 1) anim = requestAnimationFrame(stepA); };
+    anim = requestAnimationFrame(stepA);
+  };
+  set(9);
+}
+
+// ================================================================== 7 k-means in action
+function initMain() {
+  const P = STU, FIRST = [5, 6, 12]; let S, sh = false, timer = null, running = false, ymax = 200, startC = FIRST.map(i => P[i].slice());
+  function reset(C0) {
+    clearTimeout(timer); running = false;
+    S = { C: C0.map(c => c.slice()), L: null, trails: C0.map(c => [c.slice()]), hist: [], iter: 0, phase: 'start', done: false };
+    ymax = sse(P, assign(P, S.C), S.C) * 1.1; upd();
+  }
+  function doAssign() { const L2 = assign(P, S.C); const same = S.L && sameLabels(S.L, L2); S.L = L2; S.hist.push({ v: sse(P, S.L, S.C), t: 'A' }); if (same) { S.done = true; S.phase = 'done'; } else S.phase = 'assigned'; }
+  function doUpdate() { const C2 = means(P, S.L, S.C); S.C.forEach((c, j) => S.trails[j].push(C2[j].slice())); S.C = C2; S.iter++; S.hist.push({ v: sse(P, S.L, S.C), t: 'U' }); S.phase = 'updated'; }
+  function step() { if (S.done) return; if (S.phase === 'start' || S.phase === 'updated') doAssign(); else doUpdate(); upd(); }
+  const cv = new Cv($('#cv-main'), 780, 770, c => { if (!S) return; SPL.frame(c, SPO); drawPts(c, SPL, P, { L: S.L, C: S.C, trails: S.trails.some(t => t.length > 1) ? S.trails : null, shade: sh && S.phase !== 'start' }); });
+  const ch = new Cv($('#cv-mainchart'), 832, 270, c => {
+    if (!S) return;
+    const n = Math.max(7, S.hist.length), xs = S.hist.map((h, i) => i), ys = S.hist.map(h => h.v);
+    const g = lineChart(c, 70, 40, 740, 170, xs.length ? xs : [0], xs.length ? ys : [null], { xmin: 0, xmax: n - 1, ymin: 0, ymax, xt: [], yt: [0, Math.round(ymax / 2 / 10) * 10, Math.round(ymax / 10) * 10], title: 'SSE after each step' });
+    S.hist.forEach((h, i) => { c.beginPath(); c.arc(g.X(i), g.Y(h.v), 8, 0, 7); c.fillStyle = h.t === 'A' ? BLUE : OR; c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 2; c.stroke(); });
+    c.font = '20px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'left';
+    c.fillStyle = BLUE; c.beginPath(); c.arc(450, 24, 7, 0, 7); c.fill(); c.fillStyle = MU; c.fillText('after Assign', 464, 24);
+    c.fillStyle = OR; c.beginPath(); c.arc(610, 24, 7, 0, 7); c.fill(); c.fillStyle = MU; c.fillText('after Update', 624, 24);
+    c.fillStyle = MU; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('step', 440, 234);
+  });
+  function upd() {
+    const s = S.hist.length ? S.hist[S.hist.length - 1].v : null;
+    let t;
+    if (S.phase === 'start') t = '<b>Start.</b> Three students are the starting centres. Press <b>Assign</b>.';
+    else if (S.phase === 'assigned') t = '<b>Assigned.</b> Each student took the colour of its nearest centre. SSE = <b class="mono">' + s.toFixed(1) + '</b>. Press <b>Update</b>.';
+    else if (S.phase === 'updated') t = '<b>Updated.</b> Each centre moved to the mean of its students. SSE = <b class="mono">' + s.toFixed(1) + '</b>. Press <b>Assign</b>.';
+    else t = '<b>Converged</b> after ' + S.iter + ' updates: no student changed cluster. Final SSE = <b class="mono">' + s.toFixed(1) + '</b>.';
+    $('#km-phase').innerHTML = t;
+    $('#km-assign').disabled = S.done || !(S.phase === 'start' || S.phase === 'updated');
+    $('#km-update').disabled = S.done || S.phase !== 'assigned';
+    $('#km-step').disabled = S.done || running; $('#km-run').disabled = S.done || running;
+    $('#km-run').textContent = running ? 'Running…' : 'Run';
+    const L = S.L || assign(P, S.C), n = new Array(3).fill(0), cs = new Array(3).fill(0); P.forEach((p, i) => { n[L[i]]++; cs[L[i]] += d2(p, S.C[L[i]]); });
+    $('#km-table').innerHTML = '<table class="tb"><tr><th>cluster</th><th>centre (hours, score)</th><th>students</th><th>cluster SSE</th></tr>' + S.C.map((c, j) =>
+      '<tr><td><span class="dot" style="background:' + COL[j] + ';vertical-align:middle"></span> ' + (j + 1) + '</td><td>(' + c[0].toFixed(2) + ', ' + c[1].toFixed(2) + ')</td><td>' + (S.L ? n[j] : '–') + '</td><td>' + (S.L ? cs[j].toFixed(1) : '–') + '</td></tr>').join('') + '</table>';
+    cv.draw(); ch.draw();
+  }
+  function run() { if (S.done) { running = false; upd(); return; } running = true; step(); if (!S.done) timer = setTimeout(run, 700); else { running = false; upd(); } }
+  $('#km-assign').onclick = () => { if (!(S.phase === 'start' || S.phase === 'updated') || S.done) return; doAssign(); upd(); };
+  $('#km-update').onclick = () => { if (S.phase !== 'assigned') return; doUpdate(); upd(); };
+  $('#km-step').onclick = step; $('#km-run').onclick = () => { if (!running) run(); };
+  $('#km-reset').onclick = () => reset(startC); $('#km-new').onclick = () => { startC = initRandom(P, 3, Math.random); reset(startC); };
+  $('#km-shade').onclick = () => { sh = !sh; $('#km-shade').classList.toggle('sel', sh); cv.draw(); };
+  reset(startC);
+  window.__km = () => S;
+}
+
+// ================================================================== 8 by hand
+function initHand() {
+  const H = [[1, 1], [2, 1], [1, 2], [6, 5], [7, 6], [8, 5]]; let C = [H[0].slice(), H[1].slice()]; const its = [];
+  for (let g = 0; g < 8; g++) {
+    const D = H.map(p => C.map(c => Math.sqrt(d2(p, c)))), L = D.map(r => r[0] <= r[1] ? 0 : 1), Cn = means(H, L, C);
+    its.push({ C: C.map(c => c.slice()), D, L, Cn, sse: sse(H, L, C) });
+    if (C.every((c, j) => Math.abs(c[0] - Cn[j][0]) < 1e-9 && Math.abs(c[1] - Cn[j][1]) < 1e-9)) break; C = Cn;
+  }
+  const last = its.length * 2; let s = 0;
+  const pl = new Plot(52, 22, 520, 520, [0, 10], [0, 10]);
+  const cv = new Cv($('#cv-hand'), 596, 596, c => {
+    pl.frame(c, { tx: [0, 5, 10], ty: [0, 5, 10], xl: 'hours', yl: 'score' });
+    const i = s === 0 ? 0 : Math.floor((s - 1) / 2), ph = s === 0 ? 'start' : ((s - 1) % 2 === 0 ? 'assign' : 'update'), it = its[i];
+    H.forEach((p, k) => { marker(c, ph === 'start' ? 0 : it.L[k], pl.X(p[0]), pl.Y(p[1]), 12, ph === 'start' ? NEUTRAL : COL[it.L[k]], '#fff', 2.5); c.fillStyle = INK; c.font = '700 20px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(k + 1, pl.X(p[0]) + 12, pl.Y(p[1]) - 8); });
+    const cur = it.C;
+    if (ph === 'update') {
+      it.C.forEach((q, j) => { c.beginPath(); c.arc(pl.X(q[0]), pl.Y(q[1]), 11, 0, 7); c.strokeStyle = COL[j]; c.lineWidth = 4; c.setLineDash([5, 4]); c.stroke(); c.setLineDash([]); c.strokeStyle = COL[j]; c.beginPath(); c.moveTo(pl.X(q[0]), pl.Y(q[1])); c.lineTo(pl.X(it.Cn[j][0]), pl.Y(it.Cn[j][1])); c.stroke(); centreMark(c, pl.X(it.Cn[j][0]), pl.Y(it.Cn[j][1]), COL[j], 13); });
+    } else cur.forEach((q, j) => centreMark(c, pl.X(q[0]), pl.Y(q[1]), COL[j], 13));
+  });
+  function f2(v) { return v.toFixed(2); }
+  function upd() {
+    const i = s === 0 ? 0 : Math.floor((s - 1) / 2), ph = s === 0 ? 'start' : ((s - 1) % 2 === 0 ? 'assign' : 'update'), it = its[i];
+    $('#hd-state').textContent = s === 0 ? 'Start' : 'Iteration ' + (i + 1) + ' · ' + (ph === 'assign' ? 'Assign' : 'Update');
+    $('#hd-back').disabled = s === 0; $('#hd-next').disabled = s === last;
+    let rows = '', note = '';
+    H.forEach((p, k) => {
+      const d = it.D[k], j = it.L[k];
+      rows += '<tr><td>' + (k + 1) + '</td><td>(' + p[0] + ', ' + p[1] + ')</td>' +
+        (ph === 'start' ? '<td>–</td><td>–</td><td>–</td>' : '<td' + (j === 0 ? ' style="font-weight:700;color:' + COL[0] + '"' : '') + '>' + f2(d[0]) + '</td><td' + (j === 1 ? ' style="font-weight:700;color:' + COL[1] + '"' : '') + '>' + f2(d[1]) + '</td><td><span class="dot" style="background:' + COL[j] + ';vertical-align:middle"></span> ' + (j + 1) + '</td>') + '</tr>';
+    });
+    const c1 = it.C[0], c2 = it.C[1];
+    $('#hd-table').innerHTML = '<table class="tb"><tr><th>student</th><th>(hours, score)</th><th>to c₁ = (' + +c1[0].toFixed(2) + ', ' + +c1[1].toFixed(2) + ')</th><th>to c₂ = (' + +c2[0].toFixed(2) + ', ' + +c2[1].toFixed(2) + ')</th><th>joins</th></tr>' + rows + '</table>';
+    if (s === 0) note = '<b>Start:</b> the first two students are the centres, c₁ = (1, 1) and c₂ = (2, 1).';
+    else if (ph === 'assign') { const k = 3, d = it.D[k]; note = '<b>Assign:</b> distance = √(Δhours² + Δscore²). For student 4 to c₁: √((6−' + +c1[0].toFixed(2) + ')² + (5−' + +c1[1].toFixed(2) + ')²) = ' + f2(d[0]) + '. Each student joins the nearer centre.'; }
+    else {
+      const parts = [0, 1].map(j => { const m = H.filter((p, k) => it.L[k] === j); const sx = m.map(p => p[0]).join(' + '), sy = m.map(p => p[1]).join(' + '); return 'c' + (j ? '₂' : '₁') + ' = ((' + sx + ') ÷ ' + m.length + ', (' + sy + ') ÷ ' + m.length + ') = (' + f2(it.Cn[j][0]) + ', ' + f2(it.Cn[j][1]) + ')'; });
+      note = '<b>Update:</b> each centre becomes the mean of its students.<br>' + parts.join('<br>') + (s === last ? '<br><b>The centres did not move: stop.</b> SSE = ' + it.sse.toFixed(1) + '.' : '');
+    }
+    $('#hd-new').innerHTML = note; cv.draw();
+  }
+  $('#hd-next').onclick = () => { if (s < last) { s++; upd(); } }; $('#hd-back').onclick = () => { if (s > 0) { s--; upd(); } };
+  upd(); window.__hand = () => ({ its, s });
+  STEP.hand = { pos: () => s, max: () => last, next: () => { if (s < last) { s++; upd(); } }, prev: () => { if (s > 0) { s--; upd(); } } };
+}
+
+// ================================================================== 9 does it always stop
+function initStops() {
+  let runs = null, prog = 1, raf = null;
+  const cv = new Cv($('#cv-stops'), 848, 616, c => {
+    const pl = { x: 84, y: 40, w: 680, h: 500 }, maxN = runs ? Math.max(...runs.map(r => r.hist.length)) : 8, ymax = runs ? Math.max(300, Math.ceil(Math.max(...runs.map(r => Math.max(...r.hist))) / 100) * 100) : 300;
+    const X = i => pl.x + i / (maxN - 1) * pl.w, Y = v => pl.y + pl.h - v / ymax * pl.h;
+    c.fillStyle = '#fff'; c.fillRect(pl.x, pl.y, pl.w, pl.h); c.strokeStyle = LN; c.lineWidth = 2; c.strokeRect(pl.x, pl.y, pl.w, pl.h);
+    c.fillStyle = MU; c.font = '22px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = 0; v <= ymax; v += 100) { c.fillText(v, pl.x - 10, Y(v)); c.strokeStyle = GRIDC; c.beginPath(); c.moveTo(pl.x, Y(v)); c.lineTo(pl.x + pl.w, Y(v)); c.stroke(); }
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let i = 0; i < maxN; i++) c.fillText(i, X(i), pl.y + pl.h + 8);
+    c.fillText('iteration', pl.x + pl.w / 2, pl.y + pl.h + 38);
+    c.save(); c.translate(24, pl.y + pl.h / 2); c.rotate(-Math.PI / 2); c.fillText('SSE', 0, 0); c.restore();
+    if (!runs) { c.fillStyle = MU; c.font = '26px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textBaseline = 'middle'; c.fillText('press the button', pl.x + pl.w / 2, pl.y + pl.h / 2); return; }
+    const best = BESTK[3].sse; c.setLineDash([8, 7]); c.strokeStyle = ORT; c.lineWidth = 2; c.beginPath(); c.moveTo(pl.x, Y(best)); c.lineTo(pl.x + pl.w, Y(best)); c.stroke(); c.setLineDash([]);
+    c.fillStyle = ORT; c.font = '700 20px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText('best known ' + best.toFixed(1), pl.x + pl.w - 6, Y(best) - 4);
+    runs.forEach((r, j) => {
+      c.strokeStyle = COL[j]; c.lineWidth = 4; c.lineJoin = 'round'; c.beginPath();
+      const lim = prog * (r.hist.length - 1);
+      r.hist.forEach((v, i) => { if (i > lim + 1e-9) return; const x = X(i), y = Y(v); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke();
+      r.hist.forEach((v, i) => { if (i > lim + 1e-9) return; marker(c, j, X(i), Y(v), 6, COL[j], '#fff', 1.5); });
+      if (prog >= 1) { c.fillStyle = COL[j]; c.font = '700 20px "JetBrains Mono",monospace'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(r.sse.toFixed(1), X(r.hist.length - 1) + 12, Y(r.sse) + (j % 2 ? 10 : -10)); }
+    });
+  });
+  $('#st-run').onclick = () => {
+    runs = [31, 32, 33, 34, 35, 36].map(sd => lloyd(STU, initRandom(STU, 3, mulberry32(sd)))); prog = 0; const t0 = performance.now(); cancelAnimationFrame(raf);
+    const go = t => { prog = clamp((t - t0) / 1200, 0, 1); cv.draw(); if (prog < 1) raf = requestAnimationFrame(go); else done(); }; raf = requestAnimationFrame(go);
+    function done() { const u = [...new Set(runs.map(r => r.sse.toFixed(1)))]; $('#st-note').innerHTML = 'Every curve goes down and stops, but the six runs end at <b>' + u.length + '</b> different SSEs: ' + u.join(', ') + '.'; }
+  };
+  window.__stops = () => runs;
+}
+
+// ================================================================== 10 different starts, different answers
+function initMinima() {
+  const best = BESTK[3].sse; let runs = [], counter = 0, show = null;
+  const cv = new Cv($('#cv-min'), 780, 770, c => {
+    SPL.frame(c, SPO);
+    if (!show) { drawPts(c, SPL, STU, {}); c.fillStyle = MU; c.font = '28px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('press “Another random start”', SPL.x + SPL.w / 2, SPL.y + SPL.h - 40); return; }
+    drawPts(c, SPL, STU, { L: show.res.L, C: show.res.C });
+    show.init.forEach((q, j) => { c.beginPath(); c.arc(SPL.X(q[0]), SPL.Y(q[1]), 17, 0, 7); c.strokeStyle = COL[j]; c.lineWidth = 5; c.setLineDash([6, 5]); c.stroke(); c.setLineDash([]); c.fillStyle = '#ffffffaa'; c.fill(); });
+    show.init.forEach((q, j) => { c.strokeStyle = COL[j] + '99'; c.lineWidth = 3; c.setLineDash([3, 6]); c.beginPath(); c.moveTo(SPL.X(q[0]), SPL.Y(q[1])); c.lineTo(SPL.X(show.res.C[j][0]), SPL.Y(show.res.C[j][1])); c.stroke(); c.setLineDash([]); });
+    show.res.C.forEach((q, j) => centreMark(c, SPL.X(q[0]), SPL.Y(q[1]), COL[j], 15));
+  });
+  function one() { counter++; const rng = mulberry32((counter + 7) * 7919 + 13), init = initRandom(STU, 3, rng), res = lloyd(STU, init); const r = { n: counter, init, res }; runs.push(r); show = r; return r; }
+  function upd() {
+    const last = runs.slice(-6).reverse();
+    $('#mi-log').innerHTML = '<table class="tb"><tr><th>run</th><th>iterations</th><th>final SSE</th><th></th></tr>' + last.map(r => {
+      const ok = r.res.sse <= best * 1.0001, near = !ok && r.res.sse < best * 1.2;
+      return '<tr' + (r === show ? ' class="hl"' : '') + '><td>' + r.n + '</td><td>' + r.res.iters + '</td><td>' + r.res.sse.toFixed(1) + '</td><td style="color:' + (ok ? BLUE : ORT) + ';font-family:Atkinson Hyperlegible,sans-serif;font-weight:700">' + (ok ? 'best' : near ? 'one student off' : 'stuck') + '</td></tr>';
+    }).join('') + '</table>';
+    const nb = runs.filter(r => r.res.sse <= best * 1.0001).length;
+    $('#mi-sum').innerHTML = runs.length ? 'best so far <span>' + Math.min(...runs.map(r => r.res.sse)).toFixed(1) + '</span> · best reached in <span>' + nb + '</span> of <span>' + runs.length + '</span> runs' : '';
+    cv.draw();
+  }
+  $('#mi-one').onclick = () => { one(); upd(); }; $('#mi-many').onclick = () => { for (let i = 0; i < 20; i++) one(); upd(); };
+  $('#mi-clear').onclick = () => { runs = []; counter = 0; show = null; upd(); };
+  upd(); window.__minima = () => runs;
+}
+
+// ================================================================== 11 k-means++
+function initPPSlide() {
+  const best = BESTK[3].sse; let chosen = [], final = null, rng = Math.random;
+  const rad = () => { if (!chosen.length || chosen.length >= 3) return null; const pr = ppProbs(STU, chosen.map(i => STU[i])), mx = Math.max(...pr); return pr.map(p => 6 + 22 * Math.sqrt(p / mx)); };
+  const cv = new Cv($('#cv-pp'), 780, 770, c => {
+    SPL.frame(c, SPO);
+    if (final) { drawPts(c, SPL, STU, { L: final.L, C: final.C }); chosen.forEach((i, j) => { c.beginPath(); c.arc(SPL.X(STU[i][0]), SPL.Y(STU[i][1]), 19, 0, 7); c.strokeStyle = COL[j]; c.lineWidth = 5; c.setLineDash([6, 5]); c.stroke(); c.setLineDash([]); }); return; }
+    drawPts(c, SPL, STU, { rad: rad() });
+    chosen.forEach((i, j) => centreMark(c, SPL.X(STU[i][0]), SPL.Y(STU[i][1]), COL[j], 15));
+  });
+  function upd() {
+    $('#pp-add').disabled = chosen.length >= 3; $('#pp-run').disabled = chosen.length < 3;
+    $('#pp-stat').innerHTML = final ? 'k-means from these starts: SSE = <span>' + final.sse.toFixed(1) + '</span> after ' + final.iters + ' iterations' : (chosen.length < 3 ? 'centres chosen: <span>' + chosen.length + '</span> of 3' + (chosen.length ? ' · big dots are far from every centre so far' : '') : 'three centres chosen: press Run k-means');
+    cv.draw();
+  }
+  $('#pp-add').onclick = () => { if (chosen.length >= 3) return; chosen.push(chosen.length === 0 ? Math.floor(rng() * STU.length) : ppPick(STU, chosen.map(i => STU[i]), rng)); upd(); };
+  $('#pp-run').onclick = () => { if (chosen.length < 3) return; final = lloyd(STU, chosen.map(i => STU[i])); upd(); };
+  $('#pp-reset').onclick = () => { chosen = []; final = null; upd(); };
+  // comparison of 300 random starts with 300 k-means++ starts
+  let cmp = null;
+  const cc = new Cv($('#cv-ppcmp'), 832, 270, c => {
+    if (!cmp) { c.fillStyle = MU; c.font = '26px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText('share of runs that reach the best SSE (' + best.toFixed(1) + ')', 0, 8); return; }
+    c.fillStyle = INK; c.font = '700 26px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText('share of runs that reach the best SSE (' + best.toFixed(1) + ')', 0, 4);
+    [['random students', cmp.r, BLUE], ['k-means++', cmp.p, OR]].forEach(([lab, v, col], j) => {
+      const y = 54 + j * 84; c.fillStyle = MU; c.font = '24px "Atkinson Hyperlegible",system-ui,sans-serif'; c.fillText(lab, 0, y);
+      c.fillStyle = '#DCE4EA'; roundRect(c, 0, y + 32, 700, 28, 14); c.fill(); c.fillStyle = col; roundRect(c, 0, y + 32, Math.max(10, 700 * v.share), 28, 14); c.fill();
+      c.fillStyle = INK; c.font = '700 26px "JetBrains Mono",monospace'; c.textBaseline = 'middle'; c.fillText(Math.round(v.share * 100) + '%', 716, y + 46);
+      c.textBaseline = 'top';
+    });
+    c.fillStyle = MU; c.font = '24px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText('average final SSE:  random ' + cmp.r.mean.toFixed(1) + '  ·  k-means++ ' + cmp.p.mean.toFixed(1), 0, 226);
+  });
+  $('#pp-cmp').onclick = () => {
+    const rg = mulberry32(2024), a = { n: 0, s: 0 }, b = { n: 0, s: 0 }, N = 300;
+    for (let t = 0; t < N; t++) { const r1 = lloyd(STU, initRandom(STU, 3, rg)), r2 = lloyd(STU, initPP(STU, 3, rg)); a.s += r1.sse; b.s += r2.sse; if (r1.sse <= best * 1.0001) a.n++; if (r2.sse <= best * 1.0001) b.n++; }
+    cmp = { r: { share: a.n / N, mean: a.s / N }, p: { share: b.n / N, mean: b.s / N } }; cc.draw(); window.__cmp = cmp;
+  };
+  upd();
+}
+
+// ================================================================== 14b-d  six students: raw units, standardised, and the comparison
+const P6 = [[3, 75], [8, 55], [3, 40], [8, 30], [2, 45], [8, 65]], T6 = [0, 1, 0, 1, 0, 1];
+const M6 = [0, 1].map(d => P6.reduce((a, p) => a + p[d], 0) / 6), SD6 = [0, 1].map(d => Math.sqrt(P6.reduce((a, p) => a + (p[d] - M6[d]) ** 2, 0) / 6));
+const Z6 = P6.map(p => p.map((v, d) => (v - M6[d]) / SD6[d]));
+const SHARE_RAW6 = (SD6[0] ** 2) / (SD6[0] ** 2 + SD6[1] ** 2);
+function steps6(Q) {
+  let C = [Q[0].slice(), Q[1].slice()]; const its = [];
+  for (let g = 0; g < 8; g++) {
+    const D = Q.map(p => C.map(c => [(p[0] - c[0]) ** 2, (p[1] - c[1]) ** 2])), L = D.map(r => (r[0][0] + r[0][1]) <= (r[1][0] + r[1][1]) ? 0 : 1), Cn = means(Q, L, C);
+    its.push({ C: C.map(c => c.slice()), D, L, Cn });
+    if (C.every((c, j) => Math.abs(c[0] - Cn[j][0]) < 1e-9 && Math.abs(c[1] - Cn[j][1]) < 1e-9)) break; C = Cn;
+  }
+  return its;
+}
+const ITS6 = { raw: steps6(P6), std: steps6(Z6) };
+const agree6 = L => { const m = L.reduce((a, l, i) => a + (l === T6[i] ? 1 : 0), 0); return Math.max(m, 6 - m); };
+const PH = '#6C5CE7', PS = '#0E9AA7';      // colours of the hours part and the score part of a squared distance
+const sub1 = j => (j ? '₂' : '₁');
+
+function initScaleHand(pre, std) {
+  const Q = std ? Z6 : P6, its = ITS6[std ? 'std' : 'raw'], off = std ? 1 : 0, last = off + its.length * 2; let s = 0;
+  const f = v => (Math.abs(v - Math.round(v)) < 1e-9 && !std ? String(Math.round(v)) : (std || Math.abs(v * 100 - Math.round(v * 100)) > 1e-6 ? v.toFixed(2) : String(+v.toFixed(2)))).replace('-', '−');
+  const f2 = v => v.toFixed(2).replace('-', '−');
+  const pl = std ? new Plot(84, 24, 488, 488, [-2, 2], [-2, 2]) : new Plot(84, 24, 488, 488, [0, 10], [0, 100]);
+  const decode = () => { if (std && s === 0) return { ph: 'std', i: 0 }; const k = s - off; if (k === 0) return { ph: 'start', i: 0 }; return { ph: (k - 1) % 2 === 0 ? 'assign' : 'update', i: Math.floor((k - 1) / 2) }; };
+  const cv = new Cv($('#cv-' + pre), 596, 596, c => {
+    const o = std ? { tx: [-2, -1, 0, 1, 2], ty: [-2, -1, 0, 1, 2], fx: v => String(v).replace('-', '−'), fy: v => String(v).replace('-', '−'), xl: 'hours (standardised)', yl: 'score (standardised)' } : { tx: [0, 5, 10], ty: [0, 50, 100], xl: 'hours', yl: 'score' };
+    pl.frame(c, o);
+    const st = decode(), it = its[st.i], coloured = st.ph === 'assign' || st.ph === 'update';
+    Q.forEach((p, i) => { marker(c, T6[i], pl.X(p[0]), pl.Y(p[1]), 13, coloured ? COL[it.L[i]] : NEUTRAL, '#fff', 2.5); c.fillStyle = INK; c.font = '700 21px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(i + 1, pl.X(p[0]) + 14, pl.Y(p[1]) - 9); });
+    if (st.ph === 'std') return;
+    if (st.ph === 'update') it.C.forEach((q, j) => { c.beginPath(); c.arc(pl.X(q[0]), pl.Y(q[1]), 12, 0, 7); c.strokeStyle = COL[j]; c.lineWidth = 4; c.setLineDash([5, 4]); c.stroke(); c.setLineDash([]); c.beginPath(); c.moveTo(pl.X(q[0]), pl.Y(q[1])); c.lineTo(pl.X(it.Cn[j][0]), pl.Y(it.Cn[j][1])); c.stroke(); centreMark(c, pl.X(it.Cn[j][0]), pl.Y(it.Cn[j][1]), COL[j], 13); });
+    else it.C.forEach((q, j) => centreMark(c, pl.X(q[0]), pl.Y(q[1]), COL[j], 13));
+  });
+  function upd() {
+    const st = decode(), it = its[st.i], isLast = s === last;
+    const label = st.ph === 'std' ? 'Standardise' : st.ph === 'start' ? 'Start' : 'Iteration ' + (st.i + 1) + ' · ' + (st.ph === 'assign' ? 'Assign' : 'Update');
+    $('#' + pre + '-state').textContent = label; $('#' + pre + '-back').disabled = s === 0; $('#' + pre + '-next').disabled = isLast;
+    let table = '', note = '', legend = '';
+    if (st.ph === 'std') {
+      legend = 'Standardise each feature: z = (value − mean) ÷ standard deviation.';
+      table = '<table class="tb nw" style="font-size:24px"><tr><th>student</th><th>hours</th><th>z = (hours − ' + M6[0].toFixed(2) + ') ÷ ' + SD6[0].toFixed(2) + '</th><th>score</th><th>z = (score − ' + M6[1].toFixed(2) + ') ÷ ' + SD6[1].toFixed(2) + '</th></tr>' +
+        P6.map((p, i) => '<tr><td>' + (i + 1) + '</td><td>' + p[0] + '</td><td style="color:' + PH + ';font-weight:700">' + f2(Z6[i][0]) + '</td><td>' + p[1] + '</td><td style="color:' + PS + ';font-weight:700">' + f2(Z6[i][1]) + '</td></tr>').join('') + '</table>';
+      note = '<b>Standardise.</b> Hours: mean ' + M6[0].toFixed(2) + ', sd ' + SD6[0].toFixed(2) + '. Score: mean ' + M6[1].toFixed(2) + ', sd ' + SD6[1].toFixed(2) + '. Both features now have mean 0 and standard deviation 1, so neither can dominate.';
+    } else {
+      const c1 = it.C[0], c2 = it.C[1];
+      legend = '<b>Squared distance</b> = <span style="color:' + PH + ';font-weight:700">hours part</span> + <span style="color:' + PS + ';font-weight:700">score part</span>';
+      let hp = 0, tt = 0, rows = '';
+      Q.forEach((p, i) => {
+        const cells = [0, 1].map(j => { const d = it.D[i][j], tot = d[0] + d[1]; hp += d[0]; tt += tot; const win = it.L[i] === j && st.ph !== 'start';
+          return st.ph === 'start' ? '–' : '<span style="color:' + PH + '">' + f(d[0]) + '</span> + <span style="color:' + PS + '">' + f(d[1]) + '</span> = <b' + (win ? ' style="color:' + COL[j] + '"' : '') + '>' + f(tot) + '</b>'; });
+        const coords = std ? '(' + f2(p[0]) + ', ' + f2(p[1]) + ')' : '(' + p[0] + ', ' + p[1] + ')';
+        rows += '<tr><td>' + (i + 1) + '</td><td>' + coords + '</td><td>' + cells[0] + '</td><td>' + cells[1] + '</td><td>' + (st.ph === 'start' ? '–' : '<span class="dot" style="background:' + COL[it.L[i]] + ';vertical-align:middle"></span> ' + (it.L[i] + 1)) + '</td></tr>';
+      });
+      const cn = c => '(' + (std ? f2(c[0]) + ', ' + f2(c[1]) : f(c[0]) + ', ' + f(c[1])) + ')';
+      table = '<table class="tb nw" style="font-size:22px"><tr><th>student</th><th>' + (std ? 'z-values' : '(hours, score)') + '</th><th>to c₁ = ' + cn(c1) + '</th><th>to c₂ = ' + cn(c2) + '</th><th>joins</th></tr>' + rows + '</table>';
+      const share = Math.round(100 * hp / tt);
+      if (st.ph === 'start') note = '<b>Start.</b> The first two students are the centres, c₁ = ' + cn(c1) + ' and c₂ = ' + cn(c2) + (std ? ', now in standardised units.' : '. Raw units: 1 hour counts the same as 1 mark.');
+      else if (st.ph === 'assign') note = '<b>Assign.</b> Each student joins the nearer centre. ' + (std ? 'Both parts are on one scale: hours supply <b>' + share + '%</b> of all the squared distance here, so both features count.' : 'The score part is far bigger: hours supply only <b>' + share + '%</b> of all the squared distance here, so the <b>score decides</b>.');
+      else {
+        const parts = [0, 1].map(j => { const m = Q.map((p, k) => [p, k]).filter(x => it.L[x[1]] === j).map(x => x[0]); const tm = v => (std ? (v < 0 ? '(' + f2(v) + ')' : f2(v)) : v), sx = m.map(p => tm(p[0])).join(' + '), sy = m.map(p => tm(p[1])).join(' + '); return 'c' + sub1(j) + ' = ((' + sx + ') ÷ ' + m.length + ', (' + sy + ') ÷ ' + m.length + ') = ' + cn(it.Cn[j]); });
+        note = '<b>Update.</b> Each centre moves to the mean of its students.<br><span class="mono" style="font-size:23px;line-height:1.5">' + parts.join('<br>') + '</span>';
+        if (isLast) {
+          const groups = [0, 1].map(j => '{' + it.L.map((l, k) => l === j ? k + 1 : null).filter(x => x).join(', ') + '}'), ag = agree6(it.L);
+          note += '<br><b>The centres did not move: stop.</b> Clusters ' + groups.join(' and ') + '. They match the real groups for <b>' + ag + ' of 6</b> students' + (std ? ': exactly the groups defined by hours.' : (ag <= 3 ? ': no better than guessing. The centres have almost the same hours (' + f(it.C[0][0]) + ' and ' + f(it.C[1][0]) + '): the clusters differ only in score.' : '.'));
+        }
+      }
+    }
+    $('#' + pre + '-body').innerHTML = '<p style="margin:0 0 10px;font-size:26px;color:#4F5D70;line-height:1.3">' + legend + '</p>' + table + '<p style="margin:20px 0 0;font-size:28px;line-height:1.38;color:#4F5D70">' + note + '</p>'; cv.draw();
+    window['__' + pre] = { s, last, its: its.length, final: its[its.length - 1].L, agree: agree6(its[its.length - 1].L) };
+  }
+  $('#' + pre + '-next').onclick = () => { if (s < last) { s++; upd(); } }; $('#' + pre + '-back').onclick = () => { if (s > 0) { s--; upd(); } };
+  s = 0; upd();
+  STEP[std ? 'scalestd' : 'scaleraw'] = { pos: () => s, max: () => last, next: () => { if (s < last) { s++; upd(); } }, prev: () => { if (s > 0) { s--; upd(); } } };
+}
+
+function initScaleCmp() {
+  const fin = { raw: ITS6.raw[ITS6.raw.length - 1], std: ITS6.std[ITS6.std.length - 1] };
+  const toRaw = c => [c[0] * SD6[0] + M6[0], c[1] * SD6[1] + M6[1]], toZ = (h, sc) => [(h - M6[0]) / SD6[0], (sc - M6[1]) / SD6[1]];
+  function panel(id, mode) {
+    const it = fin[mode], pl = new Plot(84, 22, 656, 480, [0, 10], [0, 100]);
+    const cls = (h, sc) => nearest(mode === 'raw' ? [h, sc] : toZ(h, sc), it.C)[0];
+    new Cv($(id), 776, 596, c => {
+      pl.frame(c, { tx: [0, 2, 4, 6, 8, 10], ty: [0, 25, 50, 75, 100], xl: 'hours', yl: 'score' });
+      c.save(); c.beginPath(); c.rect(pl.x, pl.y, pl.w, pl.h); c.clip();
+      for (let px = pl.x; px < pl.x + pl.w; px += 10) for (let py = pl.y; py < pl.y + pl.h; py += 10) { c.fillStyle = tint(COL[cls(pl.ix(px + 5), pl.iy(py + 5))], 0.14); c.fillRect(px, py, 11, 11); }
+      c.restore(); c.strokeStyle = LN; c.lineWidth = 2; c.strokeRect(pl.x, pl.y, pl.w, pl.h);
+      P6.forEach((p, i) => { marker(c, T6[i], pl.X(p[0]), pl.Y(p[1]), 13, COL[it.L[i]], '#fff', 2.5); c.fillStyle = INK; c.font = '700 21px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(i + 1, pl.X(p[0]) + 14, pl.Y(p[1]) - 9); });
+      it.C.forEach((q, j) => { const r = mode === 'raw' ? q : toRaw(q); centreMark(c, pl.X(r[0]), pl.Y(r[1]), COL[j], 13); });
+    });
+  }
+  panel('#cv-cmp1', 'raw'); panel('#cv-cmp2', 'std');
+  const ag = { raw: agree6(fin.raw.L), std: agree6(fin.std.L) };
+  $('#cmp-c1').innerHTML = '<b>Raw units.</b> A horizontal split: the score decides. Matches the real groups: <b>' + ag.raw + ' / 6</b>. Hours supply ' + (SHARE_RAW6 * 100).toFixed(0) + '% of the squared distance.';
+  $('#cmp-c2').innerHTML = '<b>Standardised.</b> A nearly vertical split: hours decide. Matches the real groups: <b>' + ag.std + ' / 6</b>. Hours supply 50% of the squared distance.';
+  window.__cmp6 = ag;
+}
+
+// ================================================================== 12 how many clusters
+function initChooseK() {
+  let k = 3;
+  const cv = new Cv($('#cv-ck'), 780, 770, c => { SPL.frame(c, SPO); const r = BESTK[k]; drawPts(c, SPL, STU, { L: r.L, C: r.C }); });
+  function set(v) { k = v; $('#ck-k').textContent = k; $('#ck-sse').textContent = BESTK[k].sse.toFixed(1); cv.draw(); }
+  $('#ck-slider').addEventListener('input', e => set(+e.target.value)); set(3);
+}
+
+// ================================================================== 13 the elbow and the silhouette
+function initElbow() {
+  let k = 3;
+  const cv = new Cv($('#cv-el'), 780, 770, c => { SPL.frame(c, SPO); const r = BESTK[k]; drawPts(c, SPL, STU, { L: r.L, C: r.C }); });
+  const ks = [1, 2, 3, 4, 5, 6, 7, 8];
+  const c1 = new Cv($('#cv-elsse'), 832, 250, c => { lineChart(c, 80, 38, 724, 160, ks, ks.map(i => BESTK[i].sse), { xmin: 1, xmax: 8, ymin: 0, ymax: 300, xt: ks, yt: [0, 100, 200, 300], hi: k, title: 'SSE' }); c.fillStyle = MU; c.font = '22px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('k', 442, 224); });
+  const c2 = new Cv($('#cv-elsil'), 832, 250, c => { lineChart(c, 80, 38, 724, 160, ks, SIL.slice(1), { xmin: 1, xmax: 8, ymin: 0, ymax: 1, xt: ks, yt: [0, 0.5, 1], fy: v => v.toFixed(1), hi: k, color: '#2E9B6F', title: 'average silhouette' }); c.fillStyle = MU; c.font = '22px "Atkinson Hyperlegible",system-ui,sans-serif'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('k', 442, 224); });
+  function set(v) { k = v; $('#el-k').textContent = k; cv.draw(); c1.draw(); c2.draw(); }
+  $('#el-slider').addEventListener('input', e => set(+e.target.value)); set(3);
+}
+
+// ================================================================== 15 outlier
+function initOutlier() {
+  const base = [[4.0, 4.6], [4.8, 5.4], [5.3, 4.4], [3.9, 5.6], [4.6, 4.9], [5.2, 5.2], [4.4, 5.9], [5.0, 4.0], [4.1, 5.1]]; let o = [7.0, 6.4];
+  const med = a => { const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+  const stat = () => { const all = base.concat([o]), mean = [0, 1].map(d => all.reduce((a, p) => a + p[d], 0) / all.length), md = [0, 1].map(d => med(all.map(p => p[d]))), m9 = [0, 1].map(d => base.reduce((a, p) => a + p[d], 0) / base.length); return { all, mean, md, m9 }; };
+  const cv = new Cv($('#cv-ou'), 780, 770, c => {
+    SPL.frame(c, SPO); const s = stat();
+    base.forEach(p => marker(c, 0, SPL.X(p[0]), SPL.Y(p[1]), 11, COL[0], '#fff', 2.5));
+    marker(c, 3, SPL.X(o[0]), SPL.Y(o[1]), 13, COL[5], '#fff', 3); c.beginPath(); c.arc(SPL.X(o[0]), SPL.Y(o[1]), 26, 0, 7); c.strokeStyle = COL[5]; c.lineWidth = 3; c.setLineDash([6, 5]); c.stroke(); c.setLineDash([]);
+    c.beginPath(); c.arc(SPL.X(s.m9[0]), SPL.Y(s.m9[1]), 8, 0, 7); c.strokeStyle = MU; c.lineWidth = 3; c.setLineDash([3, 4]); c.stroke(); c.setLineDash([]);
+    c.strokeStyle = MU; c.lineWidth = 2; c.setLineDash([6, 6]); c.beginPath(); c.moveTo(SPL.X(s.m9[0]), SPL.Y(s.m9[1])); c.lineTo(SPL.X(s.mean[0]), SPL.Y(s.mean[1])); c.stroke(); c.setLineDash([]);
+    marker(c, 3, SPL.X(s.md[0]), SPL.Y(s.md[1]), 12, '#fff', INK, 4);
+    centreMark(c, SPL.X(s.mean[0]), SPL.Y(s.mean[1]), OR, 15);
+    window.__ou = s;
+  });
+  cv.drag((x, y) => { const d = (SPL.X(o[0]) - x) ** 2 + (SPL.Y(o[1]) - y) ** 2; return d < 60 * 60; }, (x, y) => { o = [clamp(SPL.ix(x), 0, 10), clamp(SPL.iy(y), 0, 10)]; show(); cv.draw(); }, () => { });
+  function show() {
+    const s = stat(), dm = Math.hypot(s.mean[0] - s.m9[0], s.mean[1] - s.m9[1]), dd = Math.hypot(s.md[0] - med0[0], s.md[1] - med0[1]);
+    $('#ou-stat').innerHTML = 'outlier at (' + o[0].toFixed(1) + ', ' + o[1].toFixed(1) + ')<br>mean ✕ at (' + s.mean[0].toFixed(2) + ', ' + s.mean[1].toFixed(2) + ') · moved <span>' + dm.toFixed(2) + '</span><br>median ◇ at (' + s.md[0].toFixed(2) + ', ' + s.md[1].toFixed(2) + ') · moved <span>' + dd.toFixed(2) + '</span><br><small style="font:400 24px Atkinson Hyperlegible,sans-serif;color:#4F5D70">moved: compared with the nine students alone (dotted ring = their mean)</small>';
+  }
+  const med0 = [0, 1].map(d => med(base.map(p => p[d])));
+  show(); cv.draw();
+}
+
+// ================================================================== 16 cluster shapes
+function makeShapes(name) {
+  const r = mulberry32({ blobs: 11, moons: 12, rings: 13, bars: 14 }[name]), P = [], T = [];
+  if (name === 'blobs') [[2.5, 2.6], [7.6, 3.0], [5.0, 7.8]].forEach((c, j) => { for (let i = 0; i < 36; i++) { P.push([clamp(c[0] + gauss(r) * .75, .3, 9.7), clamp(c[1] + gauss(r) * .75, .3, 9.7)]); T.push(j); } });
+  if (name === 'moons') for (let i = 0; i < 60; i++) { const t = Math.PI * i / 59; P.push([1.6 + (Math.cos(t) + 1) * 2.4 + gauss(r) * .22, 3.0 + (Math.sin(t) + .5) * 4.0 + gauss(r) * .22]); T.push(0); P.push([1.6 + (1 - Math.cos(t) + 1) * 2.4 + gauss(r) * .22, 3.0 + (.5 - Math.sin(t) + .5) * 4.0 + gauss(r) * .22]); T.push(1); }
+  if (name === 'rings') { for (let i = 0; i < 46; i++) { const a = r() * 6.283, rr = 1.2 + gauss(r) * .2; P.push([5 + rr * Math.cos(a), 5 + rr * Math.sin(a)]); T.push(0); } for (let i = 0; i < 80; i++) { const a = r() * 6.283, rr = 3.9 + gauss(r) * .2; P.push([5 + rr * Math.cos(a), 5 + rr * Math.sin(a)]); T.push(1); } }
+  if (name === 'bars') [[3.3, 0], [6.4, 1]].forEach(([cy, j]) => { for (let i = 0; i < 55; i++) { P.push([clamp(1 + r() * 8, .3, 9.7), clamp(cy + gauss(r) * .32, .3, 9.7)]); T.push(j); } });
+  return { P, T, k: name === 'blobs' ? 3 : 2 };
+}
+function agree(L, T, k) {
+  const perms = k === 2 ? [[0, 1], [1, 0]] : [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
+  let b = 0; perms.forEach(p => { const m = L.reduce((a, l, i) => a + (p[l] === T[i] ? 1 : 0), 0); if (m > b) b = m; }); return b;
+}
+function initShapes() {
+  const cache = {}; let name = 'blobs', showTrue = false;
+  const get = n => cache[n] || (cache[n] = (() => { const d = makeShapes(n); d.res = bestOf(d.P, d.k, 15, mulberry32(77)); d.agree = agree(d.res.L, d.T, d.k); return d; })());
+  const cv = new Cv($('#cv-sh'), 780, 770, c => { SPL.frame(c, { xl: 'feature 1', yl: 'feature 2' }); const d = get(name); drawPts(c, SPL, d.P, { L: d.res.L, C: d.res.C, shade: true, r: 9, shapeBy: showTrue ? d.T : null }); });
+  const msgs = { blobs: 'Round blobs of similar size: k-means recovers all three groups.', moons: 'The two moons are cut by a straight line, so each cluster holds pieces of both.', rings: 'The inner ring and outer ring share the same centre, so no pair of centres can separate them.', bars: 'k-means cuts the long bars across. Compact clusters beat elongated ones.' };
+  function upd() {
+    const d = get(name); $$('[data-ds]').forEach(b => b.classList.toggle('sel', b.dataset.ds === name));
+    $('#sh-stat').innerHTML = 'k = ' + d.k + ' · SSE = <span>' + d.res.sse.toFixed(1) + '</span> · matches the real groups: <span>' + d.agree + ' / ' + d.P.length + '</span>';
+    $('#sh-msg').textContent = msgs[name]; $('#sh-true').classList.toggle('sel', showTrue); cv.draw(); window.__sh = { name, agree: d.agree, n: d.P.length };
+  }
+  $$('[data-ds]').forEach(b => b.onclick = () => { name = b.dataset.ds; upd(); });
+  $('#sh-true').onclick = () => { showTrue = !showTrue; upd(); };
+  upd();
+}
+
+// ================================================================== 17 image palette
+function makeImage() {
+  const cn = document.createElement('canvas'); cn.width = 320; cn.height = 200; const x = cn.getContext('2d');
+  let g = x.createLinearGradient(0, 0, 0, 122); g.addColorStop(0, '#141a52'); g.addColorStop(.42, '#7b3f8f'); g.addColorStop(.74, '#e0627a'); g.addColorStop(1, '#f9b25a'); x.fillStyle = g; x.fillRect(0, 0, 320, 200);
+  const sg = x.createRadialGradient(214, 112, 4, 214, 112, 84); sg.addColorStop(0, 'rgba(255,246,196,1)'); sg.addColorStop(.3, 'rgba(255,205,120,.8)'); sg.addColorStop(1, 'rgba(255,160,90,0)'); x.fillStyle = sg; x.fillRect(100, 10, 220, 112);
+  x.fillStyle = '#fff3c0'; x.beginPath(); x.arc(214, 108, 22, 0, 7); x.fill();
+  x.fillStyle = 'rgba(255,190,200,.35)'; [[40, 38, 70, 7], [86, 52, 56, 5], [236, 30, 60, 6]].forEach(c => { x.beginPath(); x.ellipse(c[0], c[1], c[2], c[3], 0, 0, 7); x.fill(); });
+  x.fillStyle = '#4b2a6b'; x.beginPath(); x.moveTo(0, 122); [[28, 96], [58, 112], [96, 84], [132, 112], [170, 100], [204, 122]].forEach(p => x.lineTo(p[0], p[1])); x.lineTo(204, 122); x.closePath(); x.fill();
+  x.fillStyle = '#331d52'; x.beginPath(); x.moveTo(232, 122); [[262, 100], [288, 112], [320, 92]].forEach(p => x.lineTo(p[0], p[1])); x.lineTo(320, 122); x.closePath(); x.fill();
+  g = x.createLinearGradient(0, 122, 0, 200); g.addColorStop(0, '#f2a360'); g.addColorStop(.22, '#9c4c86'); g.addColorStop(.6, '#2e2f78'); g.addColorStop(1, '#10133e'); x.fillStyle = g; x.fillRect(0, 122, 320, 78);
+  x.fillStyle = 'rgba(255,230,160,.8)'; [[214, 126, 36], [214, 132, 26], [214, 139, 18], [214, 147, 11], [214, 156, 6]].forEach(c => { x.fillRect(c[0] - c[2], c[1], c[2] * 2, 2.5); });
+  x.fillStyle = '#0d0f33'; x.beginPath(); x.moveTo(0, 200); x.lineTo(0, 168); x.quadraticCurveTo(60, 150, 120, 176); x.quadraticCurveTo(160, 190, 190, 200); x.closePath(); x.fill();
+  x.beginPath(); x.moveTo(320, 200); x.lineTo(320, 176); x.quadraticCurveTo(280, 168, 246, 200); x.closePath(); x.fill();
+  return { cn, data: x.getImageData(0, 0, 320, 200) };
+}
+function kmRGB(px, n, k, seed, iters) {
+  const rng = mulberry32(seed), m = Math.min(n, 4000), idx = new Int32Array(m); for (let i = 0; i < m; i++) idx[i] = Math.floor(rng() * n);
+  const S = new Float32Array(3 * m); for (let i = 0; i < m; i++) { S[3 * i] = px[3 * idx[i]]; S[3 * i + 1] = px[3 * idx[i] + 1]; S[3 * i + 2] = px[3 * idx[i] + 2]; }
+  const C = new Float32Array(3 * k), D = new Float64Array(m).fill(Infinity); let first = Math.floor(rng() * m); C.set(S.subarray(3 * first, 3 * first + 3), 0);
+  for (let c = 1; c < k; c++) {
+    let tot = 0; for (let i = 0; i < m; i++) { const dr = S[3 * i] - C[3 * (c - 1)], dg = S[3 * i + 1] - C[3 * (c - 1) + 1], db = S[3 * i + 2] - C[3 * (c - 1) + 2], d = dr * dr + dg * dg + db * db; if (d < D[i]) D[i] = d; tot += D[i]; }
+    let r = rng() * tot, pick = m - 1; for (let i = 0; i < m; i++) { r -= D[i]; if (r <= 0) { pick = i; break; } } C.set(S.subarray(3 * pick, 3 * pick + 3), 3 * c);
+  }
+  const lab = new Int32Array(m);
+  for (let it = 0; it < iters; it++) {
+    let changed = 0;
+    for (let i = 0; i < m; i++) { let b = 0, bd = Infinity; for (let c = 0; c < k; c++) { const dr = S[3 * i] - C[3 * c], dg = S[3 * i + 1] - C[3 * c + 1], db = S[3 * i + 2] - C[3 * c + 2], d = dr * dr + dg * dg + db * db; if (d < bd) { bd = d; b = c; } } if (lab[i] !== b) { lab[i] = b; changed++; } }
+    const sum = new Float64Array(3 * k), cnt = new Int32Array(k); for (let i = 0; i < m; i++) { const c = lab[i]; sum[3 * c] += S[3 * i]; sum[3 * c + 1] += S[3 * i + 1]; sum[3 * c + 2] += S[3 * i + 2]; cnt[c]++; }
+    for (let c = 0; c < k; c++) if (cnt[c]) { C[3 * c] = sum[3 * c] / cnt[c]; C[3 * c + 1] = sum[3 * c + 1] / cnt[c]; C[3 * c + 2] = sum[3 * c + 2] / cnt[c]; }
+    if (!changed) break;
+  }
+  return C;
+}
+function initPalette() {
+  const img = makeImage(), n = 320 * 200, px = new Float32Array(3 * n); for (let i = 0; i < n; i++) { px[3 * i] = img.data.data[4 * i]; px[3 * i + 1] = img.data.data[4 * i + 1]; px[3 * i + 2] = img.data.data[4 * i + 2]; }
+  const KS = [2, 3, 4, 8, 16, 32], cache = {}; let ki = 3;
+  const quant = k => cache[k] || (cache[k] = (() => {
+    const C = kmRGB(px, n, k, 99 + k, 30), out = new ImageData(320, 200), lab = new Int32Array(n);
+    for (let i = 0; i < n; i++) { let b = 0, bd = Infinity; for (let c = 0; c < k; c++) { const dr = px[3 * i] - C[3 * c], dg = px[3 * i + 1] - C[3 * c + 1], db = px[3 * i + 2] - C[3 * c + 2], d = dr * dr + dg * dg + db * db; if (d < bd) { bd = d; b = c; } } lab[i] = b; out.data[4 * i] = C[3 * b]; out.data[4 * i + 1] = C[3 * b + 1]; out.data[4 * i + 2] = C[3 * b + 2]; out.data[4 * i + 3] = 255; }
+    let err = 0; for (let i = 0; i < n; i++) { const c = lab[i]; for (let d = 0; d < 3; d++) err += (px[3 * i + d] - C[3 * c + d]) ** 2; }
+    const cn = document.createElement('canvas'); cn.width = 320; cn.height = 200; cn.getContext('2d').putImageData(out, 0, 0);
+    return { C, cn, rmse: Math.sqrt(err / n / 3) };
+  })());
+  new Cv($('#cv-pal0'), 800, 500, c => { c.imageSmoothingEnabled = true; c.drawImage(img.cn, 0, 0, 800, 500); });
+  const cv1 = new Cv($('#cv-pal1'), 800, 500, c => { c.imageSmoothingEnabled = true; c.drawImage(quant(KS[ki]).cn, 0, 0, 800, 500); });
+  function set(i) {
+    ki = i; const k = KS[ki], q = quant(k); $('#pal-k').textContent = k;
+    const bits = Math.log2(k); $('#pal-cap').innerHTML = k + ' colours · ' + bits.toFixed(bits % 1 ? 1 : 0) + ' bits per pixel instead of 24 (<b>' + (24 / bits).toFixed(0) + '× smaller</b>)';
+    const cols = []; for (let c = 0; c < k; c++) cols.push([q.C[3 * c], q.C[3 * c + 1], q.C[3 * c + 2]]); cols.sort((a, b) => (0.3 * a[0] + 0.59 * a[1] + 0.11 * a[2]) - (0.3 * b[0] + 0.59 * b[1] + 0.11 * b[2]));
+    $('#pal-sw').innerHTML = cols.map(c => '<span style="width:' + (k > 16 ? 22 : 48) + 'px;height:48px;border-radius:8px;border:2px solid #fff;box-shadow:0 0 0 1px #C9D3DB;background:rgb(' + c.map(v => Math.round(v)).join(',') + ')"></span>').join('');
+    cv1.draw(); window.__pal = { k, rmse: q.rmse };
+  }
+  $('#pal-slider').addEventListener('input', e => set(+e.target.value)); set(3);
+}
+
+// ================================================================== boot
+bootEngine();
+initCover(); initData(); initPlace(); initScore(); initMean(); initMain(); initHand(); initStops(); initMinima(); initPPSlide(); initChooseK(); initElbow(); initScaleHand('sr', false); initScaleHand('ss', true); initScaleCmp(); initOutlier(); initShapes(); initPalette();
+render(true);
+
+
+</script>
+</body>
+</html>
