@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS3006 Lab 02 - Advanced Data Types & Control Structures (Interactive, 120 Questions)</title>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<style>
+  :root{--blue:#214B8C;--tint:#eef2f9;--ink:#1a2330;--muted:#5b6675;--border:#d8dee9;--code-bg:#0f1b2d;--code-ink:#e6edf5;--ok:#16a34a;--bad:#dc2626;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:#f6f8fb;line-height:1.5}
+  .wrap{max-width:900px;margin:0 auto;padding:0 18px}
+  header.hero{background:var(--blue);color:#fff;padding:24px 22px}
+  header.hero h1{margin:0;font-size:1.4rem} header.hero h2{margin:6px 0 0;font-weight:400;font-size:1rem;opacity:.95}
+  header.hero p{margin:8px 0 0;opacity:.85;font-size:.88rem}
+  #pybar{padding:8px 18px;font-size:.85rem;text-align:center;background:#fde68a;color:#7c2d12}
+  #pybar.ready{background:#dcfce7;color:#14532d}
+  #pybar.err{background:#fee2e2;color:#7f1d1d}
+  .idbar{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:16px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .idbar label{font-size:.8rem;color:var(--muted);display:block;margin-bottom:3px}
+  .idbar input,.idbar select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:.9rem}
+  .idbar .full{grid-column:1/3}
+  .toolbar{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--border);padding:10px 0;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .toolbar .wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .progress{font-size:.85rem;color:var(--muted)} .progress b{color:var(--blue)}
+  .bar{flex:1;min-width:120px;height:8px;background:#e6ebf3;border-radius:5px;overflow:hidden}
+  .bar>i{display:block;height:100%;width:0;background:var(--blue);transition:width .2s}
+  .toolbar button{font-size:.85rem;border:0;background:var(--blue);color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer}
+  .toolbar button.ghost{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+  nav.toc{background:#fff;border:1px solid var(--border);border-radius:10px;margin:14px 0;padding:10px 14px}
+  nav.toc a{display:inline-block;font-size:.8rem;background:var(--tint);color:var(--ink);text-decoration:none;padding:4px 10px;border-radius:14px;margin:3px}
+  .note{background:#fff;border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:8px;padding:12px 16px;margin:14px 0;font-size:.9rem}
+  h2.section{color:var(--blue);border-bottom:2px solid var(--blue);padding-bottom:6px;margin:28px 0 12px;font-size:1.12rem}
+  h2.section .srange{font-weight:400;color:var(--muted);font-size:.88rem}
+  .q{background:#fff;border:1px solid var(--border);border-left:4px solid #ccc;border-radius:8px;padding:14px 16px;margin:12px 0}
+  .q.mcq{border-left-color:#2563eb} .q.predict{border-left-color:#16a34a} .q.code{border-left-color:#ea8a1f}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .qnum{font-weight:700;color:var(--blue)}
+  .badge{font-size:.68rem;text-transform:uppercase;letter-spacing:.03em;padding:2px 8px;border-radius:12px;color:#fff}
+  .badge.mcq{background:#2563eb} .badge.predict{background:#16a34a} .badge.code{background:#ea8a1f}
+  .status{margin-left:auto;font-size:.75rem;color:var(--ok);font-weight:600}
+  .prompt{margin:2px 0 8px}
+  .prompt code,.prompt em{background:var(--tint);padding:1px 5px;border-radius:4px;font-style:normal;font-family:ui-monospace,Consolas,monospace;font-size:.9em}
+  .opts{display:flex;flex-direction:column;gap:6px;margin:4px 0}
+  label.opt{background:#f7f9fc;border:1px solid var(--border);border-radius:6px;padding:7px 10px;cursor:pointer;font-size:.9rem}
+  label.opt:hover{background:var(--tint)}
+  .fieldlabel{display:block;font-size:.78rem;color:var(--muted);margin:8px 0 3px}
+  pre.code{background:var(--code-bg);color:var(--code-ink);padding:10px 12px;border-radius:7px;overflow-x:auto;font-size:.85rem;margin:6px 0}
+  pre.code code{font-family:ui-monospace,Consolas,monospace}
+  textarea.ans-in{width:100%;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;padding:8px 10px;border:1px solid var(--border);border-radius:6px;resize:vertical}
+  textarea.code-edit{width:100%;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;padding:10px 12px;border:1px solid #3a5170;border-radius:6px;resize:vertical;background:#0f1b2d;color:#e6edf5;line-height:1.45;tab-size:4}
+  textarea.ans-in:focus,textarea.code-edit:focus{outline:2px solid var(--blue);border-color:var(--blue)}
+  .runrow{display:flex;align-items:center;gap:8px;margin:8px 0 0;flex-wrap:wrap}
+  .runbtn{background:var(--ok);color:#fff;border:0;padding:6px 14px;border-radius:6px;font-size:.85rem;cursor:pointer}
+  .runbtn:hover{opacity:.9} .runbtn:disabled{opacity:.5;cursor:not-allowed}
+  .resetbtn{background:#fff;color:var(--muted);border:1px solid var(--border);padding:6px 12px;border-radius:6px;font-size:.82rem;cursor:pointer}
+  .checkbtn{background:#fff;color:#5b21b6;border:1px solid #7c3aed;padding:6px 12px;border-radius:6px;font-size:.82rem;cursor:pointer}
+  .checkbtn:hover{background:#f5f0ff} .checkbtn:disabled{opacity:.5;cursor:not-allowed}
+  .checkres{font-size:.82rem;font-weight:600}
+  .checkres.pass{color:#16a34a} .checkres.fail{color:#dc2626} .checkres.wait{color:var(--muted);font-weight:400}
+  .runhint{font-size:.8rem;color:var(--muted)}
+  .output{display:none;margin-top:8px;border-radius:6px;overflow:hidden;font-family:ui-monospace,Consolas,monospace;font-size:.82rem}
+  .output.show{display:block}
+  .output .lbl{padding:4px 10px;font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;color:#fff;background:#334155}
+  .output pre{margin:0;padding:8px 12px;background:#0f1b2d;color:#e6edf5;white-space:pre-wrap;word-break:break-word;overflow-x:auto}
+  .output pre.err{color:#fca5a5}
+  .cmp{margin-top:8px;border-radius:6px;overflow:hidden;font-size:.82rem}
+  .cmp .row{display:grid;grid-template-columns:110px 1fr;border:1px solid var(--border);border-top:0}
+  .cmp .row:first-child{border-top:1px solid var(--border)}
+  .cmp .k{background:#f1f5f9;padding:6px 10px;font-size:.75rem;color:var(--muted);font-weight:600}
+  .cmp .v{padding:6px 10px;font-family:ui-monospace,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+  .cmp.match .verdict{background:#dcfce7;color:#14532d}
+  .cmp.nomatch .verdict{background:#fee2e2;color:#7f1d1d}
+  .cmp .verdict{grid-column:1/3;padding:6px 10px;font-weight:600;font-family:inherit}
+  .submitbox{background:#fff;border:2px solid var(--blue);border-radius:10px;padding:18px;margin:24px 0;text-align:center}
+  .submitbox button{font-size:1rem;background:var(--blue);color:#fff;border:0;padding:12px 28px;border-radius:8px;cursor:pointer}
+  .submitbox button.ghost2{background:#fff;color:var(--blue);border:1px solid var(--blue);font-size:.9rem;padding:8px 16px;margin:4px}
+  .submitbox .warn{color:#b45309;font-size:.85rem;margin-top:8px}
+  footer{background:var(--blue);color:#fff;padding:16px 22px;margin-top:26px;font-size:.85rem}
+  @media(max-width:560px){.idbar{grid-template-columns:1fr}.idbar .full{grid-column:1}.cmp .row{grid-template-columns:80px 1fr}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <h1>CS3006 &middot; Lab 02 &mdash; Advanced Data Types &amp; Control Structures (Interactive, 120 Questions)</h1>
+  <h2>Run Python in your browser &middot; predict &amp; check &middot; then generate your submission</h2>
+  <p>IIITDM Kancheepuram &middot; Module 1 &middot; Odd Semester 2026</p>
+</div></header>
+
+<div id="pybar">Loading Python runtime&hellip;</div>
+
+<div class="toolbar"><div class="wrap">
+  <span class="progress"><b id="done">0</b> / 120 answered</span>
+  <span class="bar"><i id="fill"></i></span>
+  <span id="saveflag" title="Your answers are saved automatically in this browser" style="font-size:.78rem;color:#16a34a;opacity:.55;min-width:70px">auto-save on</span>
+  <button id="checkallbtn" class="ghost" style="border-color:#7c3aed;color:#5b21b6" onclick="checkAll()" title="Practice self-check: run and check every answered question">&#10003; Check all (practice)</button>
+  <button class="ghost" onclick="document.querySelector('.submitbox').scrollIntoView({behavior:'smooth'})">Go to Submit</button>
+  <button class="ghost" style="border-color:#c33;color:#c33" onclick="clearSaved()" title="Erase saved answers on this browser and reset to starter code">Clear saved work</button>
+</div>
+<div class="wrap" style="padding-top:4px"><div id="checkallmsg" style="font-size:.82rem;color:#5b6675"></div></div></div>
+
+<div class="wrap">
+  <div class="note" style="background:#faf5ff;border-left-color:#7c3aed;margin-top:14px">
+    <b>&#10003; Self-check is practice only.</b> The <b>Check</b> button on each question (and <b>Check all</b> above) runs your code and tells you if the output matches &mdash; use it to test yourself. It does <b>not</b> set your grade: your actual marks come from the instructor running your submitted file. So a green &ldquo;correct&rdquo; here means you&rsquo;re on track, not that marks are recorded.
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="restorebar" style="display:none;background:#dcfce7;border:1px solid #86efac;border-left:4px solid #16a34a;border-radius:8px;padding:10px 14px;margin:14px 0;font-size:.9rem;color:#14532d">
+    <b>&#8635; Welcome back.</b> <span class="rtext"></span>
+  </div>
+  <div id="nosavebar" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-left:4px solid #dc2626;border-radius:8px;padding:10px 14px;margin:14px 0;font-size:.9rem;color:#7f1d1d">
+    <b>&#9888; Auto-save is off in this browser</b> (private / incognito mode, or storage blocked). Your answers will <b>not</b> survive a refresh here. Generate &amp; copy your submission before closing, or switch to a normal (non-incognito) window.
+  </div>
+  <div class="note" style="background:#eef7ff;border-left-color:#2563eb">
+    <b>&#128190; Your work saves automatically</b> in this browser as you type &mdash; if you refresh or accidentally close the tab, just reopen the same page on the same computer and your answers come back. To continue on a <b>different computer</b> (e.g. lab &rarr; hostel), use the buttons below.
+  </div>
+
+  <div id="portpanel" style="background:#fff;border:1px solid var(--border);border-left:4px solid #7c3aed;border-radius:8px;padding:12px 16px;margin:14px 0;font-size:.9rem">
+    <b style="color:#5b21b6">&#128194; Continue on another computer</b>
+    <div style="margin-top:6px">Finishing later or elsewhere? <b>Save progress</b> to download a small file, carry it (email it to yourself, a pen drive, or a cloud drive), then <b>Load progress</b> on the other machine to pick up exactly where you stopped.</div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <button class="ghost" style="border-color:#7c3aed;color:#5b21b6" onclick="saveProgressFile()">&#11015; Save progress (.json)</button>
+      <button class="ghost" style="border-color:#7c3aed;color:#5b21b6" onclick="document.getElementById('loadfile').click()">&#128194; Load progress&hellip;</button>
+      <input id="loadfile" type="file" accept=".json,application/json" style="display:none" onchange="loadProgressFile(this)">
+    </div>
+    <div id="portmsg" style="margin-top:8px;font-size:.85rem;color:#5b6675"></div>
+    <div style="margin-top:6px;font-size:.78rem;color:#7c2d12">This progress file is just for resuming your work &mdash; it is <b>not</b> your Moodle submission. When you are done, still use <b>Generate submission file</b> &rarr; <b>Copy answers</b> and paste into Moodle.</div>
+  </div>
+
+  <div class="idbar">
+    <div><label>Full name *</label><input id="stu_name" placeholder="e.g. Asha Kumar"></div>
+    <div><label>Roll number *</label><input id="stu_roll" placeholder="e.g. CS23B1001"></div>
+    <div class="full"><label>Batch *</label>
+      <select id="stu_batch"><option value="">-- select --</option>
+      <option>ECE</option><option>CSE-DD</option><option>Mech</option></select>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>How this lab works:</b> This page runs real Python in your browser (via Pyodide) &mdash; <b>no install and no internet needed</b> (offline build).
+    Every question is a <b>code task</b>: complete the starter and click <b>&#9654; Run</b> to test it &mdash; run it as many times as you like.
+    When done, fill your details, click <b>Generate submission file</b>, then <b>Copy answers</b> and paste it into the Lab 02 <b>edit box</b> on Moodle. Experiment freely; running code does not affect your submission until you generate it.
+  </div>
+
+  <div id="serverhelp" style="display:none;background:#fff7ed;border:1px solid #fdba74;border-left:4px solid #ea8a1f;border-radius:8px;padding:12px 16px;margin:14px 0;font-size:.9rem">
+    <b>To enable the &#9654; Run buttons, open this page over http (not file://).</b> Two easy options:
+    <div style="margin-top:8px"><b>A. Teacher hosts it (best for students):</b> put this .html on the course page / GitHub Pages / Google Sites and share the link. Opening that link just works.</div>
+    <div style="margin-top:8px"><b>B. Run a local server (for your own machine):</b> put the file in a folder, open a terminal there, and run one of:
+      <pre class="code" style="margin:6px 0"><code>python -m http.server 8000</code></pre>
+      then visit <code>http://localhost:8000/</code> and click this file. (Node users: <code>npx serve</code>.)
+    </div>
+    <div style="margin-top:8px;color:#7c2d12">Answering and generating your submission works either way &mdash; only the in-browser Python runner needs http.</div>
+  </div>
+
+  <nav class="toc"><a href="#s1">Section 1</a><a href="#s21">Section 2</a><a href="#s41">Section 3</a><a href="#s61">Section 4</a><a href="#s81">Section 5</a><a href="#s101">Section 6</a></nav>
+
+<h2 class="section" id="s1">Section 1 &middot; Lists &mdash; build, index, mutate <span class="srange">(Q1&ndash;Q20)</span></h2><div class="q code" id="q1" data-kind="code" data-n="1">
+<div class="qhead"><span class="qnum">Q1</span><span class="badge code">Short code</span><span class="status" id="st1"></span></div>
+<div class="prompt">Create a list <code>nums = [3, 1, 4, 1, 5]</code> and print its length using <code>len</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans1" class="code-edit" rows="4" spellcheck="false" oninput="mark(1)">nums = [3, 1, 4, 1, 5]
+# print the length
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(1)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(1)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(1)">Reset</button><span class="runhint" id="rh1"></span><span class="checkres" id="ck1"></span></div>
+<div class="output" id="out1"></div>
+</div><div class="q code" id="q2" data-kind="code" data-n="2">
+<div class="qhead"><span class="qnum">Q2</span><span class="badge code">Short code</span><span class="status" id="st2"></span></div>
+<div class="prompt">Append 9 and 2 to <code>nums</code>, then print the list.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans2" class="code-edit" rows="4" spellcheck="false" oninput="mark(2)">nums = [3, 1, 4, 1, 5]
+# append 9 then 2, then print nums
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(2)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(2)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(2)">Reset</button><span class="runhint" id="rh2"></span><span class="checkres" id="ck2"></span></div>
+<div class="output" id="out2"></div>
+</div><div class="q code" id="q3" data-kind="code" data-n="3">
+<div class="qhead"><span class="qnum">Q3</span><span class="badge code">Short code</span><span class="status" id="st3"></span></div>
+<div class="prompt">Print the first and last element of <code>nums</code> using positive and negative indexing.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans3" class="code-edit" rows="4" spellcheck="false" oninput="mark(3)">nums = [3, 1, 4, 1, 5]
+# print first and last
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(3)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(3)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(3)">Reset</button><span class="runhint" id="rh3"></span><span class="checkres" id="ck3"></span></div>
+<div class="output" id="out3"></div>
+</div><div class="q code" id="q4" data-kind="code" data-n="4">
+<div class="qhead"><span class="qnum">Q4</span><span class="badge code">Short code</span><span class="status" id="st4"></span></div>
+<div class="prompt">Print the middle three elements of <code>nums = [10, 20, 30, 40, 50]</code> using slicing.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans4" class="code-edit" rows="4" spellcheck="false" oninput="mark(4)">nums = [10, 20, 30, 40, 50]
+# print the slice [20, 30, 40]
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(4)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(4)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(4)">Reset</button><span class="runhint" id="rh4"></span><span class="checkres" id="ck4"></span></div>
+<div class="output" id="out4"></div>
+</div><div class="q code" id="q5" data-kind="code" data-n="5">
+<div class="qhead"><span class="qnum">Q5</span><span class="badge code">Short code</span><span class="status" id="st5"></span></div>
+<div class="prompt">Reverse <code>nums</code> with slicing (<code>[::-1]</code>) and print the result.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans5" class="code-edit" rows="4" spellcheck="false" oninput="mark(5)">nums = [1, 2, 3, 4, 5]
+# print reversed copy
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(5)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(5)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(5)">Reset</button><span class="runhint" id="rh5"></span><span class="checkres" id="ck5"></span></div>
+<div class="output" id="out5"></div>
+</div><div class="q code" id="q6" data-kind="code" data-n="6">
+<div class="qhead"><span class="qnum">Q6</span><span class="badge code">Short code</span><span class="status" id="st6"></span></div>
+<div class="prompt">Replace the element at index 2 with 99 and print the list.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans6" class="code-edit" rows="4" spellcheck="false" oninput="mark(6)">nums = [1, 2, 3, 4, 5]
+# set index 2 to 99, print
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(6)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(6)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(6)">Reset</button><span class="runhint" id="rh6"></span><span class="checkres" id="ck6"></span></div>
+<div class="output" id="out6"></div>
+</div><div class="q code" id="q7" data-kind="code" data-n="7">
+<div class="qhead"><span class="qnum">Q7</span><span class="badge code">Short code</span><span class="status" id="st7"></span></div>
+<div class="prompt">Insert 0 at the front using <code>insert</code>, then remove the value 3 using <code>remove</code>. Print the list.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans7" class="code-edit" rows="4" spellcheck="false" oninput="mark(7)">nums = [1, 2, 3, 4]
+# insert 0 at front, remove value 3, print
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(7)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(7)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(7)">Reset</button><span class="runhint" id="rh7"></span><span class="checkres" id="ck7"></span></div>
+<div class="output" id="out7"></div>
+</div><div class="q code" id="q8" data-kind="code" data-n="8">
+<div class="qhead"><span class="qnum">Q8</span><span class="badge code">Short code</span><span class="status" id="st8"></span></div>
+<div class="prompt">Use <code>pop</code> to remove and print the last element, then print the remaining list.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans8" class="code-edit" rows="4" spellcheck="false" oninput="mark(8)">nums = [1, 2, 3, 4]
+# pop last, print it, then print list
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(8)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(8)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(8)">Reset</button><span class="runhint" id="rh8"></span><span class="checkres" id="ck8"></span></div>
+<div class="output" id="out8"></div>
+</div><div class="q code" id="q9" data-kind="code" data-n="9">
+<div class="qhead"><span class="qnum">Q9</span><span class="badge code">Short code</span><span class="status" id="st9"></span></div>
+<div class="prompt">Build a list of squares 0..9 using a list comprehension and print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans9" class="code-edit" rows="4" spellcheck="false" oninput="mark(9)"># squares = [ ... ]
+# print squares
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(9)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(9)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(9)">Reset</button><span class="runhint" id="rh9"></span><span class="checkres" id="ck9"></span></div>
+<div class="output" id="out9"></div>
+</div><div class="q code" id="q10" data-kind="code" data-n="10">
+<div class="qhead"><span class="qnum">Q10</span><span class="badge code">Short code</span><span class="status" id="st10"></span></div>
+<div class="prompt">From <code>nums = [5, 12, 7, 20, 3]</code>, build a list of only the values &gt; 6 using a comprehension. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans10" class="code-edit" rows="4" spellcheck="false" oninput="mark(10)">nums = [5, 12, 7, 20, 3]
+# comprehension keeping values &gt; 6
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(10)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(10)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(10)">Reset</button><span class="runhint" id="rh10"></span><span class="checkres" id="ck10"></span></div>
+<div class="output" id="out10"></div>
+</div><div class="q code" id="q11" data-kind="code" data-n="11">
+<div class="qhead"><span class="qnum">Q11</span><span class="badge code">Short code</span><span class="status" id="st11"></span></div>
+<div class="prompt">Concatenate <code>[1, 2]</code> and <code>[3, 4]</code> with <code>+</code>, then repeat <code>[0]</code> three times with <code>*</code>. Print both.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans11" class="code-edit" rows="4" spellcheck="false" oninput="mark(11)"># print concatenation and repetition
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(11)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(11)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(11)">Reset</button><span class="runhint" id="rh11"></span><span class="checkres" id="ck11"></span></div>
+<div class="output" id="out11"></div>
+</div><div class="q code" id="q12" data-kind="code" data-n="12">
+<div class="qhead"><span class="qnum">Q12</span><span class="badge code">Short code</span><span class="status" id="st12"></span></div>
+<div class="prompt">Count how many times 1 appears in <code>[1, 2, 1, 3, 1]</code> using <code>count</code>, and find the index of 3 using <code>index</code>. Print both.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans12" class="code-edit" rows="4" spellcheck="false" oninput="mark(12)">nums = [1, 2, 1, 3, 1]
+# print count of 1 and index of 3
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(12)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(12)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(12)">Reset</button><span class="runhint" id="rh12"></span><span class="checkres" id="ck12"></span></div>
+<div class="output" id="out12"></div>
+</div><div class="q code" id="q13" data-kind="code" data-n="13">
+<div class="qhead"><span class="qnum">Q13</span><span class="badge code">Short code</span><span class="status" id="st13"></span></div>
+<div class="prompt">Sort <code>[3, 1, 4, 1, 5, 9, 2]</code> ascending with <code>sorted</code> (a copy) and print both the original and the sorted copy.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans13" class="code-edit" rows="4" spellcheck="false" oninput="mark(13)">nums = [3, 1, 4, 1, 5, 9, 2]
+# print nums then a sorted copy
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(13)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(13)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(13)">Reset</button><span class="runhint" id="rh13"></span><span class="checkres" id="ck13"></span></div>
+<div class="output" id="out13"></div>
+</div><div class="q code" id="q14" data-kind="code" data-n="14">
+<div class="qhead"><span class="qnum">Q14</span><span class="badge code">Short code</span><span class="status" id="st14"></span></div>
+<div class="prompt">Sort <code>['banana', 'apple', 'cherry']</code> and print it. Then sort it by word length and print that too.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans14" class="code-edit" rows="4" spellcheck="false" oninput="mark(14)">fruits = ['banana', 'apple', 'cherry']
+# print alphabetical, then by length (key=len)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(14)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(14)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(14)">Reset</button><span class="runhint" id="rh14"></span><span class="checkres" id="ck14"></span></div>
+<div class="output" id="out14"></div>
+</div><div class="q code" id="q15" data-kind="code" data-n="15">
+<div class="qhead"><span class="qnum">Q15</span><span class="badge code">Short code</span><span class="status" id="st15"></span></div>
+<div class="prompt">Make <code>b = a</code> then <code>b.append(99)</code>. Print <code>a</code> to observe aliasing. Then make a real copy with <code>a[:]</code> and show it is independent.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans15" class="code-edit" rows="4" spellcheck="false" oninput="mark(15)">a = [1, 2, 3]
+# demonstrate aliasing vs a copy
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(15)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(15)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(15)">Reset</button><span class="runhint" id="rh15"></span><span class="checkres" id="ck15"></span></div>
+<div class="output" id="out15"></div>
+</div><div class="q code" id="q16" data-kind="code" data-n="16">
+<div class="qhead"><span class="qnum">Q16</span><span class="badge code">Short code</span><span class="status" id="st16"></span></div>
+<div class="prompt">Compute the sum of <code>[4, 8, 15, 16, 23, 42]</code> with a for loop (no <code>sum</code>). Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans16" class="code-edit" rows="4" spellcheck="false" oninput="mark(16)">nums = [4, 8, 15, 16, 23, 42]
+# total via loop
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(16)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(16)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(16)">Reset</button><span class="runhint" id="rh16"></span><span class="checkres" id="ck16"></span></div>
+<div class="output" id="out16"></div>
+</div><div class="q code" id="q17" data-kind="code" data-n="17">
+<div class="qhead"><span class="qnum">Q17</span><span class="badge code">Short code</span><span class="status" id="st17"></span></div>
+<div class="prompt">Find the maximum of <code>[7, 2, 9, 4]</code> with a loop (no <code>max</code>). Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans17" class="code-edit" rows="4" spellcheck="false" oninput="mark(17)">nums = [7, 2, 9, 4]
+# find max via loop
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(17)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(17)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(17)">Reset</button><span class="runhint" id="rh17"></span><span class="checkres" id="ck17"></span></div>
+<div class="output" id="out17"></div>
+</div><div class="q code" id="q18" data-kind="code" data-n="18">
+<div class="qhead"><span class="qnum">Q18</span><span class="badge code">Short code</span><span class="status" id="st18"></span></div>
+<div class="prompt">Flatten <code>[[1, 2], [3, 4], [5]]</code> into a single list using nested loops. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans18" class="code-edit" rows="4" spellcheck="false" oninput="mark(18)">nested = [[1, 2], [3, 4], [5]]
+# flatten into flat, then print
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(18)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(18)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(18)">Reset</button><span class="runhint" id="rh18"></span><span class="checkres" id="ck18"></span></div>
+<div class="output" id="out18"></div>
+</div><div class="q code" id="q19" data-kind="code" data-n="19">
+<div class="qhead"><span class="qnum">Q19</span><span class="badge code">Short code</span><span class="status" id="st19"></span></div>
+<div class="prompt">Given <code>marks = [88, 72, 95, 60]</code>, print each mark with its position (1-based) using <code>enumerate</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans19" class="code-edit" rows="4" spellcheck="false" oninput="mark(19)">marks = [88, 72, 95, 60]
+# print '1 88', '2 72', ...
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(19)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(19)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(19)">Reset</button><span class="runhint" id="rh19"></span><span class="checkres" id="ck19"></span></div>
+<div class="output" id="out19"></div>
+</div><div class="q code" id="q20" data-kind="code" data-n="20">
+<div class="qhead"><span class="qnum">Q20</span><span class="badge code">Short code</span><span class="status" id="st20"></span></div>
+<div class="prompt">Gradebook: from <code>marks = [88, 72, 95, 60, 40]</code>, use a loop to count how many are &ge; 50 and print the count.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans20" class="code-edit" rows="4" spellcheck="false" oninput="mark(20)">marks = [88, 72, 95, 60, 40]
+# count marks &gt;= 50
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(20)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(20)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(20)">Reset</button><span class="runhint" id="rh20"></span><span class="checkres" id="ck20"></span></div>
+<div class="output" id="out20"></div>
+</div><h2 class="section" id="s21">Section 2 &middot; Tuples &amp; unpacking <span class="srange">(Q21&ndash;Q40)</span></h2><div class="q code" id="q21" data-kind="code" data-n="21">
+<div class="qhead"><span class="qnum">Q21</span><span class="badge code">Short code</span><span class="status" id="st21"></span></div>
+<div class="prompt">Create a tuple <code>t = (10, 20, 30)</code> and print its length and its second element.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans21" class="code-edit" rows="4" spellcheck="false" oninput="mark(21)">t = (10, 20, 30)
+# print length and t[1]
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(21)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(21)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(21)">Reset</button><span class="runhint" id="rh21"></span><span class="checkres" id="ck21"></span></div>
+<div class="output" id="out21"></div>
+</div><div class="q code" id="q22" data-kind="code" data-n="22">
+<div class="qhead"><span class="qnum">Q22</span><span class="badge code">Short code</span><span class="status" id="st22"></span></div>
+<div class="prompt">Try to assign <code>t[0] = 99</code> inside a try/except and print 'immutable' when it fails.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans22" class="code-edit" rows="4" spellcheck="false" oninput="mark(22)">t = (1, 2, 3)
+# catch the TypeError and print 'immutable'
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(22)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(22)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(22)">Reset</button><span class="runhint" id="rh22"></span><span class="checkres" id="ck22"></span></div>
+<div class="output" id="out22"></div>
+</div><div class="q code" id="q23" data-kind="code" data-n="23">
+<div class="qhead"><span class="qnum">Q23</span><span class="badge code">Short code</span><span class="status" id="st23"></span></div>
+<div class="prompt">Unpack <code>point = (3, 7)</code> into <code>x, y</code> and print <code>x</code> and <code>y</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans23" class="code-edit" rows="4" spellcheck="false" oninput="mark(23)">point = (3, 7)
+# unpack and print x, y
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(23)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(23)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(23)">Reset</button><span class="runhint" id="rh23"></span><span class="checkres" id="ck23"></span></div>
+<div class="output" id="out23"></div>
+</div><div class="q code" id="q24" data-kind="code" data-n="24">
+<div class="qhead"><span class="qnum">Q24</span><span class="badge code">Short code</span><span class="status" id="st24"></span></div>
+<div class="prompt">Swap two variables using tuple unpacking (no temp variable). Print them before and after.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans24" class="code-edit" rows="4" spellcheck="false" oninput="mark(24)">a, b = 5, 9
+# swap a and b using unpacking
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(24)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(24)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(24)">Reset</button><span class="runhint" id="rh24"></span><span class="checkres" id="ck24"></span></div>
+<div class="output" id="out24"></div>
+</div><div class="q code" id="q25" data-kind="code" data-n="25">
+<div class="qhead"><span class="qnum">Q25</span><span class="badge code">Short code</span><span class="status" id="st25"></span></div>
+<div class="prompt">Use starred unpacking: <code>first, *rest = [1, 2, 3, 4]</code>. Print <code>first</code> and <code>rest</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans25" class="code-edit" rows="4" spellcheck="false" oninput="mark(25)"># first, *rest = [1, 2, 3, 4]
+# print first and rest
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(25)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(25)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(25)">Reset</button><span class="runhint" id="rh25"></span><span class="checkres" id="ck25"></span></div>
+<div class="output" id="out25"></div>
+</div><div class="q code" id="q26" data-kind="code" data-n="26">
+<div class="qhead"><span class="qnum">Q26</span><span class="badge code">Short code</span><span class="status" id="st26"></span></div>
+<div class="prompt">Unpack <code>*mid, last = [1, 2, 3, 4]</code> and print <code>mid</code> and <code>last</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans26" class="code-edit" rows="4" spellcheck="false" oninput="mark(26)"># *mid, last = [1, 2, 3, 4]
+# print mid and last
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(26)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(26)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(26)">Reset</button><span class="runhint" id="rh26"></span><span class="checkres" id="ck26"></span></div>
+<div class="output" id="out26"></div>
+</div><div class="q code" id="q27" data-kind="code" data-n="27">
+<div class="qhead"><span class="qnum">Q27</span><span class="badge code">Short code</span><span class="status" id="st27"></span></div>
+<div class="prompt">Make a single-element tuple <code>one = (5,)</code> and a not-a-tuple <code>notup = (5)</code>. Print the <code>type</code> of each.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans27" class="code-edit" rows="4" spellcheck="false" oninput="mark(27)"># create both and print their types
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(27)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(27)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(27)">Reset</button><span class="runhint" id="rh27"></span><span class="checkres" id="ck27"></span></div>
+<div class="output" id="out27"></div>
+</div><div class="q code" id="q28" data-kind="code" data-n="28">
+<div class="qhead"><span class="qnum">Q28</span><span class="badge code">Short code</span><span class="status" id="st28"></span></div>
+<div class="prompt">Loop over <code>pairs = [(1, 'a'), (2, 'b'), (3, 'c')]</code> unpacking each into <code>num, ch</code>. Print 'num-ch' per line.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans28" class="code-edit" rows="4" spellcheck="false" oninput="mark(28)">pairs = [(1, 'a'), (2, 'b'), (3, 'c')]
+# print '1-a', '2-b', ...
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(28)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(28)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(28)">Reset</button><span class="runhint" id="rh28"></span><span class="checkres" id="ck28"></span></div>
+<div class="output" id="out28"></div>
+</div><div class="q code" id="q29" data-kind="code" data-n="29">
+<div class="qhead"><span class="qnum">Q29</span><span class="badge code">Short code</span><span class="status" id="st29"></span></div>
+<div class="prompt">Convert the list <code>[1, 2, 3]</code> to a tuple and the tuple <code>(4, 5, 6)</code> to a list. Print both.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans29" class="code-edit" rows="4" spellcheck="false" oninput="mark(29)"># convert and print both
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(29)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(29)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(29)">Reset</button><span class="runhint" id="rh29"></span><span class="checkres" id="ck29"></span></div>
+<div class="output" id="out29"></div>
+</div><div class="q code" id="q30" data-kind="code" data-n="30">
+<div class="qhead"><span class="qnum">Q30</span><span class="badge code">Short code</span><span class="status" id="st30"></span></div>
+<div class="prompt">Count occurrences of 2 in <code>(2, 3, 2, 4, 2)</code> using <code>count</code>, and the index of 4 using <code>index</code>. Print both.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans30" class="code-edit" rows="4" spellcheck="false" oninput="mark(30)">t = (2, 3, 2, 4, 2)
+# print count of 2 and index of 4
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(30)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(30)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(30)">Reset</button><span class="runhint" id="rh30"></span><span class="checkres" id="ck30"></span></div>
+<div class="output" id="out30"></div>
+</div><div class="q code" id="q31" data-kind="code" data-n="31">
+<div class="qhead"><span class="qnum">Q31</span><span class="badge code">Short code</span><span class="status" id="st31"></span></div>
+<div class="prompt">A tuple can hold a mutable list. For <code>t = (1, [2, 3])</code>, append 4 to the inner list and print <code>t</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans31" class="code-edit" rows="4" spellcheck="false" oninput="mark(31)">t = (1, [2, 3])
+# append 4 to t[1], print t
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(31)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(31)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(31)">Reset</button><span class="runhint" id="rh31"></span><span class="checkres" id="ck31"></span></div>
+<div class="output" id="out31"></div>
+</div><div class="q code" id="q32" data-kind="code" data-n="32">
+<div class="qhead"><span class="qnum">Q32</span><span class="badge code">Short code</span><span class="status" id="st32"></span></div>
+<div class="prompt">Return two values from a computation as a tuple: given <code>a, b = 17, 5</code>, print <code>(a // b, a % b)</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans32" class="code-edit" rows="4" spellcheck="false" oninput="mark(32)">a, b = 17, 5
+# print quotient and remainder as a tuple
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(32)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(32)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(32)">Reset</button><span class="runhint" id="rh32"></span><span class="checkres" id="ck32"></span></div>
+<div class="output" id="out32"></div>
+</div><div class="q code" id="q33" data-kind="code" data-n="33">
+<div class="qhead"><span class="qnum">Q33</span><span class="badge code">Short code</span><span class="status" id="st33"></span></div>
+<div class="prompt">Use <code>enumerate</code> over <code>('x', 'y', 'z')</code> to build a list of <code>(index, value)</code> tuples. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans33" class="code-edit" rows="4" spellcheck="false" oninput="mark(33)">letters = ('x', 'y', 'z')
+# build and print list of (i, v) tuples
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(33)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(33)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(33)">Reset</button><span class="runhint" id="rh33"></span><span class="checkres" id="ck33"></span></div>
+<div class="output" id="out33"></div>
+</div><div class="q code" id="q34" data-kind="code" data-n="34">
+<div class="qhead"><span class="qnum">Q34</span><span class="badge code">Short code</span><span class="status" id="st34"></span></div>
+<div class="prompt">Zip <code>names = ['Asha', 'Ravi']</code> and <code>scores = [88, 72]</code> into a list of tuples. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans34" class="code-edit" rows="5" spellcheck="false" oninput="mark(34)">names = ['Asha', 'Ravi']
+scores = [88, 72]
+# print list(zip(...))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(34)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(34)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(34)">Reset</button><span class="runhint" id="rh34"></span><span class="checkres" id="ck34"></span></div>
+<div class="output" id="out34"></div>
+</div><div class="q code" id="q35" data-kind="code" data-n="35">
+<div class="qhead"><span class="qnum">Q35</span><span class="badge code">Short code</span><span class="status" id="st35"></span></div>
+<div class="prompt">Sort <code>[(3, 'c'), (1, 'a'), (2, 'b')]</code> by the first element and print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans35" class="code-edit" rows="4" spellcheck="false" oninput="mark(35)">data = [(3, 'c'), (1, 'a'), (2, 'b')]
+# sort by data[i][0]
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(35)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(35)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(35)">Reset</button><span class="runhint" id="rh35"></span><span class="checkres" id="ck35"></span></div>
+<div class="output" id="out35"></div>
+</div><div class="q code" id="q36" data-kind="code" data-n="36">
+<div class="qhead"><span class="qnum">Q36</span><span class="badge code">Short code</span><span class="status" id="st36"></span></div>
+<div class="prompt">Sort <code>[('Asha', 88), ('Ravi', 72), ('Meera', 95)]</code> by score (second element) using <code>key</code>. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans36" class="code-edit" rows="4" spellcheck="false" oninput="mark(36)">data = [('Asha', 88), ('Ravi', 72), ('Meera', 95)]
+# sort by the score
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(36)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(36)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(36)">Reset</button><span class="runhint" id="rh36"></span><span class="checkres" id="ck36"></span></div>
+<div class="output" id="out36"></div>
+</div><div class="q code" id="q37" data-kind="code" data-n="37">
+<div class="qhead"><span class="qnum">Q37</span><span class="badge code">Short code</span><span class="status" id="st37"></span></div>
+<div class="prompt">Find the pair with the highest score in the list above using <code>max</code> with a <code>key</code>. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans37" class="code-edit" rows="4" spellcheck="false" oninput="mark(37)">data = [('Asha', 88), ('Ravi', 72), ('Meera', 95)]
+# print the top (name, score) pair
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(37)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(37)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(37)">Reset</button><span class="runhint" id="rh37"></span><span class="checkres" id="ck37"></span></div>
+<div class="output" id="out37"></div>
+</div><div class="q code" id="q38" data-kind="code" data-n="38">
+<div class="qhead"><span class="qnum">Q38</span><span class="badge code">Short code</span><span class="status" id="st38"></span></div>
+<div class="prompt">Unpack in a loop with index: for <code>i, (name, score)</code> in <code>enumerate(data)</code>, print 'i name score'.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans38" class="code-edit" rows="4" spellcheck="false" oninput="mark(38)">data = [('Asha', 88), ('Ravi', 72)]
+# print '0 Asha 88', '1 Ravi 72'
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(38)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(38)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(38)">Reset</button><span class="runhint" id="rh38"></span><span class="checkres" id="ck38"></span></div>
+<div class="output" id="out38"></div>
+</div><div class="q code" id="q39" data-kind="code" data-n="39">
+<div class="qhead"><span class="qnum">Q39</span><span class="badge code">Short code</span><span class="status" id="st39"></span></div>
+<div class="prompt">Given coordinates <code>pts = [(1, 2), (4, 6)]</code>, compute and print the sum of all x's and all y's separately using unpacking in a loop.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans39" class="code-edit" rows="4" spellcheck="false" oninput="mark(39)">pts = [(1, 2), (4, 6)]
+# print total x and total y
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(39)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(39)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(39)">Reset</button><span class="runhint" id="rh39"></span><span class="checkres" id="ck39"></span></div>
+<div class="output" id="out39"></div>
+</div><div class="q code" id="q40" data-kind="code" data-n="40">
+<div class="qhead"><span class="qnum">Q40</span><span class="badge code">Short code</span><span class="status" id="st40"></span></div>
+<div class="prompt">Gradebook: from <code>records = [('Asha', 88), ('Ravi', 72), ('Meera', 95)]</code>, loop and print only the names of students scoring &ge; 80.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans40" class="code-edit" rows="4" spellcheck="false" oninput="mark(40)">records = [('Asha', 88), ('Ravi', 72), ('Meera', 95)]
+# print names with score &gt;= 80
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(40)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(40)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(40)">Reset</button><span class="runhint" id="rh40"></span><span class="checkres" id="ck40"></span></div>
+<div class="output" id="out40"></div>
+</div><h2 class="section" id="s41">Section 3 &middot; Sets &mdash; membership &amp; algebra <span class="srange">(Q41&ndash;Q60)</span></h2><div class="q code" id="q41" data-kind="code" data-n="41">
+<div class="qhead"><span class="qnum">Q41</span><span class="badge code">Short code</span><span class="status" id="st41"></span></div>
+<div class="prompt">Create a set from <code>[1, 2, 2, 3, 3, 3]</code> and print it (duplicates removed).</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans41" class="code-edit" rows="4" spellcheck="false" oninput="mark(41)"># print set([1, 2, 2, 3, 3, 3])
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(41)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(41)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(41)">Reset</button><span class="runhint" id="rh41"></span><span class="checkres" id="ck41"></span></div>
+<div class="output" id="out41"></div>
+</div><div class="q code" id="q42" data-kind="code" data-n="42">
+<div class="qhead"><span class="qnum">Q42</span><span class="badge code">Short code</span><span class="status" id="st42"></span></div>
+<div class="prompt">Add 4 and 5 to a set <code>s = {1, 2, 3}</code> and print it. Then try adding 2 again and show the size is unchanged.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans42" class="code-edit" rows="4" spellcheck="false" oninput="mark(42)">s = {1, 2, 3}
+# add 4, 5, then 2 again; print s and len(s)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(42)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(42)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(42)">Reset</button><span class="runhint" id="rh42"></span><span class="checkres" id="ck42"></span></div>
+<div class="output" id="out42"></div>
+</div><div class="q code" id="q43" data-kind="code" data-n="43">
+<div class="qhead"><span class="qnum">Q43</span><span class="badge code">Short code</span><span class="status" id="st43"></span></div>
+<div class="prompt">Test membership: print whether 3 and 9 are in <code>{1, 2, 3}</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans43" class="code-edit" rows="4" spellcheck="false" oninput="mark(43)">s = {1, 2, 3}
+# print (3 in s) and (9 in s)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(43)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(43)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(43)">Reset</button><span class="runhint" id="rh43"></span><span class="checkres" id="ck43"></span></div>
+<div class="output" id="out43"></div>
+</div><div class="q code" id="q44" data-kind="code" data-n="44">
+<div class="qhead"><span class="qnum">Q44</span><span class="badge code">Short code</span><span class="status" id="st44"></span></div>
+<div class="prompt">Given <code>a = {1, 2, 3, 4}</code> and <code>b = {3, 4, 5, 6}</code>, print their intersection with <code>&amp;</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans44" class="code-edit" rows="5" spellcheck="false" oninput="mark(44)">a = {1, 2, 3, 4}
+b = {3, 4, 5, 6}
+# print a &amp; b
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(44)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(44)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(44)">Reset</button><span class="runhint" id="rh44"></span><span class="checkres" id="ck44"></span></div>
+<div class="output" id="out44"></div>
+</div><div class="q code" id="q45" data-kind="code" data-n="45">
+<div class="qhead"><span class="qnum">Q45</span><span class="badge code">Short code</span><span class="status" id="st45"></span></div>
+<div class="prompt">Using the same a and b, print the union with <code>|</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans45" class="code-edit" rows="5" spellcheck="false" oninput="mark(45)">a = {1, 2, 3, 4}
+b = {3, 4, 5, 6}
+# print a | b
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(45)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(45)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(45)">Reset</button><span class="runhint" id="rh45"></span><span class="checkres" id="ck45"></span></div>
+<div class="output" id="out45"></div>
+</div><div class="q code" id="q46" data-kind="code" data-n="46">
+<div class="qhead"><span class="qnum">Q46</span><span class="badge code">Short code</span><span class="status" id="st46"></span></div>
+<div class="prompt">Using the same a and b, print the difference <code>a - b</code> and <code>b - a</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans46" class="code-edit" rows="5" spellcheck="false" oninput="mark(46)">a = {1, 2, 3, 4}
+b = {3, 4, 5, 6}
+# print a - b and b - a
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(46)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(46)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(46)">Reset</button><span class="runhint" id="rh46"></span><span class="checkres" id="ck46"></span></div>
+<div class="output" id="out46"></div>
+</div><div class="q code" id="q47" data-kind="code" data-n="47">
+<div class="qhead"><span class="qnum">Q47</span><span class="badge code">Short code</span><span class="status" id="st47"></span></div>
+<div class="prompt">Print the symmetric difference of a and b with <code>^</code> (items in exactly one set).</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans47" class="code-edit" rows="5" spellcheck="false" oninput="mark(47)">a = {1, 2, 3, 4}
+b = {3, 4, 5, 6}
+# print a ^ b
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(47)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(47)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(47)">Reset</button><span class="runhint" id="rh47"></span><span class="checkres" id="ck47"></span></div>
+<div class="output" id="out47"></div>
+</div><div class="q code" id="q48" data-kind="code" data-n="48">
+<div class="qhead"><span class="qnum">Q48</span><span class="badge code">Short code</span><span class="status" id="st48"></span></div>
+<div class="prompt">Remove duplicates from <code>[3, 1, 3, 2, 1, 4]</code> while preserving first-seen order, using a set to track seen values and a loop. Print the result.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans48" class="code-edit" rows="4" spellcheck="false" oninput="mark(48)">nums = [3, 1, 3, 2, 1, 4]
+# order-preserving unique via a 'seen' set
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(48)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(48)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(48)">Reset</button><span class="runhint" id="rh48"></span><span class="checkres" id="ck48"></span></div>
+<div class="output" id="out48"></div>
+</div><div class="q code" id="q49" data-kind="code" data-n="49">
+<div class="qhead"><span class="qnum">Q49</span><span class="badge code">Short code</span><span class="status" id="st49"></span></div>
+<div class="prompt">Count the number of unique words in <code>'the cat sat on the mat'</code> using a set. Print the count.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans49" class="code-edit" rows="4" spellcheck="false" oninput="mark(49)">sentence = 'the cat sat on the mat'
+# split, put in a set, print len
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(49)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(49)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(49)">Reset</button><span class="runhint" id="rh49"></span><span class="checkres" id="ck49"></span></div>
+<div class="output" id="out49"></div>
+</div><div class="q code" id="q50" data-kind="code" data-n="50">
+<div class="qhead"><span class="qnum">Q50</span><span class="badge code">Short code</span><span class="status" id="st50"></span></div>
+<div class="prompt">Check whether <code>{1, 2}</code> is a subset of <code>{1, 2, 3}</code> using <code>issubset</code>. Print the result.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans50" class="code-edit" rows="4" spellcheck="false" oninput="mark(50)"># print {1, 2}.issubset({1, 2, 3})
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(50)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(50)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(50)">Reset</button><span class="runhint" id="rh50"></span><span class="checkres" id="ck50"></span></div>
+<div class="output" id="out50"></div>
+</div><div class="q code" id="q51" data-kind="code" data-n="51">
+<div class="qhead"><span class="qnum">Q51</span><span class="badge code">Short code</span><span class="status" id="st51"></span></div>
+<div class="prompt">Show that a set is unordered/unindexable: try <code>s[0]</code> in try/except and print 'not subscriptable' on failure.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans51" class="code-edit" rows="4" spellcheck="false" oninput="mark(51)">s = {10, 20, 30}
+# catch TypeError, print 'not subscriptable'
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(51)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(51)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(51)">Reset</button><span class="runhint" id="rh51"></span><span class="checkres" id="ck51"></span></div>
+<div class="output" id="out51"></div>
+</div><div class="q code" id="q52" data-kind="code" data-n="52">
+<div class="qhead"><span class="qnum">Q52</span><span class="badge code">Short code</span><span class="status" id="st52"></span></div>
+<div class="prompt">Use <code>discard</code> to remove 2 from <code>{1, 2, 3}</code> and also discard 9 (absent) without error. Print the set.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans52" class="code-edit" rows="4" spellcheck="false" oninput="mark(52)">s = {1, 2, 3}
+# discard 2 and 9, print s
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(52)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(52)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(52)">Reset</button><span class="runhint" id="rh52"></span><span class="checkres" id="ck52"></span></div>
+<div class="output" id="out52"></div>
+</div><div class="q code" id="q53" data-kind="code" data-n="53">
+<div class="qhead"><span class="qnum">Q53</span><span class="badge code">Short code</span><span class="status" id="st53"></span></div>
+<div class="prompt">Given two class rosters as sets, print the students enrolled in BOTH sections.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans53" class="code-edit" rows="5" spellcheck="false" oninput="mark(53)">sec_a = {'Asha', 'Ravi', 'Dev'}
+sec_b = {'Ravi', 'Meera', 'Dev'}
+# print students in both
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(53)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(53)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(53)">Reset</button><span class="runhint" id="rh53"></span><span class="checkres" id="ck53"></span></div>
+<div class="output" id="out53"></div>
+</div><div class="q code" id="q54" data-kind="code" data-n="54">
+<div class="qhead"><span class="qnum">Q54</span><span class="badge code">Short code</span><span class="status" id="st54"></span></div>
+<div class="prompt">Print students enrolled in EITHER section but NOT both (symmetric difference).</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans54" class="code-edit" rows="5" spellcheck="false" oninput="mark(54)">sec_a = {'Asha', 'Ravi', 'Dev'}
+sec_b = {'Ravi', 'Meera', 'Dev'}
+# print exclusive-or of the rosters
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(54)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(54)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(54)">Reset</button><span class="runhint" id="rh54"></span><span class="checkres" id="ck54"></span></div>
+<div class="output" id="out54"></div>
+</div><div class="q code" id="q55" data-kind="code" data-n="55">
+<div class="qhead"><span class="qnum">Q55</span><span class="badge code">Short code</span><span class="status" id="st55"></span></div>
+<div class="prompt">Build a set comprehension of the squares of 0..5 and print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans55" class="code-edit" rows="4" spellcheck="false" oninput="mark(55)"># squares = { ... }
+# print squares
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(55)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(55)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(55)">Reset</button><span class="runhint" id="rh55"></span><span class="checkres" id="ck55"></span></div>
+<div class="output" id="out55"></div>
+</div><div class="q code" id="q56" data-kind="code" data-n="56">
+<div class="qhead"><span class="qnum">Q56</span><span class="badge code">Short code</span><span class="status" id="st56"></span></div>
+<div class="prompt">From <code>marks = [90, 90, 75, 60, 75]</code>, print the distinct marks (as a set) and how many distinct values there are.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans56" class="code-edit" rows="4" spellcheck="false" oninput="mark(56)">marks = [90, 90, 75, 60, 75]
+# print the set and its length
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(56)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(56)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(56)">Reset</button><span class="runhint" id="rh56"></span><span class="checkres" id="ck56"></span></div>
+<div class="output" id="out56"></div>
+</div><div class="q code" id="q57" data-kind="code" data-n="57">
+<div class="qhead"><span class="qnum">Q57</span><span class="badge code">Short code</span><span class="status" id="st57"></span></div>
+<div class="prompt">Given a list with duplicates, print whether it contains any duplicates by comparing <code>len(list)</code> with <code>len(set(list))</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans57" class="code-edit" rows="4" spellcheck="false" oninput="mark(57)">nums = [1, 2, 3, 2, 5]
+# print True if duplicates exist
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(57)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(57)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(57)">Reset</button><span class="runhint" id="rh57"></span><span class="checkres" id="ck57"></span></div>
+<div class="output" id="out57"></div>
+</div><div class="q code" id="q58" data-kind="code" data-n="58">
+<div class="qhead"><span class="qnum">Q58</span><span class="badge code">Short code</span><span class="status" id="st58"></span></div>
+<div class="prompt">Compute the common elements of THREE sets a, b, c using chained <code>&amp;</code>. Print the result.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans58" class="code-edit" rows="6" spellcheck="false" oninput="mark(58)">a = {1, 2, 3, 4}
+b = {2, 3, 4, 5}
+c = {3, 4, 5, 6}
+# print a &amp; b &amp; c
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(58)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(58)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(58)">Reset</button><span class="runhint" id="rh58"></span><span class="checkres" id="ck58"></span></div>
+<div class="output" id="out58"></div>
+</div><div class="q code" id="q59" data-kind="code" data-n="59">
+<div class="qhead"><span class="qnum">Q59</span><span class="badge code">Short code</span><span class="status" id="st59"></span></div>
+<div class="prompt">Update a set in place: use <code>update</code> to add all of <code>[7, 8, 9]</code> to <code>{1, 2}</code>. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans59" class="code-edit" rows="4" spellcheck="false" oninput="mark(59)">s = {1, 2}
+# s.update([7, 8, 9]); print s
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(59)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(59)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(59)">Reset</button><span class="runhint" id="rh59"></span><span class="checkres" id="ck59"></span></div>
+<div class="output" id="out59"></div>
+</div><div class="q code" id="q60" data-kind="code" data-n="60">
+<div class="qhead"><span class="qnum">Q60</span><span class="badge code">Short code</span><span class="status" id="st60"></span></div>
+<div class="prompt">Gradebook: given two sets of roll numbers who submitted Lab 01 and Lab 02, print the rolls that submitted Lab 01 but NOT Lab 02.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans60" class="code-edit" rows="5" spellcheck="false" oninput="mark(60)">lab1 = {'R1', 'R2', 'R3', 'R4'}
+lab2 = {'R2', 'R4', 'R5'}
+# print rolls in lab1 but not lab2
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(60)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(60)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(60)">Reset</button><span class="runhint" id="rh60"></span><span class="checkres" id="ck60"></span></div>
+<div class="output" id="out60"></div>
+</div><h2 class="section" id="s61">Section 4 &middot; Dictionaries &amp; the gradebook <span class="srange">(Q61&ndash;Q80)</span></h2><div class="q code" id="q61" data-kind="code" data-n="61">
+<div class="qhead"><span class="qnum">Q61</span><span class="badge code">Short code</span><span class="status" id="st61"></span></div>
+<div class="prompt">Create a dict <code>marks = {'Asha': 88, 'Ravi': 72}</code> and print Asha's mark.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans61" class="code-edit" rows="4" spellcheck="false" oninput="mark(61)">marks = {'Asha': 88, 'Ravi': 72}
+# print marks['Asha']
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(61)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(61)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(61)">Reset</button><span class="runhint" id="rh61"></span><span class="checkres" id="ck61"></span></div>
+<div class="output" id="out61"></div>
+</div><div class="q code" id="q62" data-kind="code" data-n="62">
+<div class="qhead"><span class="qnum">Q62</span><span class="badge code">Short code</span><span class="status" id="st62"></span></div>
+<div class="prompt">Add a new student 'Meera' with 95 to the dict and print the whole dict.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans62" class="code-edit" rows="4" spellcheck="false" oninput="mark(62)">marks = {'Asha': 88, 'Ravi': 72}
+# add Meera=95, print marks
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(62)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(62)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(62)">Reset</button><span class="runhint" id="rh62"></span><span class="checkres" id="ck62"></span></div>
+<div class="output" id="out62"></div>
+</div><div class="q code" id="q63" data-kind="code" data-n="63">
+<div class="qhead"><span class="qnum">Q63</span><span class="badge code">Short code</span><span class="status" id="st63"></span></div>
+<div class="prompt">Use <code>get</code> to look up 'Dev' with a default of 0 (absent) and 'Asha' (present). Print both.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans63" class="code-edit" rows="4" spellcheck="false" oninput="mark(63)">marks = {'Asha': 88, 'Ravi': 72}
+# print marks.get('Dev', 0) and marks.get('Asha', 0)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(63)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(63)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(63)">Reset</button><span class="runhint" id="rh63"></span><span class="checkres" id="ck63"></span></div>
+<div class="output" id="out63"></div>
+</div><div class="q code" id="q64" data-kind="code" data-n="64">
+<div class="qhead"><span class="qnum">Q64</span><span class="badge code">Short code</span><span class="status" id="st64"></span></div>
+<div class="prompt">Loop over the dict and print each 'name score' pair on its own line.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans64" class="code-edit" rows="4" spellcheck="false" oninput="mark(64)">marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}
+# print each name and score
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(64)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(64)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(64)">Reset</button><span class="runhint" id="rh64"></span><span class="checkres" id="ck64"></span></div>
+<div class="output" id="out64"></div>
+</div><div class="q code" id="q65" data-kind="code" data-n="65">
+<div class="qhead"><span class="qnum">Q65</span><span class="badge code">Short code</span><span class="status" id="st65"></span></div>
+<div class="prompt">Print all the keys as a list and all the values as a list using <code>keys</code> and <code>values</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans65" class="code-edit" rows="4" spellcheck="false" oninput="mark(65)">marks = {'Asha': 88, 'Ravi': 72}
+# print list(keys) and list(values)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(65)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(65)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(65)">Reset</button><span class="runhint" id="rh65"></span><span class="checkres" id="ck65"></span></div>
+<div class="output" id="out65"></div>
+</div><div class="q code" id="q66" data-kind="code" data-n="66">
+<div class="qhead"><span class="qnum">Q66</span><span class="badge code">Short code</span><span class="status" id="st66"></span></div>
+<div class="prompt">Iterate with <code>items</code>: print 'name -> score' for each entry.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans66" class="code-edit" rows="4" spellcheck="false" oninput="mark(66)">marks = {'Asha': 88, 'Ravi': 72}
+# for k, v in marks.items(): ...
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(66)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(66)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(66)">Reset</button><span class="runhint" id="rh66"></span><span class="checkres" id="ck66"></span></div>
+<div class="output" id="out66"></div>
+</div><div class="q code" id="q67" data-kind="code" data-n="67">
+<div class="qhead"><span class="qnum">Q67</span><span class="badge code">Short code</span><span class="status" id="st67"></span></div>
+<div class="prompt">Check membership: print whether 'Ravi' and 'Dev' are keys in the dict.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans67" class="code-edit" rows="4" spellcheck="false" oninput="mark(67)">marks = {'Asha': 88, 'Ravi': 72}
+# print ('Ravi' in marks) and ('Dev' in marks)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(67)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(67)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(67)">Reset</button><span class="runhint" id="rh67"></span><span class="checkres" id="ck67"></span></div>
+<div class="output" id="out67"></div>
+</div><div class="q code" id="q68" data-kind="code" data-n="68">
+<div class="qhead"><span class="qnum">Q68</span><span class="badge code">Short code</span><span class="status" id="st68"></span></div>
+<div class="prompt">Update Ravi's mark to 80 and delete Asha from the dict using <code>del</code>. Print the dict.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans68" class="code-edit" rows="4" spellcheck="false" oninput="mark(68)">marks = {'Asha': 88, 'Ravi': 72}
+# set Ravi=80, del Asha, print
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(68)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(68)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(68)">Reset</button><span class="runhint" id="rh68"></span><span class="checkres" id="ck68"></span></div>
+<div class="output" id="out68"></div>
+</div><div class="q code" id="q69" data-kind="code" data-n="69">
+<div class="qhead"><span class="qnum">Q69</span><span class="badge code">Short code</span><span class="status" id="st69"></span></div>
+<div class="prompt">Build a dict of squares <code>{n: n*n}</code> for n in 0..5 using a dict comprehension. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans69" class="code-edit" rows="4" spellcheck="false" oninput="mark(69)"># squares = { ... }
+# print squares
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(69)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(69)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(69)">Reset</button><span class="runhint" id="rh69"></span><span class="checkres" id="ck69"></span></div>
+<div class="output" id="out69"></div>
+</div><div class="q code" id="q70" data-kind="code" data-n="70">
+<div class="qhead"><span class="qnum">Q70</span><span class="badge code">Short code</span><span class="status" id="st70"></span></div>
+<div class="prompt">From <code>names = ['Asha', 'Ravi']</code> and <code>scores = [88, 72]</code>, build a dict with <code>zip</code>. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans70" class="code-edit" rows="5" spellcheck="false" oninput="mark(70)">names = ['Asha', 'Ravi']
+scores = [88, 72]
+# print dict(zip(names, scores))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(70)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(70)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(70)">Reset</button><span class="runhint" id="rh70"></span><span class="checkres" id="ck70"></span></div>
+<div class="output" id="out70"></div>
+</div><div class="q code" id="q71" data-kind="code" data-n="71">
+<div class="qhead"><span class="qnum">Q71</span><span class="badge code">Short code</span><span class="status" id="st71"></span></div>
+<div class="prompt">Compute the class average from <code>marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}</code> using a loop over values (no <code>sum</code>/<code>len</code> shortcuts).</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans71" class="code-edit" rows="4" spellcheck="false" oninput="mark(71)">marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}
+# compute and print the average
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(71)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(71)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(71)">Reset</button><span class="runhint" id="rh71"></span><span class="checkres" id="ck71"></span></div>
+<div class="output" id="out71"></div>
+</div><div class="q code" id="q72" data-kind="code" data-n="72">
+<div class="qhead"><span class="qnum">Q72</span><span class="badge code">Short code</span><span class="status" id="st72"></span></div>
+<div class="prompt">Find the top scorer: loop the dict, track the best name and score, and print 'name score'.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans72" class="code-edit" rows="4" spellcheck="false" oninput="mark(72)">marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}
+# print the topper and their mark
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(72)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(72)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(72)">Reset</button><span class="runhint" id="rh72"></span><span class="checkres" id="ck72"></span></div>
+<div class="output" id="out72"></div>
+</div><div class="q code" id="q73" data-kind="code" data-n="73">
+<div class="qhead"><span class="qnum">Q73</span><span class="badge code">Short code</span><span class="status" id="st73"></span></div>
+<div class="prompt">Filter the gradebook with a dict comprehension: keep only students scoring &ge; 80. Print the filtered dict.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans73" class="code-edit" rows="4" spellcheck="false" oninput="mark(73)">marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95, 'Dev': 61}
+# {k: v for ... if v &gt;= 80}
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(73)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(73)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(73)">Reset</button><span class="runhint" id="rh73"></span><span class="checkres" id="ck73"></span></div>
+<div class="output" id="out73"></div>
+</div><div class="q code" id="q74" data-kind="code" data-n="74">
+<div class="qhead"><span class="qnum">Q74</span><span class="badge code">Short code</span><span class="status" id="st74"></span></div>
+<div class="prompt">Count how many students are in each grade band (A&ge;90, B&ge;80, C&ge;70, F otherwise) using a dict of counters and a loop. Print the counts.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans74" class="code-edit" rows="4" spellcheck="false" oninput="mark(74)">marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95, 'Dev': 61}
+# tally grade bands into a dict, print it
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(74)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(74)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(74)">Reset</button><span class="runhint" id="rh74"></span><span class="checkres" id="ck74"></span></div>
+<div class="output" id="out74"></div>
+</div><div class="q code" id="q75" data-kind="code" data-n="75">
+<div class="qhead"><span class="qnum">Q75</span><span class="badge code">Short code</span><span class="status" id="st75"></span></div>
+<div class="prompt">Given a sentence, build a word-frequency dict with a loop (use <code>get</code>). Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans75" class="code-edit" rows="4" spellcheck="false" oninput="mark(75)">sentence = 'the cat sat on the mat the cat'
+# build {word: count}
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(75)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(75)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(75)">Reset</button><span class="runhint" id="rh75"></span><span class="checkres" id="ck75"></span></div>
+<div class="output" id="out75"></div>
+</div><div class="q code" id="q76" data-kind="code" data-n="76">
+<div class="qhead"><span class="qnum">Q76</span><span class="badge code">Short code</span><span class="status" id="st76"></span></div>
+<div class="prompt">Invert a dict <code>{'a': 1, 'b': 2}</code> to <code>{1: 'a', 2: 'b'}</code> using a comprehension. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans76" class="code-edit" rows="4" spellcheck="false" oninput="mark(76)">d = {'a': 1, 'b': 2}
+# print the inverted dict
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(76)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(76)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(76)">Reset</button><span class="runhint" id="rh76"></span><span class="checkres" id="ck76"></span></div>
+<div class="output" id="out76"></div>
+</div><div class="q code" id="q77" data-kind="code" data-n="77">
+<div class="qhead"><span class="qnum">Q77</span><span class="badge code">Short code</span><span class="status" id="st77"></span></div>
+<div class="prompt">Merge two dicts <code>{'a': 1}</code> and <code>{'b': 2}</code> into one. Print the merged dict.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans77" class="code-edit" rows="5" spellcheck="false" oninput="mark(77)">d1 = {'a': 1}
+d2 = {'b': 2}
+# merge and print (e.g. {**d1, **d2})
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(77)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(77)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(77)">Reset</button><span class="runhint" id="rh77"></span><span class="checkres" id="ck77"></span></div>
+<div class="output" id="out77"></div>
+</div><div class="q code" id="q78" data-kind="code" data-n="78">
+<div class="qhead"><span class="qnum">Q78</span><span class="badge code">Short code</span><span class="status" id="st78"></span></div>
+<div class="prompt">Sort the gradebook entries by score (descending) into a list of <code>(name, score)</code> tuples. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans78" class="code-edit" rows="4" spellcheck="false" oninput="mark(78)">marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}
+# print sorted items, highest score first
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(78)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(78)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(78)">Reset</button><span class="runhint" id="rh78"></span><span class="checkres" id="ck78"></span></div>
+<div class="output" id="out78"></div>
+</div><div class="q code" id="q79" data-kind="code" data-n="79">
+<div class="qhead"><span class="qnum">Q79</span><span class="badge code">Short code</span><span class="status" id="st79"></span></div>
+<div class="prompt">Given a mark, look up its letter grade in a rules structure and print it. Use a loop over ordered (cutoff, letter) pairs.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans79" class="code-edit" rows="5" spellcheck="false" oninput="mark(79)">mark = 83
+bands = [(90, 'A'), (80, 'B'), (70, 'C'), (0, 'F')]
+# find and print the letter grade
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(79)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(79)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(79)">Reset</button><span class="runhint" id="rh79"></span><span class="checkres" id="ck79"></span></div>
+<div class="output" id="out79"></div>
+</div><div class="q code" id="q80" data-kind="code" data-n="80">
+<div class="qhead"><span class="qnum">Q80</span><span class="badge code">Short code</span><span class="status" id="st80"></span></div>
+<div class="prompt">Gradebook capstone: from <code>gb = {'Asha': 88, 'Ravi': 72, 'Meera': 95, 'Dev': 61}</code>, print the average, the topper, and the count passing (&ge; 40).</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans80" class="code-edit" rows="4" spellcheck="false" oninput="mark(80)">gb = {'Asha': 88, 'Ravi': 72, 'Meera': 95, 'Dev': 61}
+# print average, topper, and pass count
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(80)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(80)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(80)">Reset</button><span class="runhint" id="rh80"></span><span class="checkres" id="ck80"></span></div>
+<div class="output" id="out80"></div>
+</div><h2 class="section" id="s81">Section 5 &middot; Branching &amp; loops over collections <span class="srange">(Q81&ndash;Q100)</span></h2><div class="q code" id="q81" data-kind="code" data-n="81">
+<div class="qhead"><span class="qnum">Q81</span><span class="badge code">Short code</span><span class="status" id="st81"></span></div>
+<div class="prompt">For each number in <code>[3, 8, 5, 12]</code>, print 'even' or 'odd' using if/else in a loop.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans81" class="code-edit" rows="4" spellcheck="false" oninput="mark(81)">nums = [3, 8, 5, 12]
+# print even/odd for each
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(81)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(81)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(81)">Reset</button><span class="runhint" id="rh81"></span><span class="checkres" id="ck81"></span></div>
+<div class="output" id="out81"></div>
+</div><div class="q code" id="q82" data-kind="code" data-n="82">
+<div class="qhead"><span class="qnum">Q82</span><span class="badge code">Short code</span><span class="status" id="st82"></span></div>
+<div class="prompt">Print FizzBuzz for 1..20: 'Fizz' if divisible by 3, 'Buzz' if by 5, 'FizzBuzz' if both, else the number.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans82" class="code-edit" rows="4" spellcheck="false" oninput="mark(82)"># FizzBuzz 1..20
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(82)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(82)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(82)">Reset</button><span class="runhint" id="rh82"></span><span class="checkres" id="ck82"></span></div>
+<div class="output" id="out82"></div>
+</div><div class="q code" id="q83" data-kind="code" data-n="83">
+<div class="qhead"><span class="qnum">Q83</span><span class="badge code">Short code</span><span class="status" id="st83"></span></div>
+<div class="prompt">Classify each mark in <code>[95, 82, 71, 55]</code> into a letter grade with if/elif/else in a loop and print 'mark grade'.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans83" class="code-edit" rows="4" spellcheck="false" oninput="mark(83)">marks = [95, 82, 71, 55]
+# print each mark with its grade
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(83)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(83)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(83)">Reset</button><span class="runhint" id="rh83"></span><span class="checkres" id="ck83"></span></div>
+<div class="output" id="out83"></div>
+</div><div class="q code" id="q84" data-kind="code" data-n="84">
+<div class="qhead"><span class="qnum">Q84</span><span class="badge code">Short code</span><span class="status" id="st84"></span></div>
+<div class="prompt">Sum only the even numbers in <code>range(1, 21)</code> using a loop and a condition. Print the total.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans84" class="code-edit" rows="4" spellcheck="false" oninput="mark(84)"># total of evens 1..20
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(84)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(84)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(84)">Reset</button><span class="runhint" id="rh84"></span><span class="checkres" id="ck84"></span></div>
+<div class="output" id="out84"></div>
+</div><div class="q code" id="q85" data-kind="code" data-n="85">
+<div class="qhead"><span class="qnum">Q85</span><span class="badge code">Short code</span><span class="status" id="st85"></span></div>
+<div class="prompt">Count how many negative numbers are in <code>[3, -1, 4, -5, 2, -6]</code> using a loop. Print the count.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans85" class="code-edit" rows="4" spellcheck="false" oninput="mark(85)">nums = [3, -1, 4, -5, 2, -6]
+# count negatives
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(85)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(85)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(85)">Reset</button><span class="runhint" id="rh85"></span><span class="checkres" id="ck85"></span></div>
+<div class="output" id="out85"></div>
+</div><div class="q code" id="q86" data-kind="code" data-n="86">
+<div class="qhead"><span class="qnum">Q86</span><span class="badge code">Short code</span><span class="status" id="st86"></span></div>
+<div class="prompt">Print the multiplication table of 7 (7x1 .. 7x10) using a for loop, one line each like '7 x 1 = 7'.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans86" class="code-edit" rows="4" spellcheck="false" oninput="mark(86)"># print 7's table
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(86)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(86)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(86)">Reset</button><span class="runhint" id="rh86"></span><span class="checkres" id="ck86"></span></div>
+<div class="output" id="out86"></div>
+</div><div class="q code" id="q87" data-kind="code" data-n="87">
+<div class="qhead"><span class="qnum">Q87</span><span class="badge code">Short code</span><span class="status" id="st87"></span></div>
+<div class="prompt">Given <code>[4, 8, 15, 16, 23, 42]</code>, use a for loop with <code>break</code> to find and print the first value &gt; 20 (stop after it).</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans87" class="code-edit" rows="4" spellcheck="false" oninput="mark(87)">nums = [4, 8, 15, 16, 23, 42]
+# first value &gt; 20, then break
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(87)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(87)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(87)">Reset</button><span class="runhint" id="rh87"></span><span class="checkres" id="ck87"></span></div>
+<div class="output" id="out87"></div>
+</div><div class="q code" id="q88" data-kind="code" data-n="88">
+<div class="qhead"><span class="qnum">Q88</span><span class="badge code">Short code</span><span class="status" id="st88"></span></div>
+<div class="prompt">Print all numbers in <code>range(1, 30)</code> that are divisible by 3 but not by 5, using <code>continue</code> to skip the rest.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans88" class="code-edit" rows="4" spellcheck="false" oninput="mark(88)"># div by 3 and not by 5, in 1..29
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(88)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(88)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(88)">Reset</button><span class="runhint" id="rh88"></span><span class="checkres" id="ck88"></span></div>
+<div class="output" id="out88"></div>
+</div><div class="q code" id="q89" data-kind="code" data-n="89">
+<div class="qhead"><span class="qnum">Q89</span><span class="badge code">Short code</span><span class="status" id="st89"></span></div>
+<div class="prompt">Use a while loop to keep halving 100 (integer division) until it reaches 0, printing each value.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans89" class="code-edit" rows="4" spellcheck="false" oninput="mark(89)">n = 100
+# while n &gt; 0: print n; n //= 2
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(89)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(89)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(89)">Reset</button><span class="runhint" id="rh89"></span><span class="checkres" id="ck89"></span></div>
+<div class="output" id="out89"></div>
+</div><div class="q code" id="q90" data-kind="code" data-n="90">
+<div class="qhead"><span class="qnum">Q90</span><span class="badge code">Short code</span><span class="status" id="st90"></span></div>
+<div class="prompt">Find whether 91 is prime using a for loop over possible divisors with <code>for...else</code>. Print 'prime' or 'composite'.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans90" class="code-edit" rows="4" spellcheck="false" oninput="mark(90)">n = 91
+# primality check with for...else
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(90)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(90)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(90)">Reset</button><span class="runhint" id="rh90"></span><span class="checkres" id="ck90"></span></div>
+<div class="output" id="out90"></div>
+</div><div class="q code" id="q91" data-kind="code" data-n="91">
+<div class="qhead"><span class="qnum">Q91</span><span class="badge code">Short code</span><span class="status" id="st91"></span></div>
+<div class="prompt">Print all primes from 2 to 30 using a nested loop and <code>for...else</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans91" class="code-edit" rows="4" spellcheck="false" oninput="mark(91)"># primes 2..30
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(91)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(91)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(91)">Reset</button><span class="runhint" id="rh91"></span><span class="checkres" id="ck91"></span></div>
+<div class="output" id="out91"></div>
+</div><div class="q code" id="q92" data-kind="code" data-n="92">
+<div class="qhead"><span class="qnum">Q92</span><span class="badge code">Short code</span><span class="status" id="st92"></span></div>
+<div class="prompt">From <code>marks = [88, -1, 72, 200, 60]</code>, use <code>continue</code> to skip invalid marks (outside 0..100) and print the count of valid ones.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans92" class="code-edit" rows="4" spellcheck="false" oninput="mark(92)">marks = [88, -1, 72, 200, 60]
+# count valid marks (0..100)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(92)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(92)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(92)">Reset</button><span class="runhint" id="rh92"></span><span class="checkres" id="ck92"></span></div>
+<div class="output" id="out92"></div>
+</div><div class="q code" id="q93" data-kind="code" data-n="93">
+<div class="qhead"><span class="qnum">Q93</span><span class="badge code">Short code</span><span class="status" id="st93"></span></div>
+<div class="prompt">Given a list of words, print only those longer than 3 letters, using a loop and a condition.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans93" class="code-edit" rows="4" spellcheck="false" oninput="mark(93)">words = ['a', 'the', 'cat', 'house', 'go', 'python']
+# print words with len &gt; 3
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(93)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(93)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(93)">Reset</button><span class="runhint" id="rh93"></span><span class="checkres" id="ck93"></span></div>
+<div class="output" id="out93"></div>
+</div><div class="q code" id="q94" data-kind="code" data-n="94">
+<div class="qhead"><span class="qnum">Q94</span><span class="badge code">Short code</span><span class="status" id="st94"></span></div>
+<div class="prompt">Build a new list containing the running (cumulative) sum of <code>[1, 2, 3, 4]</code>, e.g. <code>[1, 3, 6, 10]</code>. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans94" class="code-edit" rows="4" spellcheck="false" oninput="mark(94)">nums = [1, 2, 3, 4]
+# print the running totals
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(94)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(94)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(94)">Reset</button><span class="runhint" id="rh94"></span><span class="checkres" id="ck94"></span></div>
+<div class="output" id="out94"></div>
+</div><div class="q code" id="q95" data-kind="code" data-n="95">
+<div class="qhead"><span class="qnum">Q95</span><span class="badge code">Short code</span><span class="status" id="st95"></span></div>
+<div class="prompt">Search <code>marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}</code> for the first student scoring exactly 95 using for...else. Print the name or 'none'.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans95" class="code-edit" rows="4" spellcheck="false" oninput="mark(95)">marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}
+# for...else search for a 95
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(95)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(95)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(95)">Reset</button><span class="runhint" id="rh95"></span><span class="checkres" id="ck95"></span></div>
+<div class="output" id="out95"></div>
+</div><div class="q code" id="q96" data-kind="code" data-n="96">
+<div class="qhead"><span class="qnum">Q96</span><span class="badge code">Short code</span><span class="status" id="st96"></span></div>
+<div class="prompt">Count vowels in <code>'data science is fun'</code> using a loop and an <code>in</code> membership test against a vowel set. Print the count.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans96" class="code-edit" rows="4" spellcheck="false" oninput="mark(96)">text = 'data science is fun'
+# count vowels
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(96)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(96)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(96)">Reset</button><span class="runhint" id="rh96"></span><span class="checkres" id="ck96"></span></div>
+<div class="output" id="out96"></div>
+</div><div class="q code" id="q97" data-kind="code" data-n="97">
+<div class="qhead"><span class="qnum">Q97</span><span class="badge code">Short code</span><span class="status" id="st97"></span></div>
+<div class="prompt">Given <code>[5, 3, 8, 3, 9, 3]</code>, find the index of the LAST occurrence of 3 using a loop (not <code>rindex</code>). Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans97" class="code-edit" rows="4" spellcheck="false" oninput="mark(97)">nums = [5, 3, 8, 3, 9, 3]
+# index of last 3
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(97)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(97)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(97)">Reset</button><span class="runhint" id="rh97"></span><span class="checkres" id="ck97"></span></div>
+<div class="output" id="out97"></div>
+</div><div class="q code" id="q98" data-kind="code" data-n="98">
+<div class="qhead"><span class="qnum">Q98</span><span class="badge code">Short code</span><span class="status" id="st98"></span></div>
+<div class="prompt">Print a right-aligned number pyramid of height 5 (row i prints numbers 1..i), using nested loops.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans98" class="code-edit" rows="4" spellcheck="false" oninput="mark(98)"># rows: '1', '1 2', '1 2 3', ...
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(98)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(98)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(98)">Reset</button><span class="runhint" id="rh98"></span><span class="checkres" id="ck98"></span></div>
+<div class="output" id="out98"></div>
+</div><div class="q code" id="q99" data-kind="code" data-n="99">
+<div class="qhead"><span class="qnum">Q99</span><span class="badge code">Short code</span><span class="status" id="st99"></span></div>
+<div class="prompt">Curve a class: add 5 to each mark in <code>[88, 72, 95, 98]</code> but cap at 100, using a loop and a condition. Print the new list and how many were capped.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans99" class="code-edit" rows="4" spellcheck="false" oninput="mark(99)">marks = [88, 72, 95, 98]
+# curve +5 capped at 100; print list and cap count
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(99)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(99)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(99)">Reset</button><span class="runhint" id="rh99"></span><span class="checkres" id="ck99"></span></div>
+<div class="output" id="out99"></div>
+</div><div class="q code" id="q100" data-kind="code" data-n="100">
+<div class="qhead"><span class="qnum">Q100</span><span class="badge code">Short code</span><span class="status" id="st100"></span></div>
+<div class="prompt">Gradebook: from <code>marks = [88, 30, 72, 39, 95]</code>, print how many passed (&ge; 40) and how many failed, using a loop with branching.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans100" class="code-edit" rows="4" spellcheck="false" oninput="mark(100)">marks = [88, 30, 72, 39, 95]
+# print pass count and fail count
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(100)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(100)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(100)">Reset</button><span class="runhint" id="rh100"></span><span class="checkres" id="ck100"></span></div>
+<div class="output" id="out100"></div>
+</div><h2 class="section" id="s101">Section 6 &middot; Nested structures &amp; loop control <span class="srange">(Q101&ndash;Q120)</span></h2><div class="q code" id="q101" data-kind="code" data-n="101">
+<div class="qhead"><span class="qnum">Q101</span><span class="badge code">Short code</span><span class="status" id="st101"></span></div>
+<div class="prompt">Build a 3x3 grid of zeros as a list of lists (be careful to avoid aliasing rows) and print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans101" class="code-edit" rows="4" spellcheck="false" oninput="mark(101)"># grid = [[0]*3 for _ in range(3)]
+# print grid
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(101)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(101)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(101)">Reset</button><span class="runhint" id="rh101"></span><span class="checkres" id="ck101"></span></div>
+<div class="output" id="out101"></div>
+</div><div class="q code" id="q102" data-kind="code" data-n="102">
+<div class="qhead"><span class="qnum">Q102</span><span class="badge code">Short code</span><span class="status" id="st102"></span></div>
+<div class="prompt">Set the diagonal of a 3x3 zero grid to 1 using a loop and print each row on its own line.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans102" class="code-edit" rows="4" spellcheck="false" oninput="mark(102)">grid = [[0]*3 for _ in range(3)]
+# set grid[i][i] = 1; print rows
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(102)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(102)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(102)">Reset</button><span class="runhint" id="rh102"></span><span class="checkres" id="ck102"></span></div>
+<div class="output" id="out102"></div>
+</div><div class="q code" id="q103" data-kind="code" data-n="103">
+<div class="qhead"><span class="qnum">Q103</span><span class="badge code">Short code</span><span class="status" id="st103"></span></div>
+<div class="prompt">Given a list of student dicts, print each student's name and mark by looping and indexing into each dict.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans103" class="code-edit" rows="4" spellcheck="false" oninput="mark(103)">students = [{'name': 'Asha', 'mark': 88}, {'name': 'Ravi', 'mark': 72}]
+# print 'Asha 88', 'Ravi 72'
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(103)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(103)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(103)">Reset</button><span class="runhint" id="rh103"></span><span class="checkres" id="ck103"></span></div>
+<div class="output" id="out103"></div>
+</div><div class="q code" id="q104" data-kind="code" data-n="104">
+<div class="qhead"><span class="qnum">Q104</span><span class="badge code">Short code</span><span class="status" id="st104"></span></div>
+<div class="prompt">From the same list of student dicts, compute and print the average mark with a loop.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans104" class="code-edit" rows="4" spellcheck="false" oninput="mark(104)">students = [{'name': 'Asha', 'mark': 88}, {'name': 'Ravi', 'mark': 72}, {'name': 'Meera', 'mark': 95}]
+# print the average mark
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(104)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(104)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(104)">Reset</button><span class="runhint" id="rh104"></span><span class="checkres" id="ck104"></span></div>
+<div class="output" id="out104"></div>
+</div><div class="q code" id="q105" data-kind="code" data-n="105">
+<div class="qhead"><span class="qnum">Q105</span><span class="badge code">Short code</span><span class="status" id="st105"></span></div>
+<div class="prompt">Group words by their first letter into a dict of lists. Print the dict.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans105" class="code-edit" rows="4" spellcheck="false" oninput="mark(105)">words = ['apple', 'avocado', 'banana', 'cherry', 'apricot']
+# {'a': [...], 'b': [...], 'c': [...]}
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(105)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(105)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(105)">Reset</button><span class="runhint" id="rh105"></span><span class="checkres" id="ck105"></span></div>
+<div class="output" id="out105"></div>
+</div><div class="q code" id="q106" data-kind="code" data-n="106">
+<div class="qhead"><span class="qnum">Q106</span><span class="badge code">Short code</span><span class="status" id="st106"></span></div>
+<div class="prompt">Given a dict mapping section -&gt; list of marks, print the average per section.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans106" class="code-edit" rows="4" spellcheck="false" oninput="mark(106)">data = {'A': [88, 72, 95], 'B': [60, 70, 80]}
+# print average of each section's marks
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(106)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(106)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(106)">Reset</button><span class="runhint" id="rh106"></span><span class="checkres" id="ck106"></span></div>
+<div class="output" id="out106"></div>
+</div><div class="q code" id="q107" data-kind="code" data-n="107">
+<div class="qhead"><span class="qnum">Q107</span><span class="badge code">Short code</span><span class="status" id="st107"></span></div>
+<div class="prompt">Sum every number in a nested list <code>[[1, 2], [3, [4, 5]], 6]</code> using recursion (handle inner lists). Print the total.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans107" class="code-edit" rows="8" spellcheck="false" oninput="mark(107)">nested = [[1, 2], [3, [4, 5]], 6]
+
+def total(x):
+    pass
+
+print(total(nested))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(107)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(107)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(107)">Reset</button><span class="runhint" id="rh107"></span><span class="checkres" id="ck107"></span></div>
+<div class="output" id="out107"></div>
+</div><div class="q code" id="q108" data-kind="code" data-n="108">
+<div class="qhead"><span class="qnum">Q108</span><span class="badge code">Short code</span><span class="status" id="st108"></span></div>
+<div class="prompt">Transpose a 2x3 matrix into a 3x2 matrix using nested loops. Print the transposed matrix.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans108" class="code-edit" rows="4" spellcheck="false" oninput="mark(108)">m = [[1, 2, 3], [4, 5, 6]]
+# print the transpose
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(108)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(108)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(108)">Reset</button><span class="runhint" id="rh108"></span><span class="checkres" id="ck108"></span></div>
+<div class="output" id="out108"></div>
+</div><div class="q code" id="q109" data-kind="code" data-n="109">
+<div class="qhead"><span class="qnum">Q109</span><span class="badge code">Short code</span><span class="status" id="st109"></span></div>
+<div class="prompt">Find the maximum value anywhere in a nested list of lists using nested loops. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans109" class="code-edit" rows="4" spellcheck="false" oninput="mark(109)">grid = [[3, 8, 1], [9, 2, 7], [4, 6, 5]]
+# print the largest value
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(109)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(109)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(109)">Reset</button><span class="runhint" id="rh109"></span><span class="checkres" id="ck109"></span></div>
+<div class="output" id="out109"></div>
+</div><div class="q code" id="q110" data-kind="code" data-n="110">
+<div class="qhead"><span class="qnum">Q110</span><span class="badge code">Short code</span><span class="status" id="st110"></span></div>
+<div class="prompt">Count how many times each mark appears across sections, given a dict of section -&gt; marks. Print the frequency dict.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans110" class="code-edit" rows="4" spellcheck="false" oninput="mark(110)">data = {'A': [90, 75, 90], 'B': [75, 60, 90]}
+# build {mark: count} across all sections
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(110)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(110)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(110)">Reset</button><span class="runhint" id="rh110"></span><span class="checkres" id="ck110"></span></div>
+<div class="output" id="out110"></div>
+</div><div class="q code" id="q111" data-kind="code" data-n="111">
+<div class="qhead"><span class="qnum">Q111</span><span class="badge code">Short code</span><span class="status" id="st111"></span></div>
+<div class="prompt">Given a nested gradebook (student -&gt; dict of subject -&gt; mark), print each student's total across subjects.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans111" class="code-edit" rows="4" spellcheck="false" oninput="mark(111)">gb = {'Asha': {'math': 88, 'cs': 92}, 'Ravi': {'math': 70, 'cs': 74}}
+# print each student's total
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(111)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(111)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(111)">Reset</button><span class="runhint" id="rh111"></span><span class="checkres" id="ck111"></span></div>
+<div class="output" id="out111"></div>
+</div><div class="q code" id="q112" data-kind="code" data-n="112">
+<div class="qhead"><span class="qnum">Q112</span><span class="badge code">Short code</span><span class="status" id="st112"></span></div>
+<div class="prompt">From the nested gradebook above, print the average mark in 'cs' across all students.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans112" class="code-edit" rows="4" spellcheck="false" oninput="mark(112)">gb = {'Asha': {'math': 88, 'cs': 92}, 'Ravi': {'math': 70, 'cs': 74}, 'Meera': {'math': 95, 'cs': 90}}
+# print the average cs mark
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(112)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(112)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(112)">Reset</button><span class="runhint" id="rh112"></span><span class="checkres" id="ck112"></span></div>
+<div class="output" id="out112"></div>
+</div><div class="q code" id="q113" data-kind="code" data-n="113">
+<div class="qhead"><span class="qnum">Q113</span><span class="badge code">Short code</span><span class="status" id="st113"></span></div>
+<div class="prompt">Use a nested loop with <code>break</code> to find the first pair (i, j) with <code>i*j &gt; 10</code> for i,j in 1..4. Print the pair and stop.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans113" class="code-edit" rows="4" spellcheck="false" oninput="mark(113)"># find first i,j (1..4) with i*j &gt; 10
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(113)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(113)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(113)">Reset</button><span class="runhint" id="rh113"></span><span class="checkres" id="ck113"></span></div>
+<div class="output" id="out113"></div>
+</div><div class="q code" id="q114" data-kind="code" data-n="114">
+<div class="qhead"><span class="qnum">Q114</span><span class="badge code">Short code</span><span class="status" id="st114"></span></div>
+<div class="prompt">Flatten a 2-level nested dict of lists into a single sorted list of all values. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans114" class="code-edit" rows="4" spellcheck="false" oninput="mark(114)">data = {'A': [3, 1], 'B': [4, 1, 5]}
+# print one sorted list of all values
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(114)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(114)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(114)">Reset</button><span class="runhint" id="rh114"></span><span class="checkres" id="ck114"></span></div>
+<div class="output" id="out114"></div>
+</div><div class="q code" id="q115" data-kind="code" data-n="115">
+<div class="qhead"><span class="qnum">Q115</span><span class="badge code">Short code</span><span class="status" id="st115"></span></div>
+<div class="prompt">Given a list of (name, subject, mark) triples, build a dict of name -&gt; total mark using a loop. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans115" class="code-edit" rows="4" spellcheck="false" oninput="mark(115)">rows = [('Asha', 'math', 88), ('Asha', 'cs', 92), ('Ravi', 'math', 70)]
+# build {name: total}
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(115)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(115)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(115)">Reset</button><span class="runhint" id="rh115"></span><span class="checkres" id="ck115"></span></div>
+<div class="output" id="out115"></div>
+</div><div class="q code" id="q116" data-kind="code" data-n="116">
+<div class="qhead"><span class="qnum">Q116</span><span class="badge code">Short code</span><span class="status" id="st116"></span></div>
+<div class="prompt">Merge overlapping keys: given two gradebooks, produce a dict where shared students keep the HIGHER mark. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans116" class="code-edit" rows="5" spellcheck="false" oninput="mark(116)">gb1 = {'Asha': 88, 'Ravi': 72}
+gb2 = {'Asha': 91, 'Meera': 95}
+# merge keeping the higher mark per student
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(116)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(116)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(116)">Reset</button><span class="runhint" id="rh116"></span><span class="checkres" id="ck116"></span></div>
+<div class="output" id="out116"></div>
+</div><div class="q code" id="q117" data-kind="code" data-n="117">
+<div class="qhead"><span class="qnum">Q117</span><span class="badge code">Short code</span><span class="status" id="st117"></span></div>
+<div class="prompt">Given <code>marks = [88, 72, 95, 60]</code>, compute the median by sorting a copy and handling even/odd length. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans117" class="code-edit" rows="4" spellcheck="false" oninput="mark(117)">marks = [88, 72, 95, 60]
+# compute and print the median
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(117)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(117)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(117)">Reset</button><span class="runhint" id="rh117"></span><span class="checkres" id="ck117"></span></div>
+<div class="output" id="out117"></div>
+</div><div class="q code" id="q118" data-kind="code" data-n="118">
+<div class="qhead"><span class="qnum">Q118</span><span class="badge code">Short code</span><span class="status" id="st118"></span></div>
+<div class="prompt">Find the mode (most frequent value) of <code>[3, 1, 3, 2, 3, 1]</code> using a frequency dict and a loop. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans118" class="code-edit" rows="4" spellcheck="false" oninput="mark(118)">nums = [3, 1, 3, 2, 3, 1]
+# print the most frequent value
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(118)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(118)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(118)">Reset</button><span class="runhint" id="rh118"></span><span class="checkres" id="ck118"></span></div>
+<div class="output" id="out118"></div>
+</div><div class="q code" id="q119" data-kind="code" data-n="119">
+<div class="qhead"><span class="qnum">Q119</span><span class="badge code">Short code</span><span class="status" id="st119"></span></div>
+<div class="prompt">Build a seating grid: given N=3, print a 3x3 grid where each cell shows its (row, col) as 'r,c', using nested loops.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans119" class="code-edit" rows="4" spellcheck="false" oninput="mark(119)">N = 3
+# print a grid of 'r,c' labels
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(119)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(119)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(119)">Reset</button><span class="runhint" id="rh119"></span><span class="checkres" id="ck119"></span></div>
+<div class="output" id="out119"></div>
+</div><div class="q code" id="q120" data-kind="code" data-n="120">
+<div class="qhead"><span class="qnum">Q120</span><span class="badge code">Short code</span><span class="status" id="st120"></span></div>
+<div class="prompt">Gradebook capstone: from <code>gb = {'Asha': {'math': 88, 'cs': 92}, 'Ravi': {'math': 70, 'cs': 74}, 'Meera': {'math': 95, 'cs': 90}}</code>, print each student's average and, on the last line, the class average across all marks.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans120" class="code-edit" rows="4" spellcheck="false" oninput="mark(120)">gb = {'Asha': {'math': 88, 'cs': 92}, 'Ravi': {'math': 70, 'cs': 74}, 'Meera': {'math': 95, 'cs': 90}}
+# per-student averages, then overall class average
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(120)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(120)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(120)">Reset</button><span class="runhint" id="rh120"></span><span class="checkres" id="ck120"></span></div>
+<div class="output" id="out120"></div>
+</div>
+
+  <div id="howto" style="background:#fff;border:2px solid var(--blue);border-radius:10px;padding:16px 18px;margin:22px 0">
+    <div style="font-weight:700;color:var(--blue);font-size:1.05rem;margin-bottom:8px">&#128221; How to submit your work</div>
+    <ol style="margin:0;padding-left:20px;font-size:.92rem;line-height:1.7">
+      <li><b>Answer the questions.</b> Each one is a code task &mdash; complete the starter and click <b>&#9654; Run</b> to test it. Watch the counter at the top move towards 120.</li>
+      <li><b>Fill your details</b> at the top: Name, Roll number, and Batch. All three are required.</li>
+      <li><b>Click <span style="color:var(--blue)">&#11015; Generate submission file (.py)</span></b> below, then click <b>&#128203; Copy answers</b>. This copies your full submission to the clipboard.</li>
+      <li><b>Open the Lab 02 assignment on Moodle</b> &rarr; <i>Add submission</i>. In the <b>online text / edit box</b>, <b>paste</b> (Ctrl+V) everything you copied.</li>
+      <li><b>Save and submit:</b> <i>Save changes</i> &rarr; <i>Submit assignment</i>. Check that your pasted code appears in the submission area. Done!</li>
+    </ol>
+  </div>
+
+  <div class="submitbox">
+    <button id="genbtn" onclick="generate()">&#11015; Generate submission file (.py)</button>
+    <div class="warn" id="subwarn"></div>
+    <div id="fallback" style="display:none;margin-top:14px">
+      <div style="font-size:.85rem;color:#5b6675;margin-bottom:8px">Copy your submission, then paste it into the Moodle edit box:</div>
+      <button id="copybtn" class="ghost2" onclick="copyAnswers()">&#128203; Copy answers</button>
+      <button id="tabbtn" class="ghost2" onclick="openInTab()">&#128194; Open in new tab</button>
+      <div style="font-size:.8rem;color:#5b6675;margin-top:8px">Paste (Ctrl+V) into the Lab 02 <b>online text / edit</b> box on Moodle, then Save &amp; Submit.</div>
+    </div>
+  </div>
+</div>
+
+<footer><div class="wrap">CS3006 &middot; Lab 02 &middot; Data Types &amp; Control Structures &middot; IIITDM Kancheepuram &middot; 120 questions</div></footer>
+
+<script>
+const KIND = {"1": "code", "2": "code", "3": "code", "4": "code", "5": "code", "6": "code", "7": "code", "8": "code", "9": "code", "10": "code", "11": "code", "12": "code", "13": "code", "14": "code", "15": "code", "16": "code", "17": "code", "18": "code", "19": "code", "20": "code", "21": "code", "22": "code", "23": "code", "24": "code", "25": "code", "26": "code", "27": "code", "28": "code", "29": "code", "30": "code", "31": "code", "32": "code", "33": "code", "34": "code", "35": "code", "36": "code", "37": "code", "38": "code", "39": "code", "40": "code", "41": "code", "42": "code", "43": "code", "44": "code", "45": "code", "46": "code", "47": "code", "48": "code", "49": "code", "50": "code", "51": "code", "52": "code", "53": "code", "54": "code", "55": "code", "56": "code", "57": "code", "58": "code", "59": "code", "60": "code", "61": "code", "62": "code", "63": "code", "64": "code", "65": "code", "66": "code", "67": "code", "68": "code", "69": "code", "70": "code", "71": "code", "72": "code", "73": "code", "74": "code", "75": "code", "76": "code", "77": "code", "78": "code", "79": "code", "80": "code", "81": "code", "82": "code", "83": "code", "84": "code", "85": "code", "86": "code", "87": "code", "88": "code", "89": "code", "90": "code", "91": "code", "92": "code", "93": "code", "94": "code", "95": "code", "96": "code", "97": "code", "98": "code", "99": "code", "100": "code", "101": "code", "102": "code", "103": "code", "104": "code", "105": "code", "106": "code", "107": "code", "108": "code", "109": "code", "110": "code", "111": "code", "112": "code", "113": "code", "114": "code", "115": "code", "116": "code", "117": "code", "118": "code", "119": "code", "120": "code"};
+const KEY = {"1": {"m": "exact", "e": "5"}, "2": {"m": "exact", "e": "[3, 1, 4, 1, 5, 9, 2]"}, "3": {"m": "exact", "e": "3 5"}, "4": {"m": "exact", "e": "[20, 30, 40]"}, "5": {"m": "exact", "e": "[5, 4, 3, 2, 1]"}, "6": {"m": "exact", "e": "[1, 2, 99, 4, 5]"}, "7": {"m": "exact", "e": "[0, 1, 2, 4]"}, "8": {"m": "exact", "e": "4\n[1, 2, 3]"}, "9": {"m": "exact", "e": "[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]"}, "10": {"m": "exact", "e": "[12, 7, 20]"}, "11": {"m": "exact", "e": "[1, 2, 3, 4]\n[0, 0, 0]"}, "12": {"m": "exact", "e": "3\n3"}, "13": {"m": "exact", "e": "[3, 1, 4, 1, 5, 9, 2]\n[1, 1, 2, 3, 4, 5, 9]"}, "14": {"m": "exact", "e": "['apple', 'banana', 'cherry']\n['apple', 'banana', 'cherry']"}, "15": {"m": "exact", "e": "[1, 2, 3, 99]\n[1, 2, 3, 99]\n[1, 2, 3, 99, 0]"}, "16": {"m": "exact", "e": "108"}, "17": {"m": "exact", "e": "9"}, "18": {"m": "exact", "e": "[1, 2, 3, 4, 5]"}, "19": {"m": "exact", "e": "1 88\n2 72\n3 95\n4 60"}, "20": {"m": "exact", "e": "4"}, "21": {"m": "exact", "e": "3 20"}, "22": {"m": "exact", "e": "immutable"}, "23": {"m": "exact", "e": "3\n7"}, "24": {"m": "exact", "e": "5 9\n9 5"}, "25": {"m": "exact", "e": "1\n[2, 3, 4]"}, "26": {"m": "exact", "e": "[1, 2, 3]\n4"}, "27": {"m": "exact", "e": "<class 'tuple'>\n<class 'int'>"}, "28": {"m": "exact", "e": "1-a\n2-b\n3-c"}, "29": {"m": "exact", "e": "(1, 2, 3)\n[4, 5, 6]"}, "30": {"m": "exact", "e": "3\n3"}, "31": {"m": "exact", "e": "(1, [2, 3, 4])"}, "32": {"m": "exact", "e": "(3, 2)"}, "33": {"m": "exact", "e": "[(0, 'x'), (1, 'y'), (2, 'z')]"}, "34": {"m": "exact", "e": "[('Asha', 88), ('Ravi', 72)]"}, "35": {"m": "exact", "e": "[(1, 'a'), (2, 'b'), (3, 'c')]"}, "36": {"m": "exact", "e": "[('Ravi', 72), ('Asha', 88), ('Meera', 95)]"}, "37": {"m": "exact", "e": "('Meera', 95)"}, "38": {"m": "exact", "e": "0 Asha 88\n1 Ravi 72"}, "39": {"m": "exact", "e": "5\n8"}, "40": {"m": "exact", "e": "Asha\nMeera"}, "41": {"m": "setline:0", "e": "{1, 2, 3}"}, "42": {"m": "setline:0", "e": "{1, 2, 3, 4, 5}\n5"}, "43": {"m": "exact", "e": "True\nFalse"}, "44": {"m": "setline:0", "e": "{3, 4}"}, "45": {"m": "setline:0", "e": "{1, 2, 3, 4, 5, 6}"}, "46": {"m": "set", "e": "{1, 2}\n{5, 6}"}, "47": {"m": "setline:0", "e": "{1, 2, 5, 6}"}, "48": {"m": "exact", "e": "[3, 1, 2, 4]"}, "49": {"m": "exact", "e": "5"}, "50": {"m": "exact", "e": "True"}, "51": {"m": "exact", "e": "not subscriptable"}, "52": {"m": "setline:0", "e": "{1, 3}"}, "53": {"m": "setline:0", "e": "{'Dev', 'Ravi'}"}, "54": {"m": "setline:0", "e": "{'Meera', 'Asha'}"}, "55": {"m": "setline:0", "e": "{0, 1, 4, 9, 16, 25}"}, "56": {"m": "setline:0", "e": "{90, 75, 60}\n3"}, "57": {"m": "exact", "e": "True"}, "58": {"m": "setline:0", "e": "{3, 4}"}, "59": {"m": "setline:0", "e": "{1, 2, 7, 8, 9}"}, "60": {"m": "setline:0", "e": "{'R1', 'R3'}"}, "61": {"m": "exact", "e": "88"}, "62": {"m": "setline:0", "e": "{'Asha': 88, 'Ravi': 72, 'Meera': 95}"}, "63": {"m": "exact", "e": "0\n88"}, "64": {"m": "set", "e": "Asha 88\nRavi 72\nMeera 95"}, "65": {"m": "exact", "e": "['Asha', 'Ravi']\n[88, 72]"}, "66": {"m": "set", "e": "Asha 88\nRavi 72"}, "67": {"m": "exact", "e": "True\nFalse"}, "68": {"m": "setline:0", "e": "{'Ravi': 80}"}, "69": {"m": "setline:0", "e": "{0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25}"}, "70": {"m": "setline:0", "e": "{'Asha': 88, 'Ravi': 72}"}, "71": {"m": "exact", "e": "85.0"}, "72": {"m": "exact", "e": "Meera 95"}, "73": {"m": "setline:0", "e": "{'Asha': 88, 'Meera': 95}"}, "74": {"m": "setline:0", "e": "{'A': 1, 'B': 1, 'C': 1, 'F': 1}"}, "75": {"m": "setline:0", "e": "{'the': 3, 'cat': 2, 'sat': 1, 'on': 1, 'mat': 1}"}, "76": {"m": "setline:0", "e": "{1: 'a', 2: 'b'}"}, "77": {"m": "setline:0", "e": "{'a': 1, 'b': 2}"}, "78": {"m": "exact", "e": "[('Meera', 95), ('Asha', 88), ('Ravi', 72)]"}, "79": {"m": "exact", "e": "B"}, "80": {"m": "exact", "e": "79.0\nMeera\n4"}, "81": {"m": "exact", "e": "odd\neven\nodd\neven"}, "82": {"m": "exact", "e": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz\n16\n17\nFizz\n19\nBuzz"}, "83": {"m": "exact", "e": "95 A\n82 B\n71 C\n55 F"}, "84": {"m": "exact", "e": "110"}, "85": {"m": "exact", "e": "3"}, "86": {"m": "exact", "e": "7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70"}, "87": {"m": "exact", "e": "23"}, "88": {"m": "exact", "e": "3\n6\n9\n12\n18\n21\n24\n27"}, "89": {"m": "exact", "e": "100\n50\n25\n12\n6\n3\n1"}, "90": {"m": "exact", "e": "composite"}, "91": {"m": "exact", "e": "2\n3\n5\n7\n11\n13\n17\n19\n23\n29"}, "92": {"m": "exact", "e": "3"}, "93": {"m": "exact", "e": "house\npython"}, "94": {"m": "exact", "e": "[1, 3, 6, 10]"}, "95": {"m": "exact", "e": "Meera"}, "96": {"m": "exact", "e": "7"}, "97": {"m": "exact", "e": "5"}, "98": {"m": "exact", "e": "1\n1 2\n1 2 3\n1 2 3 4\n1 2 3 4 5"}, "99": {"m": "exact", "e": "[93, 77, 100, 100]\n1"}, "100": {"m": "exact", "e": "3 2"}, "101": {"m": "exact", "e": "[[0, 0, 0], [0, 0, 0], [0, 0, 0]]"}, "102": {"m": "exact", "e": "[1, 0, 0]\n[0, 1, 0]\n[0, 0, 1]"}, "103": {"m": "exact", "e": "Asha 88\nRavi 72"}, "104": {"m": "exact", "e": "85.0"}, "105": {"m": "setline:0", "e": "{'a': ['apple', 'avocado', 'apricot'], 'b': ['banana'], 'c': ['cherry']}"}, "106": {"m": "set", "e": "A 85.0\nB 70.0"}, "107": {"m": "exact", "e": "21"}, "108": {"m": "exact", "e": "[[1, 4], [2, 5], [3, 6]]"}, "109": {"m": "exact", "e": "9"}, "110": {"m": "setline:0", "e": "{90: 3, 75: 2, 60: 1}"}, "111": {"m": "set", "e": "Asha 180\nRavi 144"}, "112": {"m": "exact", "e": "85.33333333333333"}, "113": {"m": "exact", "e": "3 4"}, "114": {"m": "exact", "e": "[1, 1, 3, 4, 5]"}, "115": {"m": "setline:0", "e": "{'Asha': 180, 'Ravi': 70}"}, "116": {"m": "setline:0", "e": "{'Asha': 91, 'Ravi': 72, 'Meera': 95}"}, "117": {"m": "exact", "e": "80.0"}, "118": {"m": "exact", "e": "3"}, "119": {"m": "exact", "e": "0,0 0,1 0,2\n1,0 1,1 1,2\n2,0 2,1 2,2"}, "120": {"m": "set", "e": "90.0\n72.0\n92.5\n84.83333333333333"}};   // self-check answer key (practice only)
+const EXPECTED = {};
+const SNIPPET = {};
+const STARTER = {"1": "nums = [3, 1, 4, 1, 5]\n# print the length\n", "2": "nums = [3, 1, 4, 1, 5]\n# append 9 then 2, then print nums\n", "3": "nums = [3, 1, 4, 1, 5]\n# print first and last\n", "4": "nums = [10, 20, 30, 40, 50]\n# print the slice [20, 30, 40]\n", "5": "nums = [1, 2, 3, 4, 5]\n# print reversed copy\n", "6": "nums = [1, 2, 3, 4, 5]\n# set index 2 to 99, print\n", "7": "nums = [1, 2, 3, 4]\n# insert 0 at front, remove value 3, print\n", "8": "nums = [1, 2, 3, 4]\n# pop last, print it, then print list\n", "9": "# squares = [ ... ]\n# print squares\n", "10": "nums = [5, 12, 7, 20, 3]\n# comprehension keeping values > 6\n", "11": "# print concatenation and repetition\n", "12": "nums = [1, 2, 1, 3, 1]\n# print count of 1 and index of 3\n", "13": "nums = [3, 1, 4, 1, 5, 9, 2]\n# print nums then a sorted copy\n", "14": "fruits = ['banana', 'apple', 'cherry']\n# print alphabetical, then by length (key=len)\n", "15": "a = [1, 2, 3]\n# demonstrate aliasing vs a copy\n", "16": "nums = [4, 8, 15, 16, 23, 42]\n# total via loop\n", "17": "nums = [7, 2, 9, 4]\n# find max via loop\n", "18": "nested = [[1, 2], [3, 4], [5]]\n# flatten into flat, then print\n", "19": "marks = [88, 72, 95, 60]\n# print '1 88', '2 72', ...\n", "20": "marks = [88, 72, 95, 60, 40]\n# count marks >= 50\n", "21": "t = (10, 20, 30)\n# print length and t[1]\n", "22": "t = (1, 2, 3)\n# catch the TypeError and print 'immutable'\n", "23": "point = (3, 7)\n# unpack and print x, y\n", "24": "a, b = 5, 9\n# swap a and b using unpacking\n", "25": "# first, *rest = [1, 2, 3, 4]\n# print first and rest\n", "26": "# *mid, last = [1, 2, 3, 4]\n# print mid and last\n", "27": "# create both and print their types\n", "28": "pairs = [(1, 'a'), (2, 'b'), (3, 'c')]\n# print '1-a', '2-b', ...\n", "29": "# convert and print both\n", "30": "t = (2, 3, 2, 4, 2)\n# print count of 2 and index of 4\n", "31": "t = (1, [2, 3])\n# append 4 to t[1], print t\n", "32": "a, b = 17, 5\n# print quotient and remainder as a tuple\n", "33": "letters = ('x', 'y', 'z')\n# build and print list of (i, v) tuples\n", "34": "names = ['Asha', 'Ravi']\nscores = [88, 72]\n# print list(zip(...))\n", "35": "data = [(3, 'c'), (1, 'a'), (2, 'b')]\n# sort by data[i][0]\n", "36": "data = [('Asha', 88), ('Ravi', 72), ('Meera', 95)]\n# sort by the score\n", "37": "data = [('Asha', 88), ('Ravi', 72), ('Meera', 95)]\n# print the top (name, score) pair\n", "38": "data = [('Asha', 88), ('Ravi', 72)]\n# print '0 Asha 88', '1 Ravi 72'\n", "39": "pts = [(1, 2), (4, 6)]\n# print total x and total y\n", "40": "records = [('Asha', 88), ('Ravi', 72), ('Meera', 95)]\n# print names with score >= 80\n", "41": "# print set([1, 2, 2, 3, 3, 3])\n", "42": "s = {1, 2, 3}\n# add 4, 5, then 2 again; print s and len(s)\n", "43": "s = {1, 2, 3}\n# print (3 in s) and (9 in s)\n", "44": "a = {1, 2, 3, 4}\nb = {3, 4, 5, 6}\n# print a & b\n", "45": "a = {1, 2, 3, 4}\nb = {3, 4, 5, 6}\n# print a | b\n", "46": "a = {1, 2, 3, 4}\nb = {3, 4, 5, 6}\n# print a - b and b - a\n", "47": "a = {1, 2, 3, 4}\nb = {3, 4, 5, 6}\n# print a ^ b\n", "48": "nums = [3, 1, 3, 2, 1, 4]\n# order-preserving unique via a 'seen' set\n", "49": "sentence = 'the cat sat on the mat'\n# split, put in a set, print len\n", "50": "# print {1, 2}.issubset({1, 2, 3})\n", "51": "s = {10, 20, 30}\n# catch TypeError, print 'not subscriptable'\n", "52": "s = {1, 2, 3}\n# discard 2 and 9, print s\n", "53": "sec_a = {'Asha', 'Ravi', 'Dev'}\nsec_b = {'Ravi', 'Meera', 'Dev'}\n# print students in both\n", "54": "sec_a = {'Asha', 'Ravi', 'Dev'}\nsec_b = {'Ravi', 'Meera', 'Dev'}\n# print exclusive-or of the rosters\n", "55": "# squares = { ... }\n# print squares\n", "56": "marks = [90, 90, 75, 60, 75]\n# print the set and its length\n", "57": "nums = [1, 2, 3, 2, 5]\n# print True if duplicates exist\n", "58": "a = {1, 2, 3, 4}\nb = {2, 3, 4, 5}\nc = {3, 4, 5, 6}\n# print a & b & c\n", "59": "s = {1, 2}\n# s.update([7, 8, 9]); print s\n", "60": "lab1 = {'R1', 'R2', 'R3', 'R4'}\nlab2 = {'R2', 'R4', 'R5'}\n# print rolls in lab1 but not lab2\n", "61": "marks = {'Asha': 88, 'Ravi': 72}\n# print marks['Asha']\n", "62": "marks = {'Asha': 88, 'Ravi': 72}\n# add Meera=95, print marks\n", "63": "marks = {'Asha': 88, 'Ravi': 72}\n# print marks.get('Dev', 0) and marks.get('Asha', 0)\n", "64": "marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}\n# print each name and score\n", "65": "marks = {'Asha': 88, 'Ravi': 72}\n# print list(keys) and list(values)\n", "66": "marks = {'Asha': 88, 'Ravi': 72}\n# for k, v in marks.items(): ...\n", "67": "marks = {'Asha': 88, 'Ravi': 72}\n# print ('Ravi' in marks) and ('Dev' in marks)\n", "68": "marks = {'Asha': 88, 'Ravi': 72}\n# set Ravi=80, del Asha, print\n", "69": "# squares = { ... }\n# print squares\n", "70": "names = ['Asha', 'Ravi']\nscores = [88, 72]\n# print dict(zip(names, scores))\n", "71": "marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}\n# compute and print the average\n", "72": "marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}\n# print the topper and their mark\n", "73": "marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95, 'Dev': 61}\n# {k: v for ... if v >= 80}\n", "74": "marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95, 'Dev': 61}\n# tally grade bands into a dict, print it\n", "75": "sentence = 'the cat sat on the mat the cat'\n# build {word: count}\n", "76": "d = {'a': 1, 'b': 2}\n# print the inverted dict\n", "77": "d1 = {'a': 1}\nd2 = {'b': 2}\n# merge and print (e.g. {**d1, **d2})\n", "78": "marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}\n# print sorted items, highest score first\n", "79": "mark = 83\nbands = [(90, 'A'), (80, 'B'), (70, 'C'), (0, 'F')]\n# find and print the letter grade\n", "80": "gb = {'Asha': 88, 'Ravi': 72, 'Meera': 95, 'Dev': 61}\n# print average, topper, and pass count\n", "81": "nums = [3, 8, 5, 12]\n# print even/odd for each\n", "82": "# FizzBuzz 1..20\n", "83": "marks = [95, 82, 71, 55]\n# print each mark with its grade\n", "84": "# total of evens 1..20\n", "85": "nums = [3, -1, 4, -5, 2, -6]\n# count negatives\n", "86": "# print 7's table\n", "87": "nums = [4, 8, 15, 16, 23, 42]\n# first value > 20, then break\n", "88": "# div by 3 and not by 5, in 1..29\n", "89": "n = 100\n# while n > 0: print n; n //= 2\n", "90": "n = 91\n# primality check with for...else\n", "91": "# primes 2..30\n", "92": "marks = [88, -1, 72, 200, 60]\n# count valid marks (0..100)\n", "93": "words = ['a', 'the', 'cat', 'house', 'go', 'python']\n# print words with len > 3\n", "94": "nums = [1, 2, 3, 4]\n# print the running totals\n", "95": "marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}\n# for...else search for a 95\n", "96": "text = 'data science is fun'\n# count vowels\n", "97": "nums = [5, 3, 8, 3, 9, 3]\n# index of last 3\n", "98": "# rows: '1', '1 2', '1 2 3', ...\n", "99": "marks = [88, 72, 95, 98]\n# curve +5 capped at 100; print list and cap count\n", "100": "marks = [88, 30, 72, 39, 95]\n# print pass count and fail count\n", "101": "# grid = [[0]*3 for _ in range(3)]\n# print grid\n", "102": "grid = [[0]*3 for _ in range(3)]\n# set grid[i][i] = 1; print rows\n", "103": "students = [{'name': 'Asha', 'mark': 88}, {'name': 'Ravi', 'mark': 72}]\n# print 'Asha 88', 'Ravi 72'\n", "104": "students = [{'name': 'Asha', 'mark': 88}, {'name': 'Ravi', 'mark': 72}, {'name': 'Meera', 'mark': 95}]\n# print the average mark\n", "105": "words = ['apple', 'avocado', 'banana', 'cherry', 'apricot']\n# {'a': [...], 'b': [...], 'c': [...]}\n", "106": "data = {'A': [88, 72, 95], 'B': [60, 70, 80]}\n# print average of each section's marks\n", "107": "nested = [[1, 2], [3, [4, 5]], 6]\n\ndef total(x):\n    pass\n\nprint(total(nested))\n", "108": "m = [[1, 2, 3], [4, 5, 6]]\n# print the transpose\n", "109": "grid = [[3, 8, 1], [9, 2, 7], [4, 6, 5]]\n# print the largest value\n", "110": "data = {'A': [90, 75, 90], 'B': [75, 60, 90]}\n# build {mark: count} across all sections\n", "111": "gb = {'Asha': {'math': 88, 'cs': 92}, 'Ravi': {'math': 70, 'cs': 74}}\n# print each student's total\n", "112": "gb = {'Asha': {'math': 88, 'cs': 92}, 'Ravi': {'math': 70, 'cs': 74}, 'Meera': {'math': 95, 'cs': 90}}\n# print the average cs mark\n", "113": "# find first i,j (1..4) with i*j > 10\n", "114": "data = {'A': [3, 1], 'B': [4, 1, 5]}\n# print one sorted list of all values\n", "115": "rows = [('Asha', 'math', 88), ('Asha', 'cs', 92), ('Ravi', 'math', 70)]\n# build {name: total}\n", "116": "gb1 = {'Asha': 88, 'Ravi': 72}\ngb2 = {'Asha': 91, 'Meera': 95}\n# merge keeping the higher mark per student\n", "117": "marks = [88, 72, 95, 60]\n# compute and print the median\n", "118": "nums = [3, 1, 3, 2, 3, 1]\n# print the most frequent value\n", "119": "N = 3\n# print a grid of 'r,c' labels\n", "120": "gb = {'Asha': {'math': 88, 'cs': 92}, 'Ravi': {'math': 70, 'cs': 74}, 'Meera': {'math': 95, 'cs': 90}}\n# per-student averages, then overall class average\n"};
+const NQ = 120;
+let pyodide = null, pyReady = false;
+
+// ---------- Pyodide bootstrap ----------
+async function initPy(){
+  const bar=document.getElementById('pybar');
+  if(location.protocol==='file:'){
+    bar.className='err';
+    bar.innerHTML='\u26A0 <b>Run buttons need the page served over http, not opened directly.</b> '+
+      'You opened this as a local file (file://), where browsers block WebAssembly. '+
+      'Open it from a web address instead (your teacher\u2019s course page / GitHub Pages), '+
+      'or run a quick local server \u2014 see the instructions box below. '+
+      'You can still answer every question and generate your submission here; only the \u25B6 Run buttons are affected.';
+    var help=document.getElementById('serverhelp'); if(help) help.style.display='block';
+    return;
+  }
+  try{
+    bar.textContent='Loading Python (Pyodide) from local files\u2026 ~5\u201310s.';
+    pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/" });
+    pyReady = true;
+    bar.className='ready';
+    bar.innerHTML='\u2713 Python is ready \u2014 use the \u25B6 Run buttons to execute code in your browser.';
+    document.querySelectorAll('.runbtn').forEach(b=>b.disabled=false);
+  }catch(e){
+    bar.className='err';
+    bar.innerHTML='\u26A0 Could not load the Python runtime (needs internet on first load, and the page must be served over http/https). '+
+      'You can still answer and submit; \u25B6 Run buttons are disabled. Details: '+escapeHtml(String(e).slice(0,120));
+    var h2=document.getElementById('serverhelp'); if(h2) h2.style.display='block';
+  }
+}
+
+async function pyRun(src){
+  if(!pyReady) return {out:'', err:'Python is still loading \u2014 please wait for the green bar.'};
+  const wrapped =
+    "import sys, io\n" +
+    "_o=io.StringIO(); _e=io.StringIO()\n" +
+    "_so=sys.stdout; _se=sys.stderr\n" +
+    "sys.stdout=_o; sys.stderr=_e\n" +
+    "try:\n" +
+    "    exec(compile(__USERSRC__, '<cell>', 'exec'), {})\n" +
+    "except Exception:\n" +
+    "    import traceback; traceback.print_exc()\n" +
+    "finally:\n" +
+    "    sys.stdout=_so; sys.stderr=_se\n" +
+    "_out=_o.getvalue(); _err=_e.getvalue()\n";
+  try{
+    pyodide.globals.set('__USERSRC__', src);
+    await pyodide.runPythonAsync(wrapped);
+    const out = pyodide.globals.get('_out');
+    const err = pyodide.globals.get('_err');
+    return {out: out||'', err: err||''};
+  }catch(e){
+    return {out:'', err:String(e)};
+  }
+}
+
+function showOutput(n, out, err){
+  const box=document.getElementById('out'+n);
+  let h='';
+  if(out){ h+='<div class="lbl">output</div><pre>'+escapeHtml(out.replace(/\n$/,''))+'</pre>'; }
+  if(err){ h+='<div class="lbl" style="background:#7f1d1d">error / traceback</div><pre class="err">'+escapeHtml(err.replace(/\n$/,''))+'</pre>'; }
+  if(!out && !err){ h='<div class="lbl">output</div><pre>(no output \u2014 did you use print()?)</pre>'; }
+  box.innerHTML=h; box.classList.add('show');
+}
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function norm(s){
+  return String(s).replace(/\r/g,'').split('\n').map(l=>l.replace(/\s+$/,'')).join('\n').replace(/\n+$/,'').trim();
+}
+
+async function runPredict(n){
+  const btn=event.target; btn.disabled=true; const hint=document.getElementById('rh'+n);
+  hint.textContent='running\u2026';
+  const {out, err} = await pyRun(SNIPPET[n]);
+  showOutput(n, out, err);
+  const actual = err ? (out+err) : out;
+  const guess = (document.getElementById('ans'+n).value)||'';
+  const box=document.getElementById('out'+n);
+  const match = norm(guess)!=='' && norm(guess)===norm(actual);
+  const cmp=document.createElement('div');
+  cmp.className='cmp '+(match?'match':'nomatch');
+  cmp.innerHTML =
+    '<div class="row"><div class="k">your guess</div><div class="v">'+escapeHtml(guess||'(empty)')+'</div></div>'+
+    '<div class="row"><div class="k">real output</div><div class="v">'+escapeHtml(norm(actual)||'(none)')+'</div></div>'+
+    '<div class="verdict">'+(match?'\u2713 Your prediction matches the real output!':(norm(guess)===''?'\u2192 Type your prediction above, then Run again to compare.':'\u2717 Not a match \u2014 compare the two and figure out why.'))+'</div>';
+  box.appendChild(cmp);
+  hint.textContent=''; btn.disabled=false;
+  mark(n);
+}
+
+async function runCode(n){
+  const btn=event.target; btn.disabled=true; const hint=document.getElementById('rh'+n);
+  hint.textContent='running\u2026';
+  const src=document.getElementById('ans'+n).value;
+  const {out, err} = await pyRun(src);
+  showOutput(n, out, err);
+  hint.textContent = err ? '' : '\u2713 ran';
+  btn.disabled=false;
+  mark(n);
+}
+
+// ---------- self-check (PRACTICE ONLY - does not affect your grade) ----------
+// Mirrors the instructor grader's comparison so practice matches real marking.
+function _normLines(s){
+  s = String(s).replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  let lines = s.split('\n').map(l=>l.replace(/\s+$/,''));
+  while(lines.length && lines[lines.length-1]==='') lines.pop();
+  return lines;
+}
+// Canonicalize a set/dict literal line so order doesn't matter.
+function _canonSetish(line){
+  const t=line.trim();
+  if(!(t.startsWith('{') && t.endsWith('}'))) return line;
+  const inner=t.slice(1,-1).trim();
+  if(inner==='') return line;
+  // dict if top-level ':' present (not inside quotes)
+  const parts=_splitTop(inner);
+  let isDict=false;
+  for(const p of parts){ if(_topColon(p)){ isDict=true; break; } }
+  if(isDict){
+    const kv=parts.map(p=>{ const c=_topColon(p); return [p.slice(0,c).trim(), p.slice(c+1).trim()]; });
+    kv.sort((a,b)=> a[0]<b[0]?-1:a[0]>b[0]?1:(a[1]<b[1]?-1:a[1]>b[1]?1:0));
+    return '{'+kv.map(x=>x[0]+': '+x[1]).join(', ')+'}';
+  } else {
+    const items=parts.map(p=>p.trim()).sort();
+    return '{'+items.join(', ')+'}';
+  }
+}
+function _splitTop(s){ // split on top-level commas
+  const out=[]; let d=0,q='',cur='';
+  for(let i=0;i<s.length;i++){ const ch=s[i];
+    if(q){ cur+=ch; if(ch===q) q=''; continue; }
+    if(ch==="'"||ch==='"'){ q=ch; cur+=ch; continue; }
+    if(ch==='{'||ch==='['||ch==='(') d++;
+    if(ch==='}'||ch===']'||ch===')') d--;
+    if(ch===','&&d===0){ out.push(cur); cur=''; } else cur+=ch;
+  }
+  if(cur.trim()!=='') out.push(cur);
+  return out;
+}
+function _topColon(s){ // index of top-level ':' or -1
+  let d=0,q='';
+  for(let i=0;i<s.length;i++){ const ch=s[i];
+    if(q){ if(ch===q) q=''; continue; }
+    if(ch==="'"||ch==='"'){ q=ch; continue; }
+    if(ch==='{'||ch==='['||ch==='(') d++;
+    if(ch==='}'||ch===']'||ch===')') d--;
+    if(ch===':'&&d===0) return i;
+  }
+  return -1;
+}
+function cmpOutput(expected, actual, mode){
+  const exp=_normLines(expected), act=_normLines(actual);
+  if(mode==='manual') return null;
+  if(mode==='set'){
+    const a=exp.slice().sort(), b=act.slice().sort();
+    return a.length===b.length && a.every((x,i)=>x===b[i]);
+  }
+  if(mode && mode.indexOf('setline:')===0){
+    const idx=parseInt(mode.split(':')[1],10);
+    if(exp.length!==act.length) return false;
+    for(let i=0;i<exp.length;i++){
+      if(i===idx){ if(_canonSetish(exp[i])!==_canonSetish(act[i])) return false; }
+      else if(exp[i]!==act[i]) return false;
+    }
+    return true;
+  }
+  return exp.length===act.length && exp.every((x,i)=>x===act[i]);
+}
+
+async function checkOne(n, silent){
+  const k=KEY[n]; const res=document.getElementById('ck'+n);
+  if(!k){ if(res){res.className='checkres wait'; res.textContent='';} return null; }
+  if(!silent && res){ res.className='checkres wait'; res.textContent='checking\u2026'; }
+  const src=document.getElementById('ans'+n).value;
+  const {out, err} = await pyRun(src);
+  if(!silent) showOutput(n, out, err);
+  const actual = err ? (out+err) : out;
+  const ok = cmpOutput(k.e, actual, k.m);
+  if(res){
+    if(ok===null){ res.className='checkres wait'; res.textContent='manual review'; }
+    else if(ok){ res.className='checkres pass'; res.textContent='\u2713 correct'; }
+    else { res.className='checkres fail'; res.textContent='\u2717 not yet'; }
+  }
+  return ok;
+}
+
+async function checkAll(){
+  const btn=document.getElementById('checkallbtn');
+  const bar=document.getElementById('checkallmsg');
+  if(!pyReady){ bar.textContent='Python is still loading \u2014 wait for the green bar, then try again.'; return; }
+  btn.disabled=true;
+  let pass=0, fail=0, manual=0, blank=0;
+  const failed=[];
+  for(let n=1;n<=NQ;n++){
+    bar.textContent='Checking Q'+n+' of '+NQ+'\u2026';
+    const cur=document.getElementById('ans'+n).value;
+    if(String(cur).trim()==='' || cur===STARTER[n]){ blank++; 
+      const r=document.getElementById('ck'+n); if(r){r.className='checkres wait';r.textContent='';}
+      continue; }
+    const ok=await checkOne(n, true);
+    if(ok===null) manual++; else if(ok) pass++; else { fail++; failed.push(n); }
+  }
+  window.__selfcheck={pass,fail,manual,blank,failed,when:new Date().toISOString()};
+  bar.innerHTML='<b>Self-check (practice):</b> \u2713 '+pass+' correct, \u2717 '+fail+' to fix'
+    + (manual?(', '+manual+' manual'):'') + (blank?(', '+blank+' not attempted'):'')
+    + '. '+(failed.length? ('Review: Q'+failed.slice(0,25).join(', Q')+(failed.length>25?'\u2026':'')):'Great work!')
+    + ' <button class="ghost" style="margin-left:8px" onclick="downloadSelfCheck()">\u2b07 Save my self-check</button>';
+  btn.disabled=false;
+}
+
+function downloadSelfCheck(){
+  const sc=window.__selfcheck; if(!sc){ return; }
+  const name=(document.getElementById('stu_name')||{}).value||'';
+  const roll=(document.getElementById('stu_roll')||{}).value||'';
+  const batch=(document.getElementById('stu_batch')||{}).value||'';
+  const L=[];
+  L.push('CS3006 Lab 02 - Self-check (PRACTICE ONLY, not your grade)');
+  L.push('Name : '+name); L.push('Roll : '+roll); L.push('Batch: '+batch);
+  L.push('When : '+new Date().toLocaleString());
+  L.push('----------------------------------------------------');
+  L.push('Correct     : '+sc.pass);
+  L.push('To fix      : '+sc.fail);
+  if(sc.manual) L.push('Manual      : '+sc.manual);
+  L.push('Not attempted: '+sc.blank);
+  if(sc.failed.length){ L.push(''); L.push('Questions to review: Q'+sc.failed.join(', Q')); }
+  L.push(''); L.push('Remember: your real marks come from the instructor grading your');
+  L.push('submitted file. This self-check is only to help you practise.');
+  const rollTag=(roll||'student').replace(/[^A-Za-z0-9_-]/g,'_');
+  triggerDownload(L.join('\n'), 'selfcheck_'+rollTag+'.txt');
+}
+
+const STORAGE_KEY = 'cs3006_lab02_datatypes_control_v1';
+let _saveTimer = null;
+function storageAvailable(){
+  try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }
+  catch(e){ return false; }
+}
+const CAN_SAVE = storageAvailable();
+
+function collectState(){
+  const ans = {};
+  for(let n=1;n<=NQ;n++){
+    const v = getAns(n);
+    if(String(v) !== String(STARTER[n]||'')) ans[n] = v;   // only store real edits
+  }
+  return {
+    v: 1,
+    name: (document.getElementById('stu_name')||{}).value || '',
+    roll: (document.getElementById('stu_roll')||{}).value || '',
+    batch:(document.getElementById('stu_batch')||{}).value || '',
+    ans: ans,
+    saved: new Date().toISOString()
+  };
+}
+function saveNow(){
+  if(!CAN_SAVE) return;
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState()));
+    flagSaved();
+  }catch(e){ /* quota or private mode: ignore */ }
+}
+function saveSoon(){          // debounced: called on every keystroke
+  if(!CAN_SAVE) return;
+  if(_saveTimer) clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveNow, 400);
+}
+function flagSaved(){
+  const el = document.getElementById('saveflag'); if(!el) return;
+  const t = new Date();
+  el.textContent = '\u2713 saved ' + t.toLocaleTimeString();
+  el.style.opacity = '1';
+  setTimeout(()=>{ el.style.opacity = '0.55'; }, 1200);
+}
+function loadSaved(){
+  if(!CAN_SAVE) return false;
+  let raw; try{ raw = localStorage.getItem(STORAGE_KEY); }catch(e){ return false; }
+  if(!raw) return false;
+  let data; try{ data = JSON.parse(raw); }catch(e){ return false; }
+  if(!data || !data.ans) return false;
+  if('name' in data)  { const e=document.getElementById('stu_name');  if(e) e.value=data.name; }
+  if('roll' in data)  { const e=document.getElementById('stu_roll');  if(e) e.value=data.roll; }
+  if('batch' in data) { const e=document.getElementById('stu_batch'); if(e) e.value=data.batch; }
+  let restored = 0;
+  for(const n in data.ans){
+    const el = document.getElementById('ans'+n);
+    if(el){ el.value = data.ans[n]; restored++; }
+  }
+  // show a small banner so the student knows work was recovered
+  const b = document.getElementById('restorebar');
+  if(b && (restored>0 || data.name || data.roll)){
+    b.style.display='block';
+    let when=''; try{ when=new Date(data.saved).toLocaleString(); }catch(e){}
+    b.querySelector('.rtext').textContent =
+      'Your earlier work was restored ('+restored+' answer'+(restored===1?'':'s')+
+      ' recovered'+(when?', last saved '+when:'')+'). Keep going where you left off.';
+  }
+  return true;
+}
+function clearSaved(){
+  if(!confirm('Clear all saved answers on THIS browser and reset every question to its starter code? This cannot be undone.')) return;
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  for(let n=1;n<=NQ;n++){
+    const el=document.getElementById('ans'+n);
+    if(el) el.value = STARTER[n]||'';
+    const box=document.getElementById('out'+n); if(box){ box.classList.remove('show'); box.innerHTML=''; }
+    const rh=document.getElementById('rh'+n); if(rh) rh.textContent='';
+    const st=document.getElementById('st'+n); if(st) st.textContent='';
+  }
+  const nm=document.getElementById('stu_name'); if(nm) nm.value='';
+  const rl=document.getElementById('stu_roll'); if(rl) rl.value='';
+  const bt=document.getElementById('stu_batch'); if(bt) bt.value='';
+  const rb=document.getElementById('restorebar'); if(rb) rb.style.display='none';
+  updateProgress();
+  const el=document.getElementById('saveflag'); if(el) el.textContent='cleared';
+}
+
+// ---------- portable progress file: continue on another computer ----------
+// Writes an answer into a cell and refreshes its status.
+function applyAnswer(n, val){
+  const el=document.getElementById('ans'+n);
+  if(!el) return false;
+  el.value = val;
+  const st=document.getElementById('st'+n);
+  if(st) st.textContent = isAnswered(n) ? '\u2713 answered' : '';
+  return true;
+}
+// Save a .json the student can carry to another machine.
+function saveProgressFile(){
+  const state = collectState();
+  const answered = Object.keys(state.ans).length;
+  const rollTag = (state.roll || 'student').replace(/[^A-Za-z0-9_-]/g,'_');
+  const content = JSON.stringify(state, null, 2);
+  const fname = 'CS3006_Lab02_progress_' + rollTag + '.json';
+  const ok = triggerDownload(content, fname);
+  const msg = document.getElementById('portmsg');
+  if(msg){
+    if(ok){ msg.style.color='#14532d';
+      msg.textContent='\u2713 Saved "'+fname+'" ('+answered+'/120 answered). Carry this file (email it to yourself / pen drive / cloud), then use "Load progress" on the other computer to continue.'; }
+    else { msg.style.color='#b45309';
+      msg.textContent='\u26A0 Download blocked. Try the "Copy answers" button in the submit area instead, or allow downloads for this page.'; }
+  }
+}
+// Load a progress .json the student picked; ask before overwriting existing work.
+function loadProgressFile(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    let data;
+    try{ data = JSON.parse(ev.target.result); }
+    catch(e){ alert('That file is not a valid progress file (could not read JSON).'); input.value=''; return; }
+    if(!data || typeof data!=='object' || !data.ans){
+      alert('That does not look like a CS3006 progress file (no answers found).'); input.value=''; return;
+    }
+    const incoming = Object.keys(data.ans).length;
+    // does the student already have their own edits here?
+    let existing = 0; for(let n=1;n<=NQ;n++){ if(isAnswered(n)) existing++; }
+    let merge = false;
+    if(existing > 0){
+      const choice = confirm(
+        'This browser already has '+existing+' answer(s).\n\n'+
+        'The file you picked has '+incoming+' answer(s).\n\n'+
+        'OK  = REPLACE: use the file\u2019s answers (your current answers here are discarded).\n'+
+        'Cancel = MERGE: keep your current answers and only fill in questions you have not answered yet.'
+      );
+      merge = !choice;   // Cancel => merge
+    }
+    // name / roll / batch: fill from file only if empty (never clobber a typed roll on merge)
+    ['name','roll','batch'].forEach(function(k){
+      const el=document.getElementById('stu_'+k); if(!el) return;
+      if(!merge || !el.value) { if(k in data && data[k]) el.value = data[k]; }
+    });
+    let applied = 0, skipped = 0;
+    for(const n in data.ans){
+      if(merge && isAnswered(n)) { skipped++; continue; }   // keep local answer
+      if(applyAnswer(n, data.ans[n])) applied++;
+    }
+    updateProgress();
+    saveNow();   // persist the merged/replaced state to this browser too
+    input.value=''; // allow re-picking the same file later
+    const msg=document.getElementById('portmsg');
+    if(msg){ msg.style.color='#14532d';
+      let when=''; try{ when=new Date(data.saved).toLocaleString(); }catch(e){}
+      msg.textContent='\u2713 Loaded '+applied+' answer(s)'+(merge?(' (merged; kept '+skipped+' you already had)'):' (replaced)')+
+        (when?', from a file saved '+when:'')+'. You can carry on from where you left off.';
+    }
+  };
+  reader.onerror = function(){ alert('Could not read that file.'); input.value=''; };
+  reader.readAsText(file);
+}
+
+function resetCode(n){
+  document.getElementById('ans'+n).value = STARTER[n]||'';
+  const box=document.getElementById('out'+n); box.classList.remove('show'); box.innerHTML='';
+  document.getElementById('rh'+n).textContent='';
+  mark(n);
+}
+
+function getAns(n){
+  if(KIND[n]==='mcq'){
+    const el=document.querySelector('input[name="q'+n+'"]:checked');
+    return el ? el.value : '';
+  } else {
+    const el=document.getElementById('ans'+n);
+    return el ? el.value : '';
+  }
+}
+function isAnswered(n){
+  const v=getAns(n);
+  if(KIND[n]==='code'){ return String(v).trim()!=='' && norm(v)!==norm(STARTER[n]||''); }
+  return String(v).trim()!=='';
+}
+function mark(n){
+  document.getElementById('st'+n).textContent = isAnswered(n) ? '\u2713 answered' : '';
+  updateProgress();
+  saveSoon();
+}
+function updateProgress(){
+  let c=0; for(let n=1;n<=NQ;n++){ if(isAnswered(n)) c++; }
+  document.getElementById('done').textContent=c;
+  document.getElementById('fill').style.width=(c/NQ*100)+'%';
+}
+
+function pyLiteral(s){
+  s=String(s); let out='';
+  for(const ch of s){
+    if(ch==='\\') out+='\\\\';
+    else if(ch==='"') out+='\\"';
+    else if(ch==='\n') out+='\\n';
+    else if(ch==='\r') out+='';
+    else if(ch==='\t') out+='\\t';
+    else out+=ch;
+  }
+  return '"'+out+'"';
+}
+function triggerDownload(content, fname){
+  try{
+    const blob=new Blob([content],{type:'application/octet-stream'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download=fname; a.rel='noopener'; a.style.display='none';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},4000);
+    return true;
+  }catch(e){
+    try{ const a=document.createElement('a');
+      a.href='data:application/octet-stream;charset=utf-8,'+encodeURIComponent(content);
+      a.download=fname; a.style.display='none'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      return true;
+    }catch(e2){ return false; }
+  }
+}
+function generate(){
+  const name=document.getElementById('stu_name').value.trim();
+  const roll=document.getElementById('stu_roll').value.trim();
+  const batch=document.getElementById('stu_batch').value.trim();
+  const w=document.getElementById('subwarn');
+  if(!name||!roll||!batch){
+    w.style.color='#b45309';
+    w.textContent='\u26A0 Please fill Name, Roll number and Batch before generating.';
+    document.querySelector('.idbar').scrollIntoView({behavior:'smooth'}); return;
+  }
+  let answered=0; const L=[];
+  L.push('# ============================================================');
+  L.push('# CS3006 - Advanced Data Types & Control Structures Lab - 120 questions (interactive)');
+  L.push('# AUTO-GENERATED SUBMISSION FILE - do not edit by hand.');
+  L.push('# Generated: '+new Date().toISOString());
+  L.push('# ============================================================');
+  L.push('');
+  L.push('student = {');
+  L.push('    "name": '+pyLiteral(name)+',');
+  L.push('    "roll": '+pyLiteral(roll)+',');
+  L.push('    "batch": '+pyLiteral(batch)+',');
+  L.push('}');
+  L.push('');
+  L.push('# answers[q] : MCQ -> letter ; predict -> predicted output text ; code -> edited Python');
+  L.push('answers = {}');
+  L.push('');
+  for(let n=1;n<=NQ;n++){
+    const val=getAns(n)||'';
+    if(isAnswered(n)) answered++;
+    const tag=(KIND[n]==='mcq')?'  # MCQ':(KIND[n]==='predict')?'  # predict':'  # code';
+    L.push('answers['+n+'] = '+pyLiteral(val)+tag);
+  }
+  L.push('');
+  L.push('meta = {"answered": '+answered+', "total": '+NQ+'}');
+  L.push('');
+  const content=L.join('\n');
+  const safeRoll=(roll.replace(/[^A-Za-z0-9_-]/g,'_'))||'student';
+  const fname='submission_'+safeRoll+'.py';
+  window.__lastContent=content; window.__lastName=fname;
+  const ok=triggerDownload(content, fname);
+  if(ok){ w.style.color='#16a34a';
+    w.textContent='\u2713 Submission generated ('+answered+'/120 answered). Now click "Copy answers" below and paste it into the Lab 02 edit box on Moodle.'; }
+  else { w.style.color='#b45309';
+    w.textContent='\u26A0 Download blocked ('+answered+'/120). Use "Copy answers" or "Open in new tab" below, save as '+fname+'.'; }
+  document.getElementById('fallback').style.display='block';
+}
+function openInTab(){
+  const c=window.__lastContent||''; const t=window.open('','_blank');
+  if(!t){ alert('Popup blocked. Allow popups or use Copy answers.'); return; }
+  const pre=t.document.createElement('pre'); pre.textContent=c;
+  t.document.title=window.__lastName||'submission.py'; t.document.body.appendChild(pre);
+}
+function copyAnswers(){
+  const c=window.__lastContent||'';
+  const done=()=>{const b=document.getElementById('copybtn');const t=b.textContent;b.textContent='\u2713 Copied!';setTimeout(()=>b.textContent=t,2000);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(c).then(done).catch(()=>legacyCopy(c,done)); }
+  else legacyCopy(c,done);
+}
+function legacyCopy(text,cb){
+  const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{ document.execCommand('copy'); cb(); }catch(e){ alert('Copy failed \u2014 select the text manually.'); }
+  document.body.removeChild(ta);
+}
+
+function wireUp(){
+  document.querySelectorAll('textarea.code-edit').forEach(function(t){
+    t.addEventListener('keydown', function(e){
+      if(e.key==='Tab'){ e.preventDefault();
+        const s=this.selectionStart, en=this.selectionEnd;
+        this.value=this.value.slice(0,s)+'    '+this.value.slice(en);
+        this.selectionStart=this.selectionEnd=s+4;
+      }
+    });
+  });
+  document.querySelectorAll('.runbtn').forEach(b=>b.disabled=true);
+  // restore any earlier work BEFORE computing progress / marking status
+  loadSaved();
+  // keep the name / roll / batch fields saved too
+  ['stu_name','stu_roll','stu_batch'].forEach(function(id){
+    const el=document.getElementById(id);
+    if(el){ el.addEventListener('input', saveSoon); el.addEventListener('change', saveSoon); }
+  });
+  // refresh every question's status after a restore
+  for(let n=1;n<=NQ;n++){
+    const st=document.getElementById('st'+n);
+    if(st) st.textContent = isAnswered(n) ? '\u2713 answered' : '';
+  }
+  updateProgress();
+  // last-chance save if the page is being closed / refreshed
+  window.addEventListener('beforeunload', saveNow);
+  if(!CAN_SAVE){
+    const bar=document.getElementById('nosavebar'); if(bar) bar.style.display='block';
+  }
+  initPy();
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', wireUp); }
+else { wireUp(); }
+</script>
+</body>
+</html>

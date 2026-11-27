@@ -1,0 +1,41 @@
+Q1. Linux networking commands are used extensively to inspect, analyze, maintain, and troubleshoot the network(s) connected to the system. Let us first know the list of the basic networking commands used in Linux followed by a detailed explanation of each.
+
+ifconfig
+ip
+traceroute
+tracepath
+ping
+netstat
+ss (Socket Statistics)
+dig
+nslookup
+host
+arp
+hostname
+curl or wget
+whois
+iftop
+
+Instructions:
+Run all the commands mentioned above along with their various options. Make sure to explore different commonly used options for each command. After executing each command (along with option), take a clear screenshot showing the output in the terminal.
+For each command, write a short note explaining its purpose and the function of the different options you tried. You can write short notes on each of the commands and discuss various options.
+Compile all your screenshots and notes into one PDF document. Ensure your name and roll number are clearly mentioned on ALL the page(s).
+Upload the PDF file as your assignment submission.
+Each student must submit the assignment individually.
+
+
+Q2. Use Cisco Packet Tracer and Connect two end nodes (Computers) and Answer the followings:
+
+Two End nodes Connected with the Straight Ethernet Cable, where both end nodes are in the same network.
+Two End nodes Connected with the Straight Ethernet Cable, where both end nodes are in the different networks.
+Two End nodes Connected with the Cross Coupled Ethernet Cable, where both end nodes are in the same network.
+Two End nodes Connected with the Cross Coupled Ethernet Cable, where both end nodes are in the different networks.
+What is a cross over Ethernet Cable? Show connection.
+What is CAT-6 cable and what each colour wire represents?
+
+Instructions:
+Submit a PDF document that includes your comments and screenshots from Cisco Packet Tracer for a specific question. Make sure to write your name and roll number clearly before taking the screenshot.
+Submit a ZIP file containing all your PKZ file(s). You may either use separate PKZ files for each question or combine all questions into a single PKZ file, if possible.
+Each student must submit the assignment individually.
+
+Thanks

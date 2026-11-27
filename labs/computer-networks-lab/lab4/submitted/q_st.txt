@@ -1,0 +1,74 @@
+Q1.Write a Single Server-Multiple Client program for text file transfer using Python threading, with
+the following requirements:
+● Each client connection is handled in a separate thread on the server.
+● When a client connects, the server assigns a unique username (e.g., user1, user2, user3, ...)
+and immediately sends this username to the client. The username stays constant if the client
+disconnects and then reconnects again in future.
+● The client then sends the name of a text file it wants to upload.
+● The server checks if a file named clientusername_<filename>.txt already exists on the server.
+If the file already exists, the server immediately responds with the message "File already
+exists" and rejects the file transfer. If the file does not exist, the server responds with
+"READY" to signal that it is ready to receive the file content.
+● Upon receiving "READY", the client reads the specified text file from its local system and
+sends the file data in chunks to the server.
+● To simulate realistic network conditions and demonstrate simultaneous multi-client
+handling, the client introduces small delays (time.sleep()) between sending each chunk of
+the file.
+● The server receives the incoming data and writes it into a file named using the format
+clientusername_<filename>.txt.
+● After successfully receiving and saving the entire file, the server sends a confirmation
+message "Upload Complete for clientusername_<filename>" back to the client indicating
+successful receipt.
+● The connection between client and server is terminated after the file transfer is completed.
+● The server displays the count of active client connections whenever a client connects or
+disconnects.
+● The server maintains a log file (server_log.txt) recording every file transfer event with the
+following details: Timestamp of the event, Client Socket Address, Assigned client username,
+File name, Action taken by the server (Accepted or Rejected), Size of the file received (if
+applicable)
+Sample:
+[2025-08-20 19:32:40] ServerSocket: 172.16.222.245:65214, ClientSocket:
+192.168.2.173:12345, Username: user1, File: user1_cl1.txt, Action: Accepted, Size: 1354
+bytes
+[2025-08-20 19:33:32] ServerSocket: 172.16.222.245:65214, ClientSocket:
+192.168.2.173:12345, Username: user1, File: user1_cl1.txt, Action: Rejected
+● The client program should handle the server’s rejection gracefully, prompting the user to
+either retry with a different file or exit the program.
+
+INSTRUCTIONS:
+1. Write both the client program and server program on your own system. Include your name
+and roll number as comments at the top of each program file. Transfer/Upload 4 types of file
+types: .txt, .docx, .pdf and .mp4 (Video sample can be downloaded from
+https://drive.google.com/drive/folders/12fIy7nE1KBm0kmMuuWfnFlf3yqyq7lxJ?usp=dr
+ive_link using IIITDM email id).
+2. Test the entire operation on your local system with one server and three clients (using
+separate terminals). Use Network IPv4 address (eg - 192.168. or 172.16. ) and hardcode it in
+server and client programs wherever necessary (should be visible in output). Do Not use
+gethostbyname() function or '0.0.0.0' ip or localhost or '127.0.0.1'. For each connection, print
+all necessary data on both server and client side:
+◦ Socket addresses of both server and client (IP and port)
+◦ The unique username assigned by the server
+◦ The filename requested by the client
+◦ The server’s response status (e.g., "READY", "File already exists")
+◦ Whether the server accepted or rejected the file
+◦ Confirmation messages sent and received by the client
+◦ The count of active connections each time a client connects or disconnects
+◦ Do not print the actual file contents to avoid clutter. Only print statuses and confirmation
+messages.
+3. Next, ask your friend sitting next to you for their system’s IP address and port number.
+Modify the client program accordingly and send files to your friend’s server program running
+on their machine. Log and print all necessary details including:
+◦ Data sent and data received (file name, statuses, confirmations)
+◦ Server and client socket addresses (IP and port)
+◦ The username assigned by the server to your client
+
+4. Take screenshots of your client.py program and its console output. Take screenshots of
+your server.py program and its console output. Take screenshots of server_log.txt file also.
+5. Compile all screenshots into a single PDF document, with your name and roll number clearly
+mentioned on every page. There should be two sets of screenshots - one performed on your
+
+local system and another performed with a friend's system.
+6. Submit the PDF document along with your client.py, server.py, local_server_log.txt (log for
+local system) and network_server_log.txt (log for using friends' system) program files as five
+separate files (do not zip or compress).
+7. Make sure to submit before the deadline. Late submissions will not be accepted.

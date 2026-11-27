@@ -1,0 +1,49 @@
+Question 10 (Lab 10): Syntax-Directed Calculator & Variable Evaluation with Flex and Bison
+(from bisoncalculatorlab.pdf)
+
+Objectives
+  - Lexical analysis: multi-digit integers, single-character variables (a-z),
+    arithmetic operators; ignore whitespace.
+  - Grammar: binary operations, unary negation, parentheses, assignment.
+  - Precedence: left-associative, * / bind tighter than + - (Bison %left / %right).
+  - Semantic actions: 26-element symbol table; guard against division by zero.
+
+Files
+  calc.l, calc.y                    the lab (exactly as in the handout)
+  extension/calc_ext.l, calc_ext.y  extension exercises A + B + C
+
+Build & run
+  bison -d calc.y          -> calc.tab.c, calc.tab.h
+  flex calc.l              -> lex.yy.c
+  gcc -o calc calc.tab.c lex.yy.c
+  ./calc
+
+  extension:
+  cd extension
+  bison -d calc_ext.y && flex calc_ext.l && gcc -o calc_ext calc_ext.tab.c lex.yy.c -lm
+
+Test cases (from the handout)
+  3 + 4 * 2       Result = 11
+  (3 + 4) * 2     Result = 14
+  a = 25          Assigned: a = 25
+  b = a - 5       Assigned: b = 20
+  b / 0           Error: Division by zero
+                  Result = 0
+  b / 4           Result = 5
+
+Lab extension exercises
+  A (Modulus & Exponentiation): add % (same precedence as *, /) and a
+    right-associative ^ using %right '^'.
+  B (Floating-point): change %union / tokens to double, use atof().
+  C (Multi-character identifiers): hash table or dynamic array for variables
+    with names longer than one letter.
+
+Key points to remember (viva)
+  - bison -d creates calc.tab.h, which calc.l #includes to get NUMBER / IDENTIFIER.
+  - %union lists the value types; %token <num> / %type <num> attach them.
+  - $$ = value of the left side, $1 $2 $3 = values of the right-side symbols.
+  - Later %left / %right lines have HIGHER precedence.
+  - %prec UMINUS gives unary minus its own (higher) precedence than binary '-'.
+  - "error '\n' { yyerrok; }" lets the parser recover and continue after a syntax error.
+  - In the extension, ^ is declared after UMINUS so -2^2 = -(2^2) = -4,
+    and %right makes 2^3^2 = 2^(3^2) = 512.

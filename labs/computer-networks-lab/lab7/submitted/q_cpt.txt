@@ -1,0 +1,64 @@
+A. Create a Local Area Network (LAN) using one switch and 6 end devices such as PCs or
+
+lalaptops. Connect a DHCP server to the same switch and name it “IIITDM DHCP Server.” Also,
+
+connect an HTTP Web Server to the same switch and configure it with an appropriate static
+
+IP address. Configure the DHCP server using a Class C IP network and create an IP address
+
+pool that dynamically assigns IP addresses to the LAN devices starting from 192.168.1.12.
+
+Configure the HTTP service on the Web Server and host a simple web page (write about
+
+yourself, like name roll number, etc.) that can be accessed by all the end devices using the
+
+Web Server’s IP address. After completing all configurations, verify that each end device
+
+receives the appropriate IP address dynamically from the DHCP server and can successfully
+
+access the hosted web pages in the Web Server. Observe the DHCP packet exchange during
+
+dynamic IP address allocation and write your observations based on the packet analysis,
+
+highlighting the role and advantages of the DHCP server.
+
+
+B. Create two separate LANs named L512 and L509, with each LAN containing a minimum of 5
+
+end devices. Interconnect the two LANs using a router. Connect a DHCP server at L512 side
+
+LAN, and configure with two ip address pools for the two different LANs (512, 509). For
+
+L512, configure the DHCP pool to dynamically assign IP addresses starting from
+
+192.168.12.15. For L509, configure the DHCP pool to dynamically assign IP addresses
+
+starting from 192.168.9.115. After completing the configuration, verify that all devices in
+
+both LANs receive the appropriate IP addresses dynamically according to the specified
+
+DHCP pools. Verify that devices within the same LAN can communicate with each other and
+
+that devices in L512 can communicate with devices in L509 and vice versa.
+
+Note: use CLI command ip helper-address DHCPserverIP (e.g, ip helper-adress
+
+192.168.12.100) in the interface of the router, so that DHCP server present in other network
+
+can serve this interface side network.
+
+
+Instructions:
+
+1
+Submit a PDF document that includes your comments and screenshots from Cisco Packet Tracer
+
+with ping, and screenshot from Cisco Packet Tracer with simulation, realtime for a specific question.
+
+Make sure to write your name and roll number clearly before taking the screenshot.
+
+2
+Combine all questions into a single PKZ file, and submit.
+
+3
+Each student must submit the assignment individually

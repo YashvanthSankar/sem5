@@ -1,0 +1,16 @@
+Employee_ID,Department,Education,Performance,Work_Mode,Salary
+E101,IT,Bachelor's,Good,Remote,45000
+E102,HR,Master's,Excellent,Office,52000
+E103,Sales,Diploma,Average,Hybrid,32000
+E104,IT,Master's,Excellent,Hybrid,65000
+E105,Finance,Bachelor's,Good,Office,42000
+E106,HR,Diploma,Poor,Remote,28000
+E107,Sales,Master's,Good,Office,48000
+E108,Finance,Bachelor's,Average,Hybrid,35000
+E109,IT,PhD,Excellent,Remote,78000
+E110,HR,Bachelor's,Good,Hybrid,40000
+E111,Sales,Diploma,Poor,Remote,27000
+E112,Finance,Master's,Excellent,Office,61000
+E113,IT,Bachelor's,Average,Office,39000
+E114,HR,PhD,Excellent,Hybrid,70000
+E115,Sales,Bachelor's,Good,Remote,43000

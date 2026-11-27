@@ -1,0 +1,2115 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CS3006 Probability Distributions Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* BASICS */
+
+.CodeMirror {
+  /* Set height, width, borders, and global font properties here */
+  font-family: monospace;
+  height: 300px;
+  color: black;
+  direction: ltr;
+}
+
+/* PADDING */
+
+.CodeMirror-lines {
+  padding: 4px 0; /* Vertical padding around content */
+}
+.CodeMirror pre.CodeMirror-line,
+.CodeMirror pre.CodeMirror-line-like {
+  padding: 0 4px; /* Horizontal padding of content */
+}
+
+.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
+  background-color: white; /* The little square between H and V scrollbars */
+}
+
+/* GUTTER */
+
+.CodeMirror-gutters {
+  border-right: 1px solid #ddd;
+  background-color: #f7f7f7;
+  white-space: nowrap;
+}
+.CodeMirror-linenumbers {}
+.CodeMirror-linenumber {
+  padding: 0 3px 0 5px;
+  min-width: 20px;
+  text-align: right;
+  color: #999;
+  white-space: nowrap;
+}
+
+.CodeMirror-guttermarker { color: black; }
+.CodeMirror-guttermarker-subtle { color: #999; }
+
+/* CURSOR */
+
+.CodeMirror-cursor {
+  border-left: 1px solid black;
+  border-right: none;
+  width: 0;
+}
+/* Shown when moving in bi-directional text */
+.CodeMirror div.CodeMirror-secondarycursor {
+  border-left: 1px solid silver;
+}
+.cm-fat-cursor .CodeMirror-cursor {
+  width: auto;
+  border: 0 !important;
+  background: #7e7;
+}
+.cm-fat-cursor div.CodeMirror-cursors {
+  z-index: 1;
+}
+.cm-fat-cursor .CodeMirror-line::selection,
+.cm-fat-cursor .CodeMirror-line > span::selection, 
+.cm-fat-cursor .CodeMirror-line > span > span::selection { background: transparent; }
+.cm-fat-cursor .CodeMirror-line::-moz-selection,
+.cm-fat-cursor .CodeMirror-line > span::-moz-selection,
+.cm-fat-cursor .CodeMirror-line > span > span::-moz-selection { background: transparent; }
+.cm-fat-cursor { caret-color: transparent; }
+@-moz-keyframes blink {
+  0% {}
+  50% { background-color: transparent; }
+  100% {}
+}
+@-webkit-keyframes blink {
+  0% {}
+  50% { background-color: transparent; }
+  100% {}
+}
+@keyframes blink {
+  0% {}
+  50% { background-color: transparent; }
+  100% {}
+}
+
+/* Can style cursor different in overwrite (non-insert) mode */
+.CodeMirror-overwrite .CodeMirror-cursor {}
+
+.cm-tab { display: inline-block; text-decoration: inherit; }
+
+.CodeMirror-rulers {
+  position: absolute;
+  left: 0; right: 0; top: -50px; bottom: 0;
+  overflow: hidden;
+}
+.CodeMirror-ruler {
+  border-left: 1px solid #ccc;
+  top: 0; bottom: 0;
+  position: absolute;
+}
+
+/* DEFAULT THEME */
+
+.cm-s-default .cm-header {color: blue;}
+.cm-s-default .cm-quote {color: #090;}
+.cm-negative {color: #d44;}
+.cm-positive {color: #292;}
+.cm-header, .cm-strong {font-weight: bold;}
+.cm-em {font-style: italic;}
+.cm-link {text-decoration: underline;}
+.cm-strikethrough {text-decoration: line-through;}
+
+.cm-s-default .cm-keyword {color: #708;}
+.cm-s-default .cm-atom {color: #219;}
+.cm-s-default .cm-number {color: #164;}
+.cm-s-default .cm-def {color: #00f;}
+.cm-s-default .cm-variable,
+.cm-s-default .cm-punctuation,
+.cm-s-default .cm-property,
+.cm-s-default .cm-operator {}
+.cm-s-default .cm-variable-2 {color: #05a;}
+.cm-s-default .cm-variable-3, .cm-s-default .cm-type {color: #085;}
+.cm-s-default .cm-comment {color: #a50;}
+.cm-s-default .cm-string {color: #a11;}
+.cm-s-default .cm-string-2 {color: #f50;}
+.cm-s-default .cm-meta {color: #555;}
+.cm-s-default .cm-qualifier {color: #555;}
+.cm-s-default .cm-builtin {color: #30a;}
+.cm-s-default .cm-bracket {color: #997;}
+.cm-s-default .cm-tag {color: #170;}
+.cm-s-default .cm-attribute {color: #00c;}
+.cm-s-default .cm-hr {color: #999;}
+.cm-s-default .cm-link {color: #00c;}
+
+.cm-s-default .cm-error {color: #f00;}
+.cm-invalidchar {color: #f00;}
+
+.CodeMirror-composing { border-bottom: 2px solid; }
+
+/* Default styles for common addons */
+
+div.CodeMirror span.CodeMirror-matchingbracket {color: #0b0;}
+div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #a22;}
+.CodeMirror-matchingtag { background: rgba(255, 150, 0, .3); }
+.CodeMirror-activeline-background {background: #e8f2ff;}
+
+/* STOP */
+
+/* The rest of this file contains styles related to the mechanics of
+   the editor. You probably shouldn't touch them. */
+
+.CodeMirror {
+  position: relative;
+  overflow: hidden;
+  background: white;
+}
+
+.CodeMirror-scroll {
+  overflow: scroll !important; /* Things will break if this is overridden */
+  /* 50px is the magic margin used to hide the element's real scrollbars */
+  /* See overflow: hidden in .CodeMirror */
+  margin-bottom: -50px; margin-right: -50px;
+  padding-bottom: 50px;
+  height: 100%;
+  outline: none; /* Prevent dragging from highlighting the element */
+  position: relative;
+  z-index: 0;
+}
+.CodeMirror-sizer {
+  position: relative;
+  border-right: 50px solid transparent;
+}
+
+/* The fake, visible scrollbars. Used to force redraw during scrolling
+   before actual scrolling happens, thus preventing shaking and
+   flickering artifacts. */
+.CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
+  position: absolute;
+  z-index: 6;
+  display: none;
+  outline: none;
+}
+.CodeMirror-vscrollbar {
+  right: 0; top: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.CodeMirror-hscrollbar {
+  bottom: 0; left: 0;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+.CodeMirror-scrollbar-filler {
+  right: 0; bottom: 0;
+}
+.CodeMirror-gutter-filler {
+  left: 0; bottom: 0;
+}
+
+.CodeMirror-gutters {
+  position: absolute; left: 0; top: 0;
+  min-height: 100%;
+  z-index: 3;
+}
+.CodeMirror-gutter {
+  white-space: normal;
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: -50px;
+}
+.CodeMirror-gutter-wrapper {
+  position: absolute;
+  z-index: 4;
+  background: none !important;
+  border: none !important;
+}
+.CodeMirror-gutter-background {
+  position: absolute;
+  top: 0; bottom: 0;
+  z-index: 4;
+}
+.CodeMirror-gutter-elt {
+  position: absolute;
+  cursor: default;
+  z-index: 4;
+}
+.CodeMirror-gutter-wrapper ::selection { background-color: transparent }
+.CodeMirror-gutter-wrapper ::-moz-selection { background-color: transparent }
+
+.CodeMirror-lines {
+  cursor: text;
+  min-height: 1px; /* prevents collapsing before first draw */
+}
+.CodeMirror pre.CodeMirror-line,
+.CodeMirror pre.CodeMirror-line-like {
+  /* Reset some styles that the rest of the page might have set */
+  -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;
+  border-width: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  margin: 0;
+  white-space: pre;
+  word-wrap: normal;
+  line-height: inherit;
+  color: inherit;
+  z-index: 2;
+  position: relative;
+  overflow: visible;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-variant-ligatures: contextual;
+  font-variant-ligatures: contextual;
+}
+.CodeMirror-wrap pre.CodeMirror-line,
+.CodeMirror-wrap pre.CodeMirror-line-like {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: normal;
+}
+
+.CodeMirror-linebackground {
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  z-index: 0;
+}
+
+.CodeMirror-linewidget {
+  position: relative;
+  z-index: 2;
+  padding: 0.1px; /* Force widget margins to stay inside of the container */
+}
+
+.CodeMirror-widget {}
+
+.CodeMirror-rtl pre { direction: rtl; }
+
+.CodeMirror-code {
+  outline: none;
+}
+
+/* Force content-box sizing for the elements where we expect it */
+.CodeMirror-scroll,
+.CodeMirror-sizer,
+.CodeMirror-gutter,
+.CodeMirror-gutters,
+.CodeMirror-linenumber {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+.CodeMirror-measure {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.CodeMirror-cursor {
+  position: absolute;
+  pointer-events: none;
+}
+.CodeMirror-measure pre { position: static; }
+
+div.CodeMirror-cursors {
+  visibility: hidden;
+  position: relative;
+  z-index: 3;
+}
+div.CodeMirror-dragcursors {
+  visibility: visible;
+}
+
+.CodeMirror-focused div.CodeMirror-cursors {
+  visibility: visible;
+}
+
+.CodeMirror-selected { background: #d9d9d9; }
+.CodeMirror-focused .CodeMirror-selected { background: #d7d4f0; }
+.CodeMirror-crosshair { cursor: crosshair; }
+.CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection { background: #d7d4f0; }
+.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection { background: #d7d4f0; }
+
+.cm-searching {
+  background-color: #ffa;
+  background-color: rgba(255, 255, 0, .4);
+}
+
+/* Used to force a border model for a node */
+.cm-force-border { padding-right: .1px; }
+
+@media print {
+  /* Hide the cursor when printing */
+  .CodeMirror div.CodeMirror-cursors {
+    visibility: hidden;
+  }
+}
+
+/* See issue #2901 */
+.cm-tab-wrap-hack:after { content: ''; }
+
+/* Help users use markselection to safely style text background */
+span.CodeMirror-selectedtext { background: none; }
+
+/* Layout: lab bench split in two. Left = worked example (cobalt, exam data); right = practice (green, factory and service data). */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --ink:#18202b; --muted:#5a6575; --line:#d5dbe3; --soft:#f5f7fa;
+  --ex:#2c55c9; --ex-tint:#e8eefb; --ex-ink:#1f3f9a;
+  --pr:#0c7d60; --pr-tint:#e3f3ed; --pr-ink:#0a5e48;
+  --ok:#1b8a45; --ok-tint:#e2f4e8; --bad:#c0392f; --bad-tint:#fbe8e6; --warn:#a86b0c; --warn-tint:#fbf0dc;
+  --code-bg:#fbfcfd; --code-ink:#1d2632; --kw:#7a2fb5; --str:#0b7a4b; --num:#b4511d; --com:#7d8796; --fn:#1f4fb5;
+  --shadow:0 1px 2px rgba(20,30,45,.06),0 4px 14px rgba(20,30,45,.05);
+  --f-ui:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-head:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161d; --surface:#1a212b; --ink:#e5eaf1; --muted:#9aa5b5; --line:#2c3644; --soft:#202935;
+  --ex:#7b9cf5; --ex-tint:#1d2943; --ex-ink:#a9bff8;
+  --pr:#4cc59f; --pr-tint:#16312a; --pr-ink:#8adcc0;
+  --ok:#5ccf87; --ok-tint:#183324; --bad:#f07a6e; --bad-tint:#3a1d1b; --warn:#e8b45a; --warn-tint:#3a2d14;
+  --code-bg:#151b23; --code-ink:#dbe2ec; --kw:#c89bf0; --str:#7fd6a6; --num:#f2a26f; --com:#7c8797; --fn:#8fb0ff;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#11161d; --surface:#1a212b; --ink:#e5eaf1; --muted:#9aa5b5; --line:#2c3644; --soft:#202935;
+  --ex:#7b9cf5; --ex-tint:#1d2943; --ex-ink:#a9bff8;
+  --pr:#4cc59f; --pr-tint:#16312a; --pr-ink:#8adcc0;
+  --ok:#5ccf87; --ok-tint:#183324; --bad:#f07a6e; --bad-tint:#3a1d1b; --warn:#e8b45a; --warn-tint:#3a2d14;
+  --code-bg:#151b23; --code-ink:#dbe2ec; --kw:#c89bf0; --str:#7fd6a6; --num:#f2a26f; --com:#7c8797; --fn:#8fb0ff;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:14.5px;line-height:1.55;display:flex;flex-direction:column;overflow:hidden}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:0 .3em}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--ex);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-head);text-wrap:balance;margin:0}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;min-width:0;margin-right:auto}
+.brand small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.brand h1{font-size:19px;font-weight:600;line-height:1.2}
+.brand h1 .arrow{color:var(--muted);font-weight:500}
+.brand h1 .l{color:var(--ex)} .brand h1 .r{color:var(--pr)}
+.pystat{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);padding:5px 10px;border:1px solid var(--line);border-radius:99px;background:var(--soft);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
+.pystat.ready .dot{background:var(--ok)} .pystat.fail .dot{background:var(--bad)}
+.pystat.busy .dot{animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:6px 12px;font-size:13px;font-weight:500;display:inline-flex;gap:6px;align-items:center}
+.btn:hover{background:var(--soft)}
+.btn.primary{background:var(--pr);border-color:var(--pr);color:#fff}
+.btn.primary:hover{filter:brightness(1.07)}
+.overall{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{width:110px;height:6px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--pr);width:0;transition:width .3s}
+
+/* module rail */
+.rail{display:flex;gap:4px;padding:8px 16px;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:thin}
+.mod{flex:none;display:flex;align-items:center;gap:8px;border:1px solid transparent;background:none;border-radius:8px;padding:6px 10px;font-size:13px;color:var(--muted);text-align:left}
+.mod:hover{background:var(--soft);color:var(--ink)}
+.mod[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+.mod .num{font-family:var(--f-head);font-weight:700;font-size:15px}
+.ring{width:18px;height:18px;flex:none}
+.ring circle{fill:none;stroke-width:3}
+.ring .bg{stroke:var(--line)} .ring .fg{stroke:var(--pr);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+.mod[aria-selected="true"] .ring .bg{stroke:color-mix(in srgb,var(--surface) 30%,transparent)}
+
+/* mobile pane switch */
+.switch{display:none;padding:8px 16px;gap:6px;background:var(--surface);border-bottom:1px solid var(--line)}
+.switch button{flex:1;border:1px solid var(--line);background:var(--soft);border-radius:7px;padding:7px;font-weight:600;font-size:13px}
+.switch button[aria-pressed="true"].l{background:var(--ex);border-color:var(--ex);color:#fff}
+.switch button[aria-pressed="true"].r{background:var(--pr);border-color:var(--pr);color:#fff}
+
+/* split */
+.split{flex:1;display:grid;grid-template-columns:var(--lw,50%) 8px 1fr;min-height:0}
+.pane{overflow-y:auto;min-width:0;scroll-behavior:smooth}
+.pane.left{background:linear-gradient(var(--ex-tint),var(--ex-tint)) top/100% 3px no-repeat,var(--bg)}
+.pane.right{background:linear-gradient(var(--pr-tint),var(--pr-tint)) top/100% 3px no-repeat,var(--bg)}
+.gutter{background:var(--line);cursor:col-resize;position:relative}
+.gutter::after{content:"";position:absolute;left:2px;top:50%;width:4px;height:36px;margin-top:-18px;border-radius:4px;background:var(--muted);opacity:.5}
+.gutter:hover,.gutter.drag{background:var(--muted)}
+.inner{max-width:760px;margin:0 auto;padding-inline:20px;padding-block:18px 60px;display:flex;flex-direction:column;gap:14px}
+.phead{display:flex;flex-direction:column;gap:6px;position:sticky;top:0;z-index:3;margin-inline:-20px;padding:12px 20px 10px;background:var(--bg);border-bottom:1px solid var(--line)}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.left .tag{color:var(--ex)} .right .tag{color:var(--pr)}
+.tag .ds{font-family:var(--f-mono);letter-spacing:0;text-transform:none;font-weight:500;color:var(--muted)}
+.phead h2{font-size:22px;font-weight:600;line-height:1.2}
+.goal{color:var(--muted);margin:0}
+details.cols{font-size:13px;color:var(--muted)}
+details.cols summary{cursor:pointer;color:var(--ink);font-weight:500;width:max-content}
+details.cols table{margin-top:6px}
+.setup{font-family:var(--f-mono);font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:8px 12px;white-space:pre-wrap}
+.setup b{font-family:var(--f-ui);font-weight:600;color:var(--ink);font-size:12px}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0;scroll-margin-top:130px;transition:opacity .2s,box-shadow .3s}
+.card.flash{box-shadow:0 0 0 3px var(--ex)}
+.chead{display:flex;align-items:baseline;gap:10px}
+.sn{font-family:var(--f-head);font-weight:700;font-size:16px;flex:none;font-variant-numeric:tabular-nums}
+.left .sn{color:var(--ex)} .right .sn{color:var(--pr)}
+.q{margin:0;min-width:0}
+.state{margin-left:auto;flex:none;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.state.done{background:var(--ok-tint);color:var(--ok)}
+.state.todo{background:var(--soft);color:var(--muted)}
+.card.waiting{opacity:.62}
+.card.waiting:hover,.card.waiting:focus-within{opacity:1}
+.link{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;border:1px solid var(--ex);color:var(--ex-ink);background:var(--ex-tint);border-radius:99px;padding:2px 10px}
+.link.pending{border-color:var(--warn);color:var(--warn);background:var(--warn-tint)}
+.link:hover{filter:brightness(.97)}
+
+/* code cell */
+.cell{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--code-bg)}
+.cellbar{display:flex;align-items:center;gap:6px;padding:5px 6px 5px 10px;border-bottom:1px solid var(--line);background:var(--soft);font-size:12px;color:var(--muted)}
+.cellbar .lbl{margin-right:auto;font-family:var(--f-mono)}
+.run{border:none;border-radius:6px;padding:4px 12px;font-size:12.5px;font-weight:600;color:#fff;display:inline-flex;align-items:center;gap:6px}
+.left .run{background:var(--ex)} .right .run{background:var(--pr)}
+.run:disabled{opacity:.55;cursor:wait}
+.ghost{border:none;background:none;border-radius:6px;padding:4px 8px;font-size:12px;color:var(--muted)}
+.ghost:hover{background:var(--line);color:var(--ink)}
+.CodeMirror{height:auto;font-family:var(--f-mono);font-size:13px;line-height:1.5;background:var(--code-bg);color:var(--code-ink)}
+.CodeMirror-scroll{min-height:44px;max-height:420px}
+.CodeMirror-gutters{background:var(--code-bg);border-right:1px solid var(--line)}
+.CodeMirror-linenumber{color:var(--com)}
+.CodeMirror-cursor{border-left:2px solid var(--ink)}
+.CodeMirror-selected,.CodeMirror-focused .CodeMirror-selected{background:color-mix(in srgb,var(--ex) 22%,transparent)}
+.cm-s-default .cm-keyword{color:var(--kw)} .cm-s-default .cm-string{color:var(--str)} .cm-s-default .cm-number{color:var(--num)}
+.cm-s-default .cm-comment{color:var(--com);font-style:italic} .cm-s-default .cm-builtin{color:var(--fn)} .cm-s-default .cm-def{color:var(--fn)}
+.cm-s-default .cm-variable,.cm-s-default .cm-variable-2,.cm-s-default .cm-property{color:var(--code-ink)} .cm-s-default .cm-operator{color:var(--muted)}
+.cm-s-default .cm-meta{color:var(--kw)}
+textarea.fallback{width:100%;min-height:120px;border:0;padding:10px;font-family:var(--f-mono);font-size:13px;background:var(--code-bg);color:var(--code-ink);resize:vertical;box-sizing:border-box}
+.out{border-top:1px solid var(--line);padding:8px 12px;display:flex;flex-direction:column;gap:8px;max-height:520px;overflow:auto;font-size:12.5px}
+.out:empty{display:none}
+.out pre{margin:0;font-family:var(--f-mono);font-size:12px;white-space:pre;color:var(--ink)}
+.out pre.err{color:var(--bad);white-space:pre-wrap}
+.out .note{color:var(--muted);font-style:italic;font-size:12px}
+.out img{max-width:100%;background:#fff;border-radius:6px;align-self:flex-start}
+.out .df{overflow-x:auto}
+.out table.dataframe,table.mini{border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+.out table.dataframe th,.out table.dataframe td{border-bottom:1px solid var(--line);padding:3px 9px;text-align:right;white-space:nowrap}
+.out table.dataframe thead th{border-bottom:2px solid var(--line);color:var(--ink)}
+.out table.dataframe tbody th{color:var(--muted);font-weight:500}
+table.mini{width:100%;margin:4px 0}
+table.mini th,table.mini td{border-bottom:1px solid var(--line);padding:4px 8px;text-align:left;vertical-align:top}
+table.mini th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.chk{font-size:12.5px;padding:6px 10px;border-radius:6px;display:flex;gap:8px;align-items:flex-start}
+.chk.pass{background:var(--ok-tint);color:var(--ok)} .chk.fail{background:var(--bad-tint);color:var(--bad)}
+
+
+.hintbtn{color:var(--warn)}
+.hintbox{border-top:1px dashed var(--warn);background:var(--warn-tint);padding:6px 10px 8px}
+.hinthead{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--warn)}
+.hinthead span{margin-right:auto}
+.hintbox pre{margin:4px 0 0;font-family:var(--f-mono);font-size:12px;white-space:pre-wrap;color:var(--ink)}
+/* reveal */
+.reveal{border-top:1px dashed var(--line);padding-top:8px}
+.reveal summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--ex-ink);list-style:none;display:inline-flex;gap:6px;align-items:center}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:"▸";transition:transform .15s}
+.reveal[open] summary::before{transform:rotate(90deg)}
+.reveal .ansbody{margin-top:6px;padding:8px 12px;border-left:3px solid var(--ex);background:var(--ex-tint);border-radius:0 6px 6px 0}
+.reveal .ansbody p{margin:.4em 0 0}
+
+/* mcq */
+.mcq{display:flex;flex-direction:column;gap:6px}
+.mcq .mq{font-weight:600;font-size:13.5px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--soft);border-radius:7px;padding:7px 10px;font-size:13px;display:flex;gap:8px;align-items:flex-start;line-height:1.4}
+.opt:hover{border-color:var(--pr)}
+.opt .k{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);flex:none;margin-top:1px}
+.opt.right{border-color:var(--ok);background:var(--ok-tint);color:var(--ok)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-tint);color:var(--bad)}
+.why{font-size:13px;padding:7px 10px;border-radius:6px;background:var(--soft);border-left:3px solid var(--muted)}
+.why.ok{border-left-color:var(--ok)} .why.no{border-left-color:var(--bad)}
+
+/* classify */
+.cls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) 22px;gap:6px 10px;align-items:center;font-size:13px}
+.cls label{font-family:var(--f-mono);font-size:12.5px;min-width:0;overflow-wrap:anywhere}
+.cls select{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);min-width:0}
+.cls .mk{font-weight:700;text-align:center}
+.mk.y{color:var(--ok)} .mk.n{color:var(--bad)}
+
+/* observation + log + findings */
+.obs{display:flex;flex-direction:column;gap:4px}
+.obs label{font-size:12px;font-weight:600;color:var(--muted)}
+.obs input,.tbl input,.tbl textarea{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:6px 9px;background:var(--surface);color:var(--ink);width:100%;box-sizing:border-box}
+.obs input:focus,.tbl input:focus,.tbl textarea:focus{border-color:var(--pr);outline:none}
+.tbl{display:flex;flex-direction:column;gap:6px}
+.tbl .row{display:grid;gap:6px;align-items:start}
+.tbl.log .row{grid-template-columns:2fr .7fr 2fr 28px}
+.tbl.find .row{grid-template-columns:1fr 1fr}
+.tbl .hd{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tbl textarea{min-height:52px;resize:vertical}
+.obslist{font-size:13px;margin:0;padding-left:18px;color:var(--ink)}
+.obslist li{margin:2px 0}
+.obslist .sn2{font-family:var(--f-mono);font-size:11.5px;color:var(--pr)}
+.empty{color:var(--muted);font-style:italic;font-size:13px}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(10,15,22,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal .box{background:var(--surface);border-radius:12px;max-width:760px;width:100%;max-height:90%;display:flex;flex-direction:column;gap:10px;padding:16px}
+.modal textarea{flex:1;min-height:320px;font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--code-bg);color:var(--code-ink)}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:8px 16px;border-radius:8px;font-size:13px;z-index:30}
+
+.loadmsg{font-size:12.5px;color:var(--warn);background:var(--warn-tint);border-radius:8px;padding:8px 12px}
+.loadmsg.fail{color:var(--bad);background:var(--bad-tint)}
+
+@media (max-width: 900px){
+  body{overflow:auto;height:auto}
+  .switch{display:flex}
+  .split{display:block}
+  .gutter{display:none}
+  .pane{overflow:visible}
+  .pane[data-hide="1"]{display:none}
+  .phead{position:static}
+  .inner{padding-inline:16px}
+  .phead{margin-inline:-16px;padding-inline:16px}
+  .tbl.log .row{grid-template-columns:1fr 1fr 28px}
+  .tbl.log .row>:nth-child(3){grid-column:1/3}
+  .tbl.find .row{grid-template-columns:1fr}
+  .overall .bar{width:70px}
+}
+
+/* guide */
+.modal .box.guide{max-width:820px;overflow-y:auto;gap:14px;padding:20px 22px}
+.guide h2{font-size:24px}
+.guide .lede{margin:0;color:var(--muted);max-width:62ch}
+.schem{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+.schem .side{border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;font-size:13px}
+.schem .side b{font-family:var(--f-head);font-size:15px}
+.schem .side span{color:var(--muted);font-family:var(--f-mono);font-size:11.5px}
+.schem .side.l{background:var(--ex-tint);border:1px solid var(--ex)} .schem .side.l b{color:var(--ex-ink)}
+.schem .side.r{background:var(--pr-tint);border:1px solid var(--pr)} .schem .side.r b{color:var(--pr-ink)}
+.schem .arr{align-self:center;font-size:12px;color:var(--muted);text-align:center;line-height:1.3}
+.schem .arr i{display:block;font-style:normal;font-size:22px;color:var(--ink)}
+.gsteps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;counter-reset:g}
+.gsteps li{counter-increment:g;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start}
+.gsteps li::before{content:counter(g);font-family:var(--f-head);font-weight:700;font-size:15px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--surface)}
+.gsteps b{font-weight:600}
+.gsteps p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.know{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.know h3{font-size:15px;margin-bottom:6px}
+.know ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:13.5px}
+.kbd{font-family:var(--f-mono);font-size:11.5px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface)}
+@media (max-width:600px){.schem{grid-template-columns:1fr}.schem .arr i{transform:rotate(90deg)}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+.obs textarea{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:6px 9px;background:var(--surface);color:var(--ink);width:100%;box-sizing:border-box;resize:vertical;min-height:84px;line-height:1.45}
+.obs textarea:focus{border-color:var(--pr);outline:none}
+</style>
+
+</head><body>
+<header class="top">
+  <div class="brand">
+    <small>CS3006 · Introduction to Data Science for Engineers · Dr. Vijaya Kumar S</small>
+    <h1>Probability Lab <span class="l">exam examples</span> <span class="arrow">→</span> <span class="r">factory &amp; service data</span></h1>
+  </div>
+  <div class="overall" title="Practice tasks completed"><span id="ovtxt">0 / 0 practice tasks</span><div class="bar"><i id="ovbar"></i></div></div>
+  <div class="pystat busy" id="pystat"><span class="dot"></span><span id="pytxt">Starting Python…</span></div>
+  <button class="btn" id="fsBtn" type="button" hidden>Full screen</button>
+  <button class="btn" id="helpBtn" type="button">How to use this lab</button>
+  <button class="btn primary" id="submitBtn" type="button">Submit my work</button>
+</header>
+<nav class="rail" id="rail" role="tablist" aria-label="Lab modules"></nav>
+<div class="switch" id="switch">
+  <button class="l" type="button" aria-pressed="true" data-p="left">Worked example</button>
+  <button class="r" type="button" aria-pressed="false" data-p="right">Practice</button>
+</div>
+<main class="split" id="split">
+  <section class="pane left" id="paneL" aria-label="Worked example"><div class="inner" id="L"></div></section>
+  <div class="gutter" id="gutter" role="separator" aria-orientation="vertical" aria-label="Resize panes" tabindex="0"></div>
+  <section class="pane right" id="paneR" aria-label="Practice"><div class="inner" id="R"></div></section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script>
+const PY_INDEX = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/";
+const BUNDLED = false;
+
+const CSV_GUESS = "student_id,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10\nS01,0,0,0,0,1,1,1,1,1,1\nS02,1,0,0,0,0,1,0,0,1,0\nS03,0,0,0,1,0,0,0,0,0,0\nS04,0,0,0,0,0,1,0,0,0,0\nS05,0,1,0,0,0,0,0,0,0,0\nS06,0,0,0,1,0,0,0,0,0,1\nS07,0,0,0,0,0,0,0,0,1,0\nS08,0,0,0,0,1,0,0,0,0,1\nS09,0,0,1,0,0,1,0,0,0,0\nS10,0,0,1,0,0,0,0,0,0,1\nS11,1,0,0,0,0,1,1,0,0,1\nS12,1,0,0,1,0,1,0,1,0,0\nS13,0,1,0,0,0,0,0,0,0,0\nS14,0,0,1,0,0,0,0,0,1,0\nS15,0,0,0,0,0,0,0,0,0,0\nS16,1,0,0,1,1,0,0,0,0,0\nS17,0,1,1,0,0,0,1,1,1,0\nS18,0,0,0,0,1,0,1,0,1,1\nS19,0,0,1,0,0,0,0,0,1,0\nS20,0,0,0,0,0,0,0,1,0,0\nS21,0,1,0,0,0,0,1,1,0,0\nS22,1,0,0,0,0,0,1,1,0,1\nS23,0,0,0,0,1,0,0,0,0,0\nS24,0,0,0,1,1,0,1,1,0,0\nS25,0,0,1,1,0,1,1,0,0,0\nS26,0,0,1,0,0,1,0,0,0,0\nS27,0,0,0,0,0,0,1,1,0,0\nS28,0,1,0,0,0,0,0,0,1,0\nS29,0,0,0,0,1,0,0,1,0,0\nS30,0,0,1,0,1,0,0,0,0,1\nS31,0,0,0,1,0,0,0,0,0,0\nS32,1,1,0,1,0,0,1,1,0,0\nS33,1,1,1,0,0,0,0,0,0,0\nS34,0,0,1,0,1,0,0,1,0,0\nS35,0,0,0,0,1,1,0,0,0,0\nS36,1,0,1,0,0,0,1,1,0,0\nS37,1,1,0,0,0,0,0,1,0,0\nS38,0,0,0,0,1,0,0,0,0,0\nS39,1,0,0,0,1,0,0,0,0,1\nS40,0,0,0,0,0,0,0,1,0,0\n";
+const CSV_DOUBTS = "doubts_in_interval,number_of_intervals\n0,6\n1,8\n2,10\n3,7\n4,2\n5,3\n";
+const CSV_MARKS = "student_id,marks\nS001,64\nS002,56\nS003,57\nS004,33\nS005,84\nS006,76\nS007,58\nS008,71\nS009,65\nS010,55\nS011,74\nS012,58\nS013,58\nS014,52\nS015,67\nS016,61\nS017,69\nS018,55\nS019,64\nS020,51\nS021,72\nS022,64\nS023,66\nS024,67\nS025,50\nS026,71\nS027,87\nS028,42\nS029,41\nS030,44\nS031,72\nS032,64\nS033,75\nS034,71\nS035,65\nS036,65\nS037,60\nS038,72\nS039,48\nS040,57\nS041,65\nS042,84\nS043,53\nS044,49\nS045,55\nS046,74\nS047,59\nS048,78\nS049,40\nS050,76\nS051,74\nS052,45\nS053,64\nS054,77\nS055,63\nS056,74\nS057,90\nS058,65\nS059,59\nS060,53\nS061,70\nS062,60\nS063,60\nS064,61\nS065,70\nS066,49\nS067,44\nS068,33\nS069,76\nS070,63\nS071,80\nS072,62\nS073,53\nS074,68\nS075,61\nS076,47\nS077,51\nS078,83\nS079,66\nS080,67\nS081,59\nS082,54\nS083,73\nS084,61\nS085,53\nS086,60\nS087,51\nS088,64\nS089,76\nS090,52\nS091,79\nS092,54\nS093,64\nS094,52\nS095,59\nS096,63\nS097,57\nS098,54\nS099,54\nS100,52\nS101,43\nS102,59\nS103,67\nS104,73\nS105,70\nS106,91\nS107,66\nS108,57\nS109,84\nS110,49\nS111,74\nS112,51\nS113,66\nS114,38\nS115,73\nS116,60\nS117,50\nS118,82\nS119,71\nS120,63\nS121,53\nS122,61\nS123,60\nS124,71\nS125,72\nS126,54\nS127,55\nS128,56\nS129,46\nS130,55\nS131,61\nS132,70\nS133,78\nS134,52\nS135,69\nS136,57\nS137,87\nS138,61\nS139,68\nS140,51\nS141,52\nS142,64\nS143,57\nS144,66\nS145,43\nS146,70\nS147,51\nS148,83\nS149,59\nS150,75\nS151,45\nS152,67\nS153,51\nS154,56\nS155,62\nS156,58\nS157,65\nS158,71\nS159,70\nS160,61\nS161,46\nS162,52\nS163,60\nS164,37\nS165,71\nS166,59\nS167,59\nS168,73\nS169,70\nS170,65\nS171,50\nS172,66\nS173,66\nS174,51\nS175,75\nS176,68\nS177,38\nS178,63\nS179,47\nS180,76\nS181,72\nS182,49\nS183,51\nS184,63\nS185,59\nS186,80\nS187,71\nS188,59\nS189,69\nS190,38\nS191,66\nS192,72\nS193,60\nS194,53\nS195,69\nS196,86\nS197,64\nS198,49\nS199,79\nS200,39\nS201,68\nS202,55\nS203,73\nS204,52\nS205,78\nS206,66\nS207,41\nS208,38\nS209,58\nS210,78\nS211,64\nS212,63\nS213,59\nS214,71\nS215,67\nS216,65\nS217,50\nS218,76\nS219,78\nS220,46\nS221,90\nS222,71\nS223,56\nS224,39\nS225,70\nS226,69\nS227,55\nS228,41\nS229,75\nS230,55\nS231,56\nS232,96\nS233,88\nS234,73\nS235,57\nS236,70\nS237,35\nS238,63\nS239,53\nS240,47\nS241,43\nS242,68\nS243,63\nS244,64\nS245,72\nS246,52\nS247,47\nS248,41\nS249,58\nS250,71\n";
+const CSV_SALES = "day,customers_until_first_sale\n1,1\n2,3\n3,2\n4,1\n5,5\n6,1\n7,2\n8,4\n9,1\n10,2\n11,7\n12,1\n13,3\n14,1\n15,2\n16,1\n17,6\n18,2\n19,1\n20,3\n21,1\n22,2\n23,9\n24,1\n25,4\n";
+const CSV_DEFECTS = "day,items_inspected,defective_items\n1,20,2\n2,20,1\n3,20,3\n4,20,0\n5,20,2\n6,20,4\n7,20,1\n8,20,2\n9,20,2\n10,20,3\n11,20,1\n12,20,0\n13,20,2\n14,20,5\n15,20,2\n16,20,1\n17,20,3\n18,20,2\n19,20,1\n20,20,2\n21,20,4\n22,20,2\n23,20,0\n24,20,1\n25,20,3\n26,20,2\n27,20,2\n28,20,1\n29,20,3\n30,20,2\n";
+const CSV_CALLS = "calls_in_interval,number_of_intervals\n0,3\n1,9\n2,14\n3,15\n4,10\n5,5\n6,3\n7,1\n8,0\n";
+const CSV_BATTERY = "unit_id,battery_hours\nB001,10.19\nB002,12.2\nB003,11.65\nB004,11.21\nB005,12.44\nB006,13.39\nB007,11.98\nB008,10.23\nB009,12.61\nB010,11.31\nB011,13.49\nB012,11.5\nB013,13.06\nB014,10.26\nB015,14.57\nB016,10.79\nB017,11.14\nB018,12.53\nB019,15.51\nB020,11.9\nB021,12.32\nB022,8.64\nB023,13.37\nB024,11.54\nB025,13.03\nB026,14.61\nB027,9.51\nB028,11.49\nB029,13.82\nB030,14.1\nB031,12.56\nB032,10.52\nB033,10.78\nB034,10.88\nB035,12.33\nB036,12.74\nB037,12.27\nB038,12.23\nB039,12.54\nB040,10.82\nB041,12.05\nB042,8.99\nB043,10.73\nB044,13.14\nB045,12.73\nB046,13.92\nB047,9.6\nB048,13.16\nB049,10.42\nB050,13.02\nB051,8.96\nB052,10.85\nB053,11.45\nB054,9.47\nB055,10.43\nB056,14.91\nB057,13.53\nB058,12.54\nB059,11.37\nB060,11.26\nB061,11.27\nB062,15.79\nB063,12.72\nB064,13.12\nB065,11.39\nB066,12.16\nB067,12.87\nB068,11.53\nB069,12.28\nB070,11.89\nB071,11.83\nB072,11.13\nB073,12.93\nB074,12.07\nB075,13.48\nB076,12.57\nB077,10.71\nB078,12.61\nB079,12.57\nB080,13.74\nB081,12.42\nB082,12.74\nB083,14.1\nB084,13.64\nB085,11.8\nB086,14.48\nB087,11.68\nB088,11.87\nB089,13.58\nB090,12.06\nB091,9.65\nB092,12.03\nB093,12.3\nB094,14.34\nB095,11.35\nB096,10.33\nB097,13.94\nB098,12.51\nB099,13.6\nB100,12.11\nB101,12.2\nB102,12.25\nB103,12.06\nB104,11.11\nB105,13.01\nB106,10.77\nB107,10.38\nB108,11.77\nB109,15.01\nB110,7.96\nB111,10.33\nB112,8.71\nB113,12.34\nB114,11.11\nB115,9.34\nB116,13.14\nB117,10.13\nB118,15.32\nB119,12.76\nB120,12.95\nB121,11.55\nB122,13.26\nB123,12.41\nB124,9.95\nB125,11.36\nB126,10.58\nB127,11.48\nB128,11.13\nB129,11.41\nB130,11.83\nB131,10.48\nB132,13.29\nB133,8.96\nB134,10.53\nB135,9.32\nB136,12.8\nB137,11.13\nB138,12.18\nB139,10.57\nB140,12.47\nB141,12.43\nB142,12.33\nB143,13.65\nB144,13.47\nB145,11.12\nB146,9.18\nB147,9.91\nB148,13.02\nB149,11.19\nB150,12.76\nB151,9.46\nB152,12.38\nB153,11.3\nB154,11.39\nB155,10.99\nB156,11.16\nB157,12.79\nB158,13.85\nB159,12.58\nB160,13.48\nB161,13.04\nB162,10.9\nB163,10.48\nB164,13.03\nB165,13.41\nB166,15.35\nB167,12.8\nB168,11.35\nB169,12.0\nB170,13.76\nB171,11.78\nB172,12.22\nB173,7.3\nB174,9.77\nB175,15.68\nB176,11.39\nB177,11.48\nB178,11.12\nB179,12.24\nB180,11.02\nB181,10.59\nB182,11.04\nB183,11.41\nB184,13.8\nB185,12.43\nB186,12.17\nB187,12.46\nB188,13.86\nB189,13.39\nB190,12.66\nB191,10.69\nB192,10.46\nB193,13.21\nB194,12.48\nB195,14.98\nB196,11.67\nB197,13.09\nB198,11.86\nB199,11.83\nB200,11.96\n";
+
+// Worked examples (left pane): exam data
+const EX = [
+ {
+  "id": 1,
+  "title": "Bernoulli: one trial, two outcomes",
+  "ds": "guess_test.csv · 40 × 11",
+  "setup": "<b>Already run for you</b>\nimport pandas as pd, numpy as np\nimport matplotlib.pyplot as plt   # loaded on first use\nfrom scipy import stats          # loaded on first use\nguess = pd.read_csv(\"guess_test.csv\")",
+  "cols": [
+   [
+    "student_id",
+    "Student ID, S01 to S40"
+   ],
+   [
+    "Q1 … Q10",
+    "1 if the student guessed that question correctly, 0 if not"
+   ]
+  ],
+  "goal": "A Bernoulli trial has two outcomes: success (1) with probability <i>p</i>, or failure (0) with probability 1 − <i>p</i>. Here one trial is one student guessing one four-option question.",
+  "steps": [
+   {
+    "n": "1.1",
+    "q": "Look at <code>guess</code>. How many students are there, and which values can <code>Q1</code> take?",
+    "code": "print(guess.shape)\nprint(guess[\"Q1\"].unique())\nguess.head()",
+    "ans": "40 students (rows). <code>Q1</code> holds only 0 and 1, so each student's answer to Q1 is one Bernoulli trial."
+   },
+   {
+    "n": "1.2",
+    "q": "Count the successes in <code>Q1</code> and estimate <i>p</i> as the proportion of 1s. For 0/1 data the mean is exactly that proportion.",
+    "code": "q1 = guess[\"Q1\"]\nprint(q1.value_counts())\np_hat = q1.mean()\nprint(p_hat)",
+    "ans": "10 of 40 students guessed correctly, so p̂ = 10/40 = 0.25. This matches the 1-in-4 chance of a blind guess."
+   },
+   {
+    "n": "1.3",
+    "q": "For a Bernoulli variable <i>X</i>, P(X = 1) = <i>p</i> and P(X = 0) = 1 − <i>p</i>. Get both with <code>stats.bernoulli.pmf</code> and check them against the formula.",
+    "code": "print(stats.bernoulli.pmf([0, 1], p_hat))   # P(X=0), P(X=1)\nprint(1 - p_hat, p_hat)                      # by formula",
+    "ans": "P(X = 0) = 0.75 and P(X = 1) = 0.25, the same both ways."
+   },
+   {
+    "n": "1.4",
+    "q": "The mean of a Bernoulli variable is <i>p</i> and its variance is <i>p</i>(1 − <i>p</i>). Compare these with the mean and variance of the data. Use <code>ddof=0</code> (divide by <i>N</i>) to match the formula.",
+    "code": "print(\"data :\", q1.mean(), q1.var(ddof=0))\nprint(\"model:\", p_hat, p_hat * (1 - p_hat))",
+    "ans": "Both lines give 0.25 and 0.1875. For 0/1 data they always agree exactly."
+   },
+   {
+    "n": "1.5",
+    "q": "Simulate 1,000 students guessing Q1 with p̂. A Bernoulli is a binomial with one trial, so use <code>rng.binomial(1, p_hat, 1000)</code>. Is the share of successes close to p̂?",
+    "code": "rng = np.random.default_rng(1)\nsim = rng.binomial(1, p_hat, 1000)\nprint(sim.mean())",
+    "ans": "About 0.27, close to p̂ = 0.25. A different seed gives a slightly different value, but with 1,000 trials it stays near p̂."
+   }
+  ]
+ },
+ {
+  "id": 2,
+  "title": "Binomial: counting successes in n trials",
+  "ds": "guess_test.csv · 40 × 11",
+  "setup": "<b>Already run for you</b>\nimport pandas as pd, numpy as np\nimport matplotlib.pyplot as plt   # loaded on first use\nfrom scipy import stats          # loaded on first use\nguess = pd.read_csv(\"guess_test.csv\")",
+  "cols": [
+   [
+    "student_id",
+    "Student ID, S01 to S40"
+   ],
+   [
+    "Q1 … Q10",
+    "1 if the student guessed that question correctly, 0 if not"
+   ]
+  ],
+  "goal": "A binomial variable counts the successes in <i>n</i> independent Bernoulli trials that share the same <i>p</i>. Here <i>X</i> = the number of correct answers when a student guesses all 10 questions, so <i>n</i> = 10.",
+  "steps": [
+   {
+    "n": "2.1",
+    "q": "Add Q1 to Q10 to get each student's score out of 10, then find the mean and variance of the scores.",
+    "code": "qs = [f\"Q{i}\" for i in range(1, 11)]\nscore = guess[qs].sum(axis=1)\nprint(score.mean(), score.var())",
+    "ans": "Mean 2.50, sample variance 1.90. The variance is below the mean, as a binomial requires (variance = <i>np</i>(1 − <i>p</i>))."
+   },
+   {
+    "n": "2.2",
+    "q": "Estimate <i>p</i> with p̂ = mean ÷ <i>n</i>, where <i>n</i> = 10.",
+    "code": "n = 10\np_hat = score.mean() / n\nprint(p_hat)",
+    "ans": "p̂ = 2.50 / 10 = 0.25, the chance of a correct blind guess."
+   },
+   {
+    "n": "2.3",
+    "q": "The binomial pmf is P(X = k) = C(n, k) p<sup>k</sup> (1 − p)<sup>n−k</sup>. Compute P(X = 3) by hand with <code>math.comb</code>, then with <code>stats.binom.pmf</code>.",
+    "code": "from math import comb\nk = 3\nby_hand = comb(n, k) * p_hat**k * (1 - p_hat)**(n - k)\nprint(by_hand)\nprint(stats.binom.pmf(k, n, p_hat))",
+    "ans": "Both give 0.2503: about 25% of guessers get exactly 3 of 10 right."
+   },
+   {
+    "n": "2.4",
+    "q": "Find P(X = 0) and the chance of passing by pure guessing, P(X ≥ 5) (pass mark = 5). <code>stats.binom.sf(4, n, p)</code> returns P(X &gt; 4), which is P(X ≥ 5).",
+    "code": "print(stats.binom.pmf(0, n, p_hat))\nprint(stats.binom.sf(4, n, p_hat))   # P(X >= 5) = P(X > 4)",
+    "ans": "P(X = 0) = 0.0563, so about 5.6% score zero. P(X ≥ 5) = 0.0781: under 8% pass by guessing alone."
+   },
+   {
+    "n": "2.5",
+    "q": "Build a table with columns <code>k</code>, <code>observed</code> (students with k correct) and <code>expected</code> (40 × P(X = k)).",
+    "code": "k = np.arange(0, n + 1)\nobserved = score.value_counts().reindex(k, fill_value=0)\nexpected = len(score) * stats.binom.pmf(k, n, p_hat)\ntable = pd.DataFrame({\"k\": k, \"observed\": observed.values, \"expected\": expected.round(1)})\ntable",
+    "ans": "Observed and expected are close for most k. The largest gap is at k = 1: 10 observed against 7.5 expected."
+   },
+   {
+    "n": "2.6",
+    "q": "Plot observed and expected counts side by side.",
+    "code": "w = 0.4\nplt.bar(table[\"k\"] - w / 2, table[\"observed\"], width=w, label=\"Observed\")\nplt.bar(table[\"k\"] + w / 2, table[\"expected\"], width=w, label=\"Expected\")\nplt.xlabel(\"Correct answers (k)\")\nplt.ylabel(\"Students\")\nplt.legend()\nplt.show()",
+    "ans": "The two sets of bars rise and fall together, so a binomial model describes this data well."
+   }
+  ]
+ },
+ {
+  "id": 3,
+  "title": "Poisson: events in a fixed interval",
+  "ds": "exam_doubts.csv · 6 × 2",
+  "setup": "<b>Already run for you</b>\nimport pandas as pd, numpy as np\nimport matplotlib.pyplot as plt   # loaded on first use\nfrom scipy import stats          # loaded on first use\ndoubts = pd.read_csv(\"exam_doubts.csv\")",
+  "cols": [
+   [
+    "doubts_in_interval",
+    "Doubts raised in one 5-minute interval (0 to 5)"
+   ],
+   [
+    "number_of_intervals",
+    "How many of the 36 intervals (a 3-hour exam) had that many doubts"
+   ]
+  ],
+  "goal": "A Poisson variable counts events in a fixed interval when events happen independently at a steady average rate λ. Here <i>X</i> = the number of doubts raised in a 5-minute interval of an exam.",
+  "steps": [
+   {
+    "n": "3.1",
+    "q": "Check that the frequencies add up to the number of intervals (3 hours = 36 intervals), then find the mean number of doubts per interval. That mean is λ.",
+    "code": "k = doubts[\"doubts_in_interval\"]\nf = doubts[\"number_of_intervals\"]\ntotal = f.sum()\nlam = (k * f).sum() / total\nprint(total, lam)",
+    "ans": "36 intervals, with 72 doubts in all, so λ = 72/36 = 2.00 doubts per interval."
+   },
+   {
+    "n": "3.2",
+    "q": "Calculate the variance (divide by <i>N</i> − 1) and compare it with λ. Why is it useful that the two are close?",
+    "code": "var_x = (f * (k - lam) ** 2).sum() / (total - 1)\nprint(\"mean    :\", lam)\nprint(\"variance:\", round(var_x, 3))",
+    "ans": "Mean 2.00, variance 2.11. A Poisson variable has mean = variance = λ, so close values support the Poisson model. A much larger variance would mean doubts arrive in bursts."
+   },
+   {
+    "n": "3.3",
+    "q": "The Poisson pmf is P(X = k) = e<sup>−λ</sup> λ<sup>k</sup> / k!. Compute P(X = 3) by hand with <code>math</code>, then with <code>stats.poisson.pmf</code>.",
+    "code": "import math\nby_hand = math.exp(-lam) * lam**3 / math.factorial(3)\nprint(by_hand)\nprint(stats.poisson.pmf(3, lam))",
+    "ans": "Both give 0.1804: about 18% of intervals have exactly 3 doubts."
+   },
+   {
+    "n": "3.4",
+    "q": "The invigilator can handle 3 doubts per interval. Find P(X = 0) and P(X ≥ 4), the chance of being overwhelmed. <code>stats.poisson.sf(3, lam)</code> returns P(X &gt; 3).",
+    "code": "print(stats.poisson.pmf(0, lam))\nprint(stats.poisson.sf(3, lam))   # P(X >= 4) = P(X > 3)",
+    "ans": "P(X = 0) = 0.1353 and P(X ≥ 4) = 0.1429: about 14% of intervals, roughly 1 in 7."
+   },
+   {
+    "n": "3.5",
+    "q": "Build a table with columns <code>k</code>, <code>observed</code> and <code>expected</code> (36 × P(X = k)) for k = 0 to 7.",
+    "code": "ks = np.arange(0, 8)\nobserved = doubts.set_index(\"doubts_in_interval\")[\"number_of_intervals\"].reindex(ks, fill_value=0)\nexpected = total * stats.poisson.pmf(ks, lam)\ntable = pd.DataFrame({\"k\": ks, \"observed\": observed.values, \"expected\": expected.round(2)})\ntable",
+    "ans": "<code>reindex</code> adds a row of 0 for any k that never occurred (here 6 and 7), so the table lines up with the model. Observed and expected differ by at most 1.7 intervals."
+   },
+   {
+    "n": "3.6",
+    "q": "Plot observed and expected counts side by side.",
+    "code": "w = 0.4\nplt.bar(table[\"k\"] - w / 2, table[\"observed\"], width=w, label=\"Observed\")\nplt.bar(table[\"k\"] + w / 2, table[\"expected\"], width=w, label=\"Expected\")\nplt.xlabel(\"Doubts in a 5-minute interval (k)\")\nplt.ylabel(\"Intervals\")\nplt.legend()\nplt.show()",
+    "ans": "The bars match closely, so the Poisson model suits this process."
+   }
+  ]
+ },
+ {
+  "id": 4,
+  "title": "Normal: the bell curve",
+  "ds": "exam_marks.csv · 250 × 2",
+  "setup": "<b>Already run for you</b>\nimport pandas as pd, numpy as np\nimport matplotlib.pyplot as plt   # loaded on first use\nfrom scipy import stats          # loaded on first use\nmarks = pd.read_csv(\"exam_marks.csv\")",
+  "cols": [
+   [
+    "student_id",
+    "Student ID, S001 to S250"
+   ],
+   [
+    "marks",
+    "Exam mark out of 100"
+   ]
+  ],
+  "goal": "A normal variable is described by its mean μ and standard deviation σ. Probabilities are areas under the bell curve, found with the cumulative distribution function (cdf).",
+  "steps": [
+   {
+    "n": "4.1",
+    "q": "Find the mean and standard deviation of the marks and draw a histogram. Is it bell-shaped?",
+    "code": "x = marks[\"marks\"]\nmu = x.mean()\nsigma = x.std()\nprint(mu, sigma)\nplt.hist(x, bins=12, density=True, edgecolor=\"white\")\nplt.xlabel(\"Marks\")\nplt.ylabel(\"Density\")\nplt.show()",
+    "ans": "μ = 61.9 and σ = 12.1. The histogram has one peak near the mean and is roughly symmetric."
+   },
+   {
+    "n": "4.2",
+    "q": "Draw the normal curve with this μ and σ (<code>stats.norm.pdf</code>) over the histogram. Does the bell follow the bars?",
+    "code": "plt.hist(x, bins=12, density=True, edgecolor=\"white\", label=\"Data\")\ngrid = np.linspace(x.min(), x.max(), 200)\nplt.plot(grid, stats.norm.pdf(grid, mu, sigma), color=\"C3\", label=\"Normal curve\")\nplt.xlabel(\"Marks\")\nplt.legend()\nplt.show()",
+    "ans": "Yes. The curve follows the bars closely, so a normal model is reasonable."
+   },
+   {
+    "n": "4.3",
+    "q": "A probability is an area. Find P(X ≥ 75) with <code>sf</code>, P(X &lt; 40) with <code>cdf</code>, and P(50 &lt; X &lt; 70) as <code>cdf(70) − cdf(50)</code>.",
+    "code": "print(\"P(X >= 75)     :\", round(stats.norm.sf(75, mu, sigma), 4))\nprint(\"P(X < 40)      :\", round(stats.norm.cdf(40, mu, sigma), 4))\nprint(\"P(50 < X < 70) :\", round(stats.norm.cdf(70, mu, sigma) - stats.norm.cdf(50, mu, sigma), 4))",
+    "ans": "P(X ≥ 75) = 0.1385 (about 14% of students), P(X &lt; 40) = 0.0351, P(50 &lt; X &lt; 70) = 0.5867. For a continuous variable P(X = a) = 0, so ≥ and &gt; give the same answer."
+   },
+   {
+    "n": "4.4",
+    "q": "A mark of 80: how many standard deviations above the mean is it (the z-score), and what share of students score below it?",
+    "code": "z = (80 - mu) / sigma\nprint(z)\nprint(stats.norm.cdf(z))",
+    "ans": "z = 1.50: 80 is about 1.5 standard deviations above the mean, and about 93% of students score below it."
+   },
+   {
+    "n": "4.5",
+    "q": "Find the cut-off mark for the top 10% of students. This is the 90th percentile, found with the inverse cdf <code>stats.norm.ppf</code>.",
+    "code": "cutoff = stats.norm.ppf(0.90, mu, sigma)\nprint(cutoff)",
+    "ans": "77.3. Students scoring above this mark are in the top 10%."
+   },
+   {
+    "n": "4.6",
+    "q": "Empirical rule: what percentage of marks lie within 1, 2 and 3 standard deviations of the mean? Compare with 68%, 95% and 99.7%.",
+    "code": "for j in (1, 2, 3):\n    inside = x.between(mu - j * sigma, mu + j * sigma).mean() * 100\n    print(j, \"sd:\", round(inside, 1), \"%\")",
+    "ans": "70.0%, 95.6% and 100.0%, close to 68%, 95% and 99.7%. This agreement is one sign that data are normal."
+   }
+  ]
+ }
+];
+
+// Practice tasks (right pane): sales, defects, help-desk calls, batteries.
+// Task widgets: code (starter), hint, check {expr, pass, hint}, mcq [{q, opts, a, why}], obs (one line with a number), written (2-3 sentences)
+const PR = [
+ {
+  "id": 1,
+  "title": "Bernoulli: one customer, buy or not",
+  "intro": "A salesperson approaches customers one at a time each day and stops at her first sale. Treat every customer as one Bernoulli trial: success = the customer buys.",
+  "ds": "q3_geometric_sales.csv · 25 × 2",
+  "setup": "<b>Already run for you</b>\nimport pandas as pd, numpy as np\nimport matplotlib.pyplot as plt   # loaded on first use\nfrom scipy import stats          # loaded on first use\nsales = pd.read_csv(\"q3_geometric_sales.csv\")",
+  "cols": [
+   [
+    "day",
+    "Day number, 1 to 25"
+   ],
+   [
+    "customers_until_first_sale",
+    "Customers approached on that day, up to and including the first sale"
+   ]
+  ],
+  "tasks": [
+   {
+    "n": "P1.1",
+    "q": "Find the total number of customers approached (add up the column) and the number of sales (one per day). Store them in <code>trials</code> and <code>successes</code>.",
+    "link": "1.1",
+    "code": "trials = ...      # add up the column\nsuccesses = ...   # one sale per day, so count the rows\nprint(trials, successes)",
+    "hint": "trials = sales[\"customers_until_first_sale\"].sum()\nsuccesses = len(sales)\nprint(trials, successes)",
+    "check": {
+     "expr": "int(trials) == 66 and int(successes) == 25",
+     "pass": "66 customers approached and 25 sales.",
+     "hint": "trials should be the sum of the column, and successes the number of days."
+    },
+    "mcq": [
+     {
+      "q": "How many customers were approached in all 25 days?",
+      "opts": [
+       "25",
+       "66",
+       "41",
+       "2.64"
+      ],
+      "a": 1,
+      "why": "The column adds up to 66. Of these, 25 bought (one per day) and 41 did not."
+     }
+    ],
+    "obs": true,
+    "obsEx": "66 customers approached, 25 sales."
+   },
+   {
+    "n": "P1.2",
+    "q": "Estimate <i>p</i> = sales ÷ customers approached. Store it in <code>p_hat</code>.",
+    "link": "1.2",
+    "code": "trials = sales[\"customers_until_first_sale\"].sum()\nsuccesses = len(sales)\np_hat = ... / ...\nprint(p_hat)",
+    "hint": "trials = sales[\"customers_until_first_sale\"].sum()\nsuccesses = len(sales)\np_hat = successes / trials\nprint(p_hat)",
+    "check": {
+     "expr": "abs(p_hat - 25/66) < 0.001",
+     "pass": "p̂ = 25/66 = 0.379.",
+     "hint": "p̂ should be the number of sales divided by the number of customers approached."
+    },
+    "mcq": [
+     {
+      "q": "What is p̂, to 3 decimals?",
+      "opts": [
+       "0.379",
+       "2.640",
+       "0.621",
+       "0.250"
+      ],
+      "a": 0,
+      "why": "p̂ = 25/66 = 0.379. The column's mean, 2.64, is the average number of customers per sale; its reciprocal 1/2.64 is p̂."
+     }
+    ],
+    "obs": true,
+    "obsEx": "p̂ = 25/66 = 0.379."
+   },
+   {
+    "n": "P1.3",
+    "q": "For one customer <i>X</i> ~ Bernoulli(p̂), find P(X = 1) and P(X = 0). Store them in <code>p_sale</code> and <code>p_no_sale</code>.",
+    "link": "1.3",
+    "code": "p_hat = len(sales) / sales[\"customers_until_first_sale\"].sum()\np_sale = ...      # P(X = 1)\np_no_sale = ...   # P(X = 0)\nprint(p_sale, p_no_sale)",
+    "hint": "p_hat = len(sales) / sales[\"customers_until_first_sale\"].sum()\np_sale, p_no_sale = stats.bernoulli.pmf([1, 0], p_hat)\nprint(p_sale, p_no_sale)",
+    "check": {
+     "expr": "abs(p_sale - 25/66) < 0.001 and abs(p_no_sale - 41/66) < 0.001",
+     "pass": "P(sale) = 0.379 and P(no sale) = 0.621.",
+     "hint": "p_sale should equal p̂ and p_no_sale should equal 1 − p̂."
+    },
+    "mcq": [
+     {
+      "q": "What is the probability that a customer does not buy?",
+      "opts": [
+       "0.379",
+       "0.621",
+       "0.500",
+       "2.640"
+      ],
+      "a": 1,
+      "why": "P(X = 0) = 1 − p̂ = 0.621."
+     }
+    ],
+    "obs": true,
+    "obsEx": "P(sale) = 0.379, P(no sale) = 0.621."
+   },
+   {
+    "n": "P1.4",
+    "q": "Find the mean and variance of <i>X</i> from p̂: E[X] = p̂ and Var(X) = p̂(1 − p̂). Store them in <code>mean_x</code> and <code>var_x</code>.",
+    "link": "1.4",
+    "code": "p_hat = len(sales) / sales[\"customers_until_first_sale\"].sum()\nmean_x = ...\nvar_x = ... * (1 - ...)\nprint(mean_x, var_x)",
+    "hint": "p_hat = len(sales) / sales[\"customers_until_first_sale\"].sum()\nmean_x = p_hat\nvar_x = p_hat * (1 - p_hat)\nprint(mean_x, var_x)",
+    "check": {
+     "expr": "abs(mean_x - 0.3787878787878788) < 0.001 and abs(var_x - 0.23530762167125804) < 0.001",
+     "pass": "Mean 0.379 and variance 0.235.",
+     "hint": "mean_x should be p̂ and var_x should be p̂ × (1 − p̂)."
+    },
+    "mcq": [
+     {
+      "q": "For which value of p is the variance p(1 − p) largest?",
+      "opts": [
+       "p = 0.1",
+       "p = 0.5",
+       "p = 0.9",
+       "p = 1"
+      ],
+      "a": 1,
+      "why": "p(1 − p) peaks at p = 0.5, where it equals 0.25: the outcome is hardest to predict when success and failure are equally likely. At p = 1 the variance is 0."
+     }
+    ],
+    "obs": true,
+    "obsEx": "Mean 0.379, variance 0.235."
+   },
+   {
+    "n": "P1.5",
+    "q": "Simulate 1,000 customers with <code>rng.binomial(1, p_hat, 1000)</code> (seed 7). Store the result in <code>sim</code> and compare its mean with p̂.",
+    "link": "1.5",
+    "code": "p_hat = len(sales) / sales[\"customers_until_first_sale\"].sum()\nrng = np.random.default_rng(7)\nsim = rng.binomial(..., p_hat, ...)\nprint(sim.mean(), p_hat)",
+    "hint": "p_hat = len(sales) / sales[\"customers_until_first_sale\"].sum()\nrng = np.random.default_rng(7)\nsim = rng.binomial(1, p_hat, 1000)\nprint(sim.mean(), p_hat)",
+    "check": {
+     "expr": "len(sim) == 1000 and set(np.unique(sim)) <= {0, 1} and abs(sim.mean() - 0.3787878787878788) < 0.06",
+     "pass": "sim holds 1,000 values of 0 or 1, and its mean is close to p̂.",
+     "hint": "sim should hold 1,000 values of 0 or 1, drawn with probability p̂."
+    },
+    "obs": true,
+    "obsEx": "Simulated share of sales = 0.3xx, close to p̂."
+   },
+   {
+    "n": "P1.6",
+    "q": "Written: In two sentences, describe this data as a Bernoulli trial (the trial, the meaning of success, and p̂). The company hopes that at least 1 in 3 customers buys. Does your p̂ support that?",
+    "written": true
+   }
+  ]
+ },
+ {
+  "id": 2,
+  "title": "Binomial: defects in 20 items",
+  "intro": "A factory inspects 20 randomly chosen items every day. Let <i>X</i> = the number of defective items in one day, so <i>n</i> = 20.",
+  "ds": "q1_binomial_defects.csv · 30 × 3",
+  "setup": "<b>Already run for you</b>\nimport pandas as pd, numpy as np\nimport matplotlib.pyplot as plt   # loaded on first use\nfrom scipy import stats          # loaded on first use\ndefects = pd.read_csv(\"q1_binomial_defects.csv\")",
+  "cols": [
+   [
+    "day",
+    "Day, 1 to 30"
+   ],
+   [
+    "items_inspected",
+    "Items inspected that day (20)"
+   ],
+   [
+    "defective_items",
+    "Defective items found that day"
+   ]
+  ],
+  "tasks": [
+   {
+    "n": "P2.1",
+    "q": "Find <i>n</i> (items inspected per day), then the mean and sample variance of the daily defective counts. Store them in <code>n</code>, <code>mean_x</code> and <code>var_x</code>.",
+    "link": "2.1",
+    "code": "n = defects[\"items_inspected\"].iloc[0]   # the same every day, so take the first row\nmean_x = ...   # mean of defective_items\nvar_x = ...    # sample variance of defective_items\nprint(n, mean_x, var_x)",
+    "hint": "n = defects[\"items_inspected\"].iloc[0]\nmean_x = defects[\"defective_items\"].mean()\nvar_x = defects[\"defective_items\"].var()\nprint(n, mean_x, var_x)",
+    "check": {
+     "expr": "int(n) == 20 and abs(mean_x - 1.9666666666666666) < 1e-6 and abs(var_x - 1.412643678160919) < 1e-6",
+     "pass": "n = 20, mean 1.967, variance 1.413.",
+     "hint": "n should be 20; use .mean() and .var() on the defective_items column."
+    },
+    "mcq": [
+     {
+      "q": "How does the variance compare with the mean?",
+      "opts": [
+       "The variance is smaller than the mean",
+       "The variance is larger than the mean",
+       "They are equal",
+       "They cannot be compared"
+      ],
+      "a": 0,
+      "why": "The variance (1.41) is below the mean (1.97). A binomial has variance np(1 − p) = mean × (1 − p), which is always below the mean, so this fits."
+     }
+    ],
+    "obs": true,
+    "obsEx": "Mean 1.97, variance 1.41."
+   },
+   {
+    "n": "P2.2",
+    "q": "Estimate the probability of a defect, p̂ = mean ÷ <i>n</i>. Store it in <code>p_hat</code>.",
+    "link": "2.2",
+    "code": "n = 20\np_hat = ... / n\nprint(p_hat)",
+    "hint": "n = 20\np_hat = defects[\"defective_items\"].mean() / n\nprint(p_hat)",
+    "check": {
+     "expr": "abs(p_hat - 0.09833333333333333) < 1e-6",
+     "pass": "p̂ = 0.0983.",
+     "hint": "p̂ should be the mean of defective_items divided by 20."
+    },
+    "mcq": [
+     {
+      "q": "What does p̂ = 0.098 mean?",
+      "opts": [
+       "About 9.8% of inspected items are defective",
+       "9.8 items are defective every day",
+       "A defect occurs on 9.8% of days",
+       "The factory has 9.8% fewer defects"
+      ],
+      "a": 0,
+      "why": "p is the probability that one item is defective, so p̂ is the estimated proportion of defective items."
+     }
+    ],
+    "obs": true,
+    "obsEx": "p̂ = 1.97/20 = 0.098."
+   },
+   {
+    "n": "P2.3",
+    "q": "Using p̂, find P(X = 0), P(X = 2) and P(X ≥ 4) for one day. Store them in <code>p0</code>, <code>p2</code> and <code>p4plus</code>.",
+    "link": "2.3",
+    "code": "n = 20\np_hat = defects[\"defective_items\"].mean() / n\np0 = stats.binom.pmf(..., n, p_hat)\np2 = stats.binom.pmf(..., n, p_hat)\np4plus = stats.binom.sf(..., n, p_hat)   # P(X >= 4) = P(X > 3)\nprint(p0, p2, p4plus)",
+    "hint": "n = 20\np_hat = defects[\"defective_items\"].mean() / n\np0 = stats.binom.pmf(0, n, p_hat)\np2 = stats.binom.pmf(2, n, p_hat)\np4plus = stats.binom.sf(3, n, p_hat)\nprint(p0, p2, p4plus)",
+    "check": {
+     "expr": "abs(p0 - 0.126159597415763) < 0.001 and abs(p2 - 0.2850909219758424) < 0.001 and abs(p4plus - 0.12702949663418306) < 0.001",
+     "pass": "P(X=0) = 0.126, P(X=2) = 0.285, P(X≥4) = 0.127.",
+     "hint": "Use stats.binom.pmf for exact values and stats.binom.sf(3, ...) for P(X ≥ 4)."
+    },
+    "mcq": [
+     {
+      "q": "Which call gives P(X ≥ 4)?",
+      "opts": [
+       "stats.binom.sf(3, n, p)",
+       "stats.binom.sf(4, n, p)",
+       "stats.binom.cdf(4, n, p)",
+       "stats.binom.pmf(4, n, p)"
+      ],
+      "a": 0,
+      "why": "sf(k) = P(X > k), so P(X ≥ 4) = P(X > 3) = sf(3). cdf(4) is P(X ≤ 4), and pmf(4) is P(X = 4) only."
+     }
+    ],
+    "obs": true,
+    "obsEx": "P(X=0) = 0.126; P(X=2) = 0.285; P(X≥4) = 0.127."
+   },
+   {
+    "n": "P2.4",
+    "q": "Build a table with columns <code>k</code>, <code>observed</code> (days with k defects) and <code>expected</code> (30 × P(X = k)) for k = 0 to 8, store it in <code>table</code>, then plot observed and expected side by side.",
+    "link": "2.5",
+    "code": "n = 20\np_hat = defects[\"defective_items\"].mean() / n\nk = np.arange(0, 9)\nobserved = defects[\"defective_items\"].value_counts().reindex(k, fill_value=...)\nexpected = ... * stats.binom.pmf(k, n, p_hat)\ntable = pd.DataFrame({\"k\": k, \"observed\": observed.values, \"expected\": expected.round(2)})\nprint(table)\nw = 0.4\nplt.bar(k - w / 2, table[\"observed\"], width=w, label=\"Observed\")\nplt.bar(k + w / 2, table[\"expected\"], width=w, label=...)\nplt.legend()\nplt.show()",
+    "hint": "n = 20\np_hat = defects[\"defective_items\"].mean() / n\nk = np.arange(0, 9)\nobserved = defects[\"defective_items\"].value_counts().reindex(k, fill_value=0)\nexpected = len(defects) * stats.binom.pmf(k, n, p_hat)\ntable = pd.DataFrame({\"k\": k, \"observed\": observed.values, \"expected\": expected.round(2)})\nprint(table)\nw = 0.4\nplt.bar(k - w / 2, table[\"observed\"], width=w, label=\"Observed\")\nplt.bar(k + w / 2, table[\"expected\"], width=w, label=\"Expected\")\nplt.xlabel(\"Defective items per day (k)\")\nplt.ylabel(\"Days\")\nplt.legend()\nplt.show()",
+    "check": {
+     "expr": "list(table.columns) == [\"k\", \"observed\", \"expected\"] and int(table[\"observed\"].sum()) == 30 and abs(float(table[\"expected\"].iloc[0]) - 3.7847879224728898) < 0.05",
+     "pass": "The table has 30 observed days, and expected for k = 0 is 3.78.",
+     "hint": "The columns must be k, observed, expected; observed must add up to 30 days."
+    },
+    "mcq": [
+     {
+      "q": "At which k is the gap between observed and expected days largest?",
+      "opts": [
+       "k = 0",
+       "k = 1",
+       "k = 2",
+       "k = 3"
+      ],
+      "a": 2,
+      "why": "At k = 2: 12 days observed against 8.6 expected. The other gaps are all smaller than 1.5 days."
+     }
+    ],
+    "obs": true,
+    "obsEx": "k = 2: 12 observed vs 8.6 expected."
+   },
+   {
+    "n": "P2.5",
+    "q": "The factory promises that “at most 10% of items are defective”. If <i>p</i> = 0.10, how many of the 30 days would you expect to have zero defects? How many did you observe? Store them in <code>expected_zero</code> and <code>observed_zero</code>.",
+    "link": "2.5",
+    "code": "expected_zero = len(defects) * stats.binom.pmf(..., 20, ...)\nobserved_zero = int((defects[\"defective_items\"] == ...).sum())\nprint(expected_zero, observed_zero)",
+    "hint": "expected_zero = len(defects) * stats.binom.pmf(0, 20, 0.10)\nobserved_zero = int((defects[\"defective_items\"] == 0).sum())\nprint(expected_zero, observed_zero)",
+    "check": {
+     "expr": "abs(expected_zero - 3.6472996377170768) < 0.05 and observed_zero == 3",
+     "pass": "Expected 3.65 zero-defect days, observed 3.",
+     "hint": "expected_zero = 30 × P(X = 0) with p = 0.10; observed_zero counts the days with 0 defects."
+    },
+    "mcq": [
+     {
+      "q": "What do the expected and observed counts suggest about the claim?",
+      "opts": [
+       "They are close (3 vs 3.6), so there is no evidence against the claim",
+       "Observed is far below expected, so the claim is false",
+       "Observed is far above expected, so the factory beats its promise",
+       "Nothing, because the claim cannot be tested"
+      ],
+      "a": 0,
+      "why": "3 observed against 3.65 expected is a small gap. The data are consistent with p = 0.10 (and p̂ = 0.098 is itself about 10%)."
+     }
+    ],
+    "obs": true,
+    "obsEx": "Expected 3.65 zero-defect days, observed 3."
+   },
+   {
+    "n": "P2.6",
+    "q": "Written: Do the data support the binomial model? Give two reasons (look at the mean and variance, and at the observed and expected table).",
+    "written": true
+   }
+  ]
+ },
+ {
+  "id": 3,
+  "title": "Poisson: calls to a help desk",
+  "intro": "A college help desk counted the calls received in each 10-minute interval over 10 hours (60 intervals). The file is a frequency table.",
+  "ds": "q2_poisson_helpdesk_calls.csv · 9 × 2",
+  "setup": "<b>Already run for you</b>\nimport pandas as pd, numpy as np\nimport matplotlib.pyplot as plt   # loaded on first use\nfrom scipy import stats          # loaded on first use\ncalls = pd.read_csv(\"q2_poisson_helpdesk_calls.csv\")",
+  "cols": [
+   [
+    "calls_in_interval",
+    "Calls received in one 10-minute interval"
+   ],
+   [
+    "number_of_intervals",
+    "How many of the 60 intervals had that many calls"
+   ]
+  ],
+  "tasks": [
+   {
+    "n": "P3.1",
+    "q": "Verify that the frequencies add up to 60, then calculate the mean number of calls per interval, λ. Store them in <code>total</code> and <code>lam</code>.",
+    "link": "3.1",
+    "code": "# Check that the frequencies add up to 60, then find the mean calls per interval (Example 3.1)\n# Store them in total and lam\n",
+    "hint": "k = calls[\"calls_in_interval\"]\nf = calls[\"number_of_intervals\"]\ntotal = ...\nlam = ... / total\nprint(total, lam)",
+    "check": {
+     "expr": "int(total) == 60 and abs(lam - 2.8666666666666667) < 1e-6",
+     "pass": "60 intervals and λ = 2.867.",
+     "hint": "total is the sum of number_of_intervals; lam is the sum of calls × frequency, divided by total."
+    },
+    "mcq": [
+     {
+      "q": "What is λ?",
+      "opts": [
+       "2.87 calls per interval",
+       "3.33 calls per interval",
+       "172 calls per interval",
+       "60 calls per interval"
+      ],
+      "a": 0,
+      "why": "172 calls arrived in 60 intervals, so λ = 172/60 = 2.87. The total number of calls and the number of intervals are not rates."
+     }
+    ],
+    "obs": true,
+    "obsEx": "60 intervals; λ = 2.87."
+   },
+   {
+    "n": "P3.2",
+    "q": "Calculate the variance (divide by <i>N</i> − 1) and compare it with λ. Store it in <code>var_x</code>.",
+    "link": "3.2",
+    "code": "# Variance of the calls per interval, dividing by N - 1 (Example 3.2)\n# Store it in var_x\n",
+    "hint": "k = calls[\"calls_in_interval\"]\nf = calls[\"number_of_intervals\"]\ntotal = f.sum()\nlam = (k * f).sum() / total\nvar_x = (f * (k - ...) ** 2).sum() / (... - 1)\nprint(lam, var_x)",
+    "check": {
+     "expr": "abs(var_x - 2.5242937853107343) < 1e-6",
+     "pass": "Variance = 2.524, close to λ = 2.867.",
+     "hint": "var_x = sum of f × (k − λ)², divided by (total − 1)."
+    },
+    "mcq": [
+     {
+      "q": "Why is it useful that the mean and variance are close for a Poisson process?",
+      "opts": [
+       "A Poisson variable has mean = variance, so closeness supports the Poisson model",
+       "It shows the calls have no randomness",
+       "It proves the calls are independent",
+       "It means λ must be a whole number"
+      ],
+      "a": 0,
+      "why": "A Poisson variable has mean = variance = λ. If the sample variance is near the sample mean, the Poisson model is plausible. A much larger variance means calls arrive in bursts; a much smaller one means they arrive too regularly."
+     }
+    ],
+    "obs": true,
+    "obsEx": "Variance 2.52 vs mean 2.87."
+   },
+   {
+    "n": "P3.3",
+    "q": "Using λ, find P(X = 0), P(X = 3) and P(X ≥ 6). Store them in <code>p0</code>, <code>p3</code> and <code>p6plus</code>.",
+    "link": "3.3",
+    "code": "# P(X = 0), P(X = 3) and P(X >= 6) under Poisson(lam) (Examples 3.3 and 3.4)\n# Store them in p0, p3 and p6plus\n",
+    "hint": "k = calls[\"calls_in_interval\"]\nf = calls[\"number_of_intervals\"]\nlam = (k * f).sum() / f.sum()\np0 = stats.poisson.pmf(..., lam)\np3 = stats.poisson.pmf(..., lam)\np6plus = stats.poisson.sf(..., lam)   # P(X >= 6) = P(X > 5)\nprint(p0, p3, p6plus)",
+    "check": {
+     "expr": "abs(p0 - 0.056888238346101516) < 0.001 and abs(p3 - 0.22335867487325892) < 0.001 and abs(p6plus - 0.07107670500485229) < 0.001",
+     "pass": "P(X=0) = 0.057, P(X=3) = 0.223, P(X≥6) = 0.071.",
+     "hint": "Use stats.poisson.pmf for exact values and stats.poisson.sf(5, lam) for P(X ≥ 6)."
+    },
+    "mcq": [
+     {
+      "q": "Which call gives P(X ≥ 6)?",
+      "opts": [
+       "stats.poisson.sf(5, lam)",
+       "stats.poisson.sf(6, lam)",
+       "stats.poisson.cdf(6, lam)",
+       "stats.poisson.pmf(6, lam)"
+      ],
+      "a": 0,
+      "why": "sf(k) = P(X > k), so P(X ≥ 6) = P(X > 5) = sf(5)."
+     }
+    ],
+    "obs": true,
+    "obsEx": "P(X=0) = 0.057; P(X=3) = 0.223; P(X≥6) = 0.071."
+   },
+   {
+    "n": "P3.4",
+    "q": "Build a table with columns <code>k</code>, <code>observed</code> and <code>expected</code> (60 × P(X = k)) for k = 0 to 8, store it in <code>table</code>, then plot observed and expected side by side.",
+    "link": "3.5",
+    "code": "# Table of k, observed, expected (60 x P(X = k)) for k = 0..8, stored in table (Examples 3.5 and 3.6)\n# Then plot observed and expected side by side\n",
+    "hint": "k = calls[\"calls_in_interval\"]\nf = calls[\"number_of_intervals\"]\ntotal = f.sum()\nlam = (k * f).sum() / total\nks = np.arange(0, 9)\nobserved = calls.set_index(\"calls_in_interval\")[\"number_of_intervals\"].reindex(ks, fill_value=0)\nexpected = ... * stats.poisson.pmf(ks, lam)\ntable = pd.DataFrame({\"k\": ks, \"observed\": observed.values, \"expected\": expected.round(2)})\nprint(table)\nw = 0.4\nplt.bar(ks - w / 2, table[\"observed\"], width=w, label=\"Observed\")\nplt.bar(ks + w / 2, table[\"expected\"], width=w, label=...)\nplt.legend()\nplt.show()",
+    "check": {
+     "expr": "list(table.columns) == [\"k\", \"observed\", \"expected\"] and int(table[\"observed\"].sum()) == 60 and abs(float(table[\"expected\"].iloc[0]) - 3.4132943007660907) < 0.05",
+     "pass": "The table has 60 observed intervals, and expected for k = 0 is 3.41.",
+     "hint": "The columns must be k, observed, expected; observed must add up to 60 intervals."
+    },
+    "mcq": [
+     {
+      "q": "How do the observed and expected frequencies compare?",
+      "opts": [
+       "Close at every k; the largest gap is about 1.6 intervals (k = 3)",
+       "Observed is far above expected at k = 0",
+       "Observed is zero where expected is large",
+       "They are identical"
+      ],
+      "a": 0,
+      "why": "The largest gap is at k = 3: 15 observed against 13.4 expected. Every other gap is smaller, so the Poisson model fits well."
+     }
+    ],
+    "obs": true,
+    "obsEx": "k = 3: 15 observed vs 13.4 expected."
+   },
+   {
+    "n": "P3.5",
+    "q": "The desk has 2 staff and can handle at most 5 calls per interval. In what percentage of intervals will they be overwhelmed (more than 5 calls)? Find it from the model (<code>pct_model</code>) and from the data (<code>pct_data</code>).",
+    "link": "3.4",
+    "code": "# Percentage of intervals with more than 5 calls: from the Poisson model and from the data (Example 3.4)\n# Store them in pct_model and pct_data\n",
+    "hint": "k = calls[\"calls_in_interval\"]\nf = calls[\"number_of_intervals\"]\ntotal = f.sum()\nlam = (k * f).sum() / total\npct_model = 100 * stats.poisson.sf(..., lam)\npct_data = 100 * f[k > ...].sum() / total\nprint(pct_model, pct_data)",
+    "check": {
+     "expr": "abs(pct_model - 7.107670500485229) < 0.1 and abs(pct_data - 6.666666666666667) < 0.1",
+     "pass": "Model: 7.1% of intervals; data: 6.7%.",
+     "hint": "Overwhelmed means more than 5 calls: use sf(5, lam) for the model, and the rows with k > 5 for the data."
+    },
+    "mcq": [
+     {
+      "q": "About how often is the desk overwhelmed?",
+      "opts": [
+       "About 1 interval in 14 (7%)",
+       "About 1 interval in 3 (33%)",
+       "About 1 interval in 100 (1%)",
+       "Never"
+      ],
+      "a": 0,
+      "why": "The model gives 7.1% and the data 6.7% (4 of 60 intervals). Both are about 1 interval in 14."
+     }
+    ],
+    "obs": true,
+    "obsEx": "Overwhelmed in 7.1% of intervals (model), 6.7% (data)."
+   },
+   {
+    "n": "P3.6",
+    "q": "Written: Should the desk hire a third person? Justify your answer using the percentage you found.",
+    "written": true
+   }
+  ]
+ },
+ {
+  "id": 4,
+  "title": "Normal: battery life",
+  "intro": "A phone maker tested 200 batteries and recorded how many hours each lasted on one charge. Let <i>X</i> = battery life in hours.",
+  "ds": "normal_battery_life.csv · 200 × 2",
+  "setup": "<b>Already run for you</b>\nimport pandas as pd, numpy as np\nimport matplotlib.pyplot as plt   # loaded on first use\nfrom scipy import stats          # loaded on first use\nbattery = pd.read_csv(\"normal_battery_life.csv\")",
+  "cols": [
+   [
+    "unit_id",
+    "Battery ID, B001 to B200"
+   ],
+   [
+    "battery_hours",
+    "Hours the battery lasted on one full charge"
+   ]
+  ],
+  "tasks": [
+   {
+    "n": "P4.1",
+    "q": "Find the mean and standard deviation of <code>battery_hours</code> (store them in <code>mu</code> and <code>sigma</code>), then draw a histogram with the normal curve on top.",
+    "link": "4.2",
+    "code": "# Mean and standard deviation of battery_hours, then a histogram with the normal curve (Examples 4.1 and 4.2)\n# Store the mean in mu and the standard deviation in sigma\n",
+    "hint": "x = battery[\"battery_hours\"]\nmu = ...\nsigma = ...\nprint(mu, sigma)\nplt.hist(x, bins=12, density=True, edgecolor=\"white\")\ngrid = np.linspace(x.min(), x.max(), 200)\nplt.plot(grid, stats.norm.pdf(grid, ..., ...), color=\"C3\")\nplt.xlabel(\"Battery life (hours)\")\nplt.show()",
+    "check": {
+     "expr": "abs(mu - 11.988600000000002) < 1e-6 and abs(sigma - 1.4922553973279074) < 0.01",
+     "pass": "μ = 11.99 hours and σ = 1.49 hours.",
+     "hint": "mu is the mean and sigma the standard deviation of battery_hours."
+    },
+    "mcq": [
+     {
+      "q": "Which describes the histogram?",
+      "opts": [
+       "Bell-shaped and roughly symmetric",
+       "Skewed to the right",
+       "Two separate peaks",
+       "Flat, with all values equally likely"
+      ],
+      "a": 0,
+      "why": "The bars rise to one peak near 12 hours and fall away evenly on both sides, which matches the normal curve."
+     }
+    ],
+    "obs": true,
+    "obsEx": "μ = 11.99 h, σ = 1.49 h."
+   },
+   {
+    "n": "P4.2",
+    "q": "Find P(X &lt; 10), P(X &gt; 14) and P(11 &lt; X &lt; 13). Store them in <code>p_low</code>, <code>p_high</code> and <code>p_mid</code>.",
+    "link": "4.3",
+    "code": "# P(X < 10), P(X > 14) and P(11 < X < 13) under Normal(mu, sigma) (Example 4.3)\n# Store them in p_low, p_high and p_mid\n",
+    "hint": "x = battery[\"battery_hours\"]\nmu, sigma = x.mean(), x.std()\np_low = stats.norm.cdf(..., mu, sigma)\np_high = stats.norm.sf(..., mu, sigma)\np_mid = stats.norm.cdf(13, mu, sigma) - stats.norm.cdf(..., mu, sigma)\nprint(p_low, p_high, p_mid)",
+    "check": {
+     "expr": "abs(p_low - 0.09132930197610784) < 0.002 and abs(p_high - 0.08884646505286703) < 0.002 and abs(p_mid - 0.49721043098244777) < 0.002",
+     "pass": "P(X<10) = 0.091, P(X>14) = 0.089, P(11<X<13) = 0.497.",
+     "hint": "Use cdf for 'less than', sf for 'greater than', and a difference of two cdf values for 'between'."
+    },
+    "mcq": [
+     {
+      "q": "Which call gives P(X > 14)?",
+      "opts": [
+       "stats.norm.sf(14, mu, sigma)",
+       "stats.norm.cdf(14, mu, sigma)",
+       "stats.norm.ppf(14, mu, sigma)",
+       "stats.norm.pdf(14, mu, sigma)"
+      ],
+      "a": 0,
+      "why": "sf(14) is the area to the right of 14. cdf(14) is the area to the left, and pdf(14) is the height of the curve, not a probability."
+     }
+    ],
+    "obs": true,
+    "obsEx": "P(X<10) = 0.091; P(X>14) = 0.089; P(11<X<13) = 0.497."
+   },
+   {
+    "n": "P4.3",
+    "q": "A battery lasts 15 hours. Find its z-score (<code>z</code>) and the percentage of batteries that last longer than 15 hours (<code>pct_longer</code>).",
+    "link": "4.4",
+    "code": "# z-score of 15 hours, and the percentage of batteries that last longer (Example 4.4)\n# Store them in z and pct_longer\n",
+    "hint": "x = battery[\"battery_hours\"]\nmu, sigma = x.mean(), x.std()\nz = (... - mu) / sigma\npct_longer = 100 * stats.norm.sf(..., mu, sigma)\nprint(z, pct_longer)",
+    "check": {
+     "expr": "abs(z - 2.0180191711099402) < 0.02 and abs(pct_longer - 2.1794632376902823) < 0.1",
+     "pass": "z = 2.02; 2.2% of batteries last longer than 15 hours.",
+     "hint": "z = (15 − mu) / sigma; pct_longer is 100 × the area to the right of 15."
+    },
+    "mcq": [
+     {
+      "q": "z = 2.02 means that…",
+      "opts": [
+       "15 hours is about 2 standard deviations above the mean",
+       "15 hours is 2 hours above the mean",
+       "2% of batteries last exactly 15 hours",
+       "the battery lasts 2.02 times the mean"
+      ],
+      "a": 0,
+      "why": "A z-score counts standard deviations from the mean: (15 − μ) / σ."
+     }
+    ],
+    "obs": true,
+    "obsEx": "z = 2.02; 2.2% last longer than 15 h."
+   },
+   {
+    "n": "P4.4",
+    "q": "The maker replaces the worst 5% of batteries free of charge. What battery life is the cut-off? Store it in <code>cutoff</code>.",
+    "link": "4.5",
+    "code": "# The battery life below which 5% of batteries fall (Example 4.5)\n# Store it in cutoff\n",
+    "hint": "x = battery[\"battery_hours\"]\nmu, sigma = x.mean(), x.std()\ncutoff = stats.norm.ppf(..., mu, sigma)\nprint(cutoff)",
+    "check": {
+     "expr": "abs(cutoff - 9.534058297367283) < 0.02",
+     "pass": "Cut-off = 9.53 hours.",
+     "hint": "Use the inverse cdf, stats.norm.ppf, with probability 0.05."
+    },
+    "mcq": [
+     {
+      "q": "Which call finds the cut-off?",
+      "opts": [
+       "stats.norm.ppf(0.05, mu, sigma)",
+       "stats.norm.cdf(0.05, mu, sigma)",
+       "stats.norm.ppf(0.95, mu, sigma)",
+       "stats.norm.sf(0.05, mu, sigma)"
+      ],
+      "a": 0,
+      "why": "ppf(0.05) is the value with 5% of batteries below it. ppf(0.95) would be the cut-off for the best 5%. cdf and sf take a battery life as input, not a probability."
+     }
+    ],
+    "obs": true,
+    "obsEx": "Cut-off = 9.53 hours."
+   },
+   {
+    "n": "P4.5",
+    "q": "Empirical rule: what percentage of batteries last within 1, 2 and 3 standard deviations of the mean? Store the three values in <code>inside1</code>, <code>inside2</code> and <code>inside3</code>.",
+    "link": "4.6",
+    "code": "# Percentage of batteries within 1, 2 and 3 standard deviations of the mean (Example 4.6)\n# Store them in inside1, inside2 and inside3\n",
+    "hint": "x = battery[\"battery_hours\"]\nmu, sigma = x.mean(), x.std()\ninside = [x.between(mu - j * sigma, mu + j * ...).mean() * 100 for j in (1, 2, 3)]\ninside1, inside2, inside3 = inside\nprint(inside)",
+    "check": {
+     "expr": "abs(inside1 - 71.0) < 0.6 and abs(inside2 - 93.0) < 0.6 and abs(inside3 - 99.5) < 0.6",
+     "pass": "71.0%, 93.0% and 99.5%.",
+     "hint": "Count the share of values between mu − j×sigma and mu + j×sigma, for j = 1, 2, 3."
+    },
+    "mcq": [
+     {
+      "q": "How do the percentages compare with 68%, 95% and 99.7%?",
+      "opts": [
+       "Close (71%, 93%, 99.5%), which supports a normal model",
+       "Far lower, so the data are not normal",
+       "Exactly equal",
+       "They cannot be compared"
+      ],
+      "a": 0,
+      "why": "The three percentages are within a few points of the empirical rule, which is what a normal variable gives."
+     }
+    ],
+    "obs": true,
+    "obsEx": "71.0%, 93.0%, 99.5% within 1, 2, 3 sd."
+   },
+   {
+    "n": "P4.6",
+    "q": "Written: Do the battery lives follow a normal model? Give two reasons.",
+    "written": true
+   }
+  ]
+ }
+];
+
+// ---------- state ----------
+const KEY = "cs3006-prob-lab-v1";
+let S = { hints: {}, mod: 1, lw: 50, leftRun: {}, codes: {}, mcq: {}, cls: {}, checks: {}, ran: {}, obs: {}, who: { name: "", roll: "" } };
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
+S.hints = S.hints || {};
+let saveT = null;
+function save() { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }, 250); }
+
+const $ = (s, el = document) => el.querySelector(s);
+const h = (tag, attrs = {}, ...kids) => {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === "html") el.innerHTML = v;
+    else if (k === "text") el.textContent = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const k of kids.flat()) if (k != null) el.append(k.nodeType ? k : document.createTextNode(k));
+  return el;
+};
+function toast(msg) { const t = h("div", { class: "toast", role: "status", text: msg }); document.body.append(t); setTimeout(() => t.remove(), 2200); }
+
+const SHORT = ["Bernoulli", "Binomial", "Poisson", "Normal"];
+const allTasks = () => PR.flatMap(m => m.tasks);
+const leftStepOf = id => EX.flatMap(e => e.steps).find(s => s.n === id);
+
+
+// ---------- Python ----------
+const HELPER = String.raw`
+import sys, io, ast, json, base64, traceback, os, warnings
+os.environ["MPLBACKEND"] = "Agg"
+warnings.simplefilter("ignore", FutureWarning)
+warnings.simplefilter("ignore", DeprecationWarning)
+G = {"__name__": "__main__", "__builtins__": __builtins__}
+exec("""import pandas as pd
+import numpy as np
+pd.set_option("display.width", 140)
+pd.set_option("display.max_columns", 30)
+import math
+sales = pd.read_csv("q3_geometric_sales.csv")
+defects = pd.read_csv("q1_binomial_defects.csv")
+calls = pd.read_csv("q2_poisson_helpdesk_calls.csv")
+battery = pd.read_csv("normal_battery_life.csv")
+guess = pd.read_csv("guess_test.csv")
+doubts = pd.read_csv("exam_doubts.csv")
+marks = pd.read_csv("exam_marks.csv")
+""", G)
+_buf = io.StringIO()
+_segs = []
+def _flush_text():
+    t = _buf.getvalue()
+    if t:
+        _segs.append({"t": "text", "v": t})
+    _buf.seek(0); _buf.truncate(0)
+def _show(*a, **k):
+    if "matplotlib.pyplot" not in sys.modules:
+        return
+    import matplotlib.pyplot as plt
+    _flush_text()
+    for n in plt.get_fignums():
+        f = plt.figure(n); b = io.BytesIO()
+        f.savefig(b, format="png", dpi=110, bbox_inches="tight", facecolor="white")
+        _segs.append({"t": "img", "v": base64.b64encode(b.getvalue()).decode()})
+    plt.close("all")
+def _lab_plot_setup():
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    plt.show = _show
+    plt.rcParams.update({"figure.figsize": (6.4, 3.4), "figure.dpi": 100,
+                         "axes.spines.top": False, "axes.spines.right": False})
+    G["plt"] = plt
+def _lab_stats_setup():
+    from scipy import stats
+    G["stats"] = stats
+def _fmt(v):
+    import pandas as pd, numpy as np
+    m = type(v).__module__ or ""
+    if m.startswith("matplotlib") or m.startswith("seaborn"):
+        return None
+    if isinstance(v, np.ndarray) and v.dtype == object and v.size and (type(v.flat[0]).__module__ or "").startswith("matplotlib"):
+        return None
+    if isinstance(v, (list, tuple)) and v and (type(v[0]).__module__ or "").startswith("matplotlib"):
+        return None
+    if isinstance(v, pd.DataFrame):
+        return {"t": "html", "v": v.to_html(max_rows=24, max_cols=20, border=0)}
+    try:
+        if isinstance(v, pd.io.formats.style.Styler):
+            return {"t": "html", "v": v.to_html()}
+    except Exception:
+        pass
+    return {"t": "text", "v": repr(v)}
+def _hint(e, side, code=""):
+    msg = str(e)
+    if isinstance(e, NameError):
+        return "A name is not defined yet. Run the earlier cells of this module first, in order, and use the variable names given in the task."
+    if "ellipsis" in msg.lower() or "..." in code:
+        return "Replace each ... placeholder with your own code."
+    return ""
+def _lab_run(code, side="left"):
+    global _segs
+    _segs = []
+    _buf.seek(0); _buf.truncate(0)
+    old = sys.stdout, sys.stderr
+    sys.stdout = sys.stderr = _buf
+    err = None; val = None
+    try:
+        tree = ast.parse(code, "<cell>", "exec")
+        last = None
+        if tree.body and isinstance(tree.body[-1], ast.Expr):
+            last = ast.Expression(tree.body.pop().value)
+        exec(compile(tree, "<cell>", "exec"), G)
+        if last is not None:
+            val = eval(compile(last, "<cell>", "eval"), G)
+    except SyntaxError as e:
+        err = "SyntaxError on line %s: %s" % (e.lineno, e.msg)
+    except BaseException as e:
+        fr = [f for f in traceback.extract_tb(e.__traceback__) if f.filename == "<cell>"]
+        line = ("Line %d: " % fr[-1].lineno) if fr else ""
+        err = line + "".join(traceback.format_exception_only(type(e), e)).strip()
+        hn = _hint(e, side, code)
+        if hn:
+            err += "\n→ " + hn
+    finally:
+        sys.stdout, sys.stderr = old
+    _flush_text()
+    if val is not None and err is None:
+        try:
+            r = _fmt(val)
+            if r: _segs.append(r)
+        except Exception as e:
+            _segs.append({"t": "text", "v": repr(e)})
+    _show()
+    if err:
+        _segs.append({"t": "err", "v": err})
+    return json.dumps(_segs)
+def _lab_check(expr):
+    try:
+        return "pass" if bool(eval(expr, G)) else "fail"
+    except Exception as e:
+        return "fail"
+def _lab_has(name):
+    return name in G
+def _lab_quiet(code):
+    old = sys.stdout, sys.stderr
+    sys.stdout = sys.stderr = io.StringIO()
+    try:
+        exec(code, G); return "ok"
+    except Exception as e:
+        return "%s: %s" % (type(e).__name__, e)
+    finally:
+        sys.stdout, sys.stderr = old
+        if "matplotlib.pyplot" in sys.modules:
+            sys.modules["matplotlib.pyplot"].close("all")
+`;
+
+let py = null, pyReady = false, plotP = null;
+const PY_ABS = new URL(PY_INDEX, location.href).href;
+function setStat(kind, txt) { const s = $("#pystat"); s.className = "pystat " + kind; $("#pytxt").textContent = txt; }
+const readyP = (async () => {
+  try {
+    if (typeof loadPyodide !== "function") throw new Error("The Python runtime script did not load.");
+    setStat("busy", "Loading Python…");
+    if (BUNDLED) {
+      // Packages are hosted beside the page with a .wasm suffix; map the names Pyodide asks for.
+      const of = window.fetch.bind(window);
+      window.fetch = (u, o) => {
+        let s = typeof u === "string" ? u : (u instanceof URL ? u.href : null);
+        if (s && /\.(whl|zip)$/.test(s)) return of(s + ".wasm", o);
+        return of(u, o);
+      };
+    }
+    py = await loadPyodide({ indexURL: PY_ABS });
+    setStat("busy", "Loading pandas…");
+    await py.loadPackage(["numpy", "pandas"], { messageCallback: () => {} });
+    py.FS.writeFile("guess_test.csv", CSV_GUESS);
+    py.FS.writeFile("exam_doubts.csv", CSV_DOUBTS);
+    py.FS.writeFile("exam_marks.csv", CSV_MARKS);
+    py.FS.writeFile("q3_geometric_sales.csv", CSV_SALES);
+    py.FS.writeFile("q1_binomial_defects.csv", CSV_DEFECTS);
+    py.FS.writeFile("q2_poisson_helpdesk_calls.csv", CSV_CALLS);
+    py.FS.writeFile("normal_battery_life.csv", CSV_BATTERY);
+    py.runPython(HELPER);
+    pyReady = true; setStat("ready", "Python ready");
+    return true;
+  } catch (e) {
+    console.error(e);
+    setStat("fail", "Python could not start");
+    document.querySelectorAll(".loadmsg").forEach(m => { m.hidden = false; m.classList.add("fail"); m.textContent = "Python could not start in this browser view (" + (e && e.message ? e.message : e) + "). Multiple-choice questions still work. To run code, open the lab in a current Chrome, Edge or Firefox."; });
+    return false;
+  }
+})();
+function ensurePlot() {
+  if (!plotP) plotP = (async () => {
+    setStat("busy", "Loading matplotlib (first plot only)…");
+    await py.loadPackage(["matplotlib"], { messageCallback: () => {} });
+    py.runPython("_lab_plot_setup()");
+    setStat("ready", "Python ready");
+  })().catch(e => { plotP = null; setStat("ready", "Python ready (plotting failed to load)"); throw e; });
+  return plotP;
+}
+let statsP = null;
+function ensureStats() {
+  if (!statsP) statsP = (async () => {
+    setStat("busy", "Loading scipy (first use only)…");
+    await py.loadPackage(["scipy"], { messageCallback: () => {} });
+    py.runPython("_lab_stats_setup()");
+    setStat("ready", "Python ready");
+  })().catch(e => { statsP = null; setStat("ready", "Python ready (scipy failed to load)"); throw e; });
+  return statsP;
+}
+
+const pyCall = (fn, ...args) => py.globals.get(fn)(...args);
+const nextFrame = () => new Promise(r => setTimeout(r, 30));
+
+const sessionRan = new Set();   // worked-example steps run since this page load
+
+async function runCode(code, side, outEl, btn, before) {
+  outEl.innerHTML = "";
+  btn.disabled = true; const label = btn.innerHTML; btn.innerHTML = "Running…";
+  try {
+    if (!pyReady) { outEl.append(h("div", { class: "note", text: "Waiting for Python to finish loading…" })); }
+    const ok = await readyP;
+    if (!ok) { outEl.innerHTML = ""; outEl.append(h("pre", { class: "err", text: "Python is not available in this browser view." })); return { error: true }; }
+    outEl.innerHTML = "";
+    const pre = before ? before() : [];
+    const allCode = code + pre.map(p => p.code).join("\n");
+    if (/\bplt\b/.test(allCode)) {
+      try { await ensurePlot(); } catch (e) { outEl.append(h("pre", { class: "err", text: "Plotting libraries failed to load: " + e.message })); return { error: true }; }
+    }
+    if (/\b(stats|scipy)\b/.test(allCode)) {
+      try { await ensureStats(); } catch (e) { outEl.append(h("pre", { class: "err", text: "scipy failed to load: " + e.message })); return { error: true }; }
+    }
+    if (pre.length) {
+      const done = [], failed = [];
+      for (const p of pre) { const r = pyCall("_lab_quiet", p.code); if (r === "ok") { sessionRan.add(p.n); done.push(p.n); } else failed.push(p.n + " (" + r + ")"); }
+      if (done.length) outEl.append(h("div", { class: "note", text: "First ran step" + (done.length > 1 ? "s " : " ") + done.join(", ") + ", which this step builds on." }));
+      if (failed.length) outEl.append(h("pre", { class: "err", text: "Could not run earlier step " + failed.join("; ") + ". Run that step yourself first." }));
+    }
+    await nextFrame();
+    const segs = JSON.parse(pyCall("_lab_run", code, side));
+    let error = false;
+    for (const s of segs) {
+      if (s.t === "text") outEl.append(h("pre", { text: s.v.replace(/\n$/, "") }));
+      else if (s.t === "html") outEl.append(h("div", { class: "df", html: s.v }));
+      else if (s.t === "img") outEl.append(h("img", { src: "data:image/png;base64," + s.v, alt: "Plot output" }));
+      else if (s.t === "err") { error = true; outEl.append(h("pre", { class: "err", text: s.v })); }
+    }
+    if (!segs.length) outEl.append(h("div", { class: "note", text: "Ran without output." }));
+    return { error };
+  } finally { btn.disabled = false; btn.innerHTML = label; }
+}
+
+
+// ---------- code cell ----------
+let CMS = [];
+const hasRealCode = c => c.split("\n").some(l => { const t = l.replace(/#.*$/, "").trim(); return t && t !== "..."; });
+function codeCell({ key, code, side, onRun, label, hint, onHint, before }) {
+  const ta = h("textarea", { class: "fallback", id: "cm-" + key.replace(/\W/g, "_"), spellcheck: "false" });
+  ta.value = S.codes[key] ?? code;
+  const out = h("div", { class: "out", "aria-live": "polite" });
+  const runBtn = h("button", { class: "run", type: "button", html: "▶ Run" });
+  const resetBtn = h("button", { class: "ghost", type: "button", text: "Reset", title: "Restore the original code" });
+  let hintBtn = null, hintBox = null;
+  if (hint) {
+    hintBtn = h("button", { class: "ghost hintbtn", type: "button", text: "Hint", title: "Show a code skeleton for this task" });
+    let armed = false;
+    const useBtn = h("button", { class: "ghost", type: "button", text: "Copy hint into cell" });
+    useBtn.addEventListener("click", () => {
+      if (hasRealCode(get()) && !armed) { armed = true; useBtn.textContent = "This replaces your code. Click again"; return; }
+      set(hint); armed = false; useBtn.textContent = "Copy hint into cell"; cm && cm.focus();
+    });
+    hintBox = h("div", { class: "hintbox", hidden: true }, h("div", { class: "hinthead" }, h("span", { text: "Hint: use this code as a guide" }), useBtn), h("pre", { text: hint }));
+    hintBtn.addEventListener("click", () => { hintBox.hidden = !hintBox.hidden; hintBtn.textContent = hintBox.hidden ? "Hint" : "Hide hint"; if (!hintBox.hidden && onHint) onHint(); });
+  }
+  const wrap = h("div", { class: "cell" }, h("div", { class: "cellbar" }, h("span", { class: "lbl", text: label || "Python · Shift+Enter to run" }), hintBtn, resetBtn, runBtn), ta, hintBox, out);
+  let cm = null;
+  const get = () => cm ? cm.getValue() : ta.value;
+  const set = v => cm ? cm.setValue(v) : (ta.value = v);
+  const go = async () => { const c = get(); const r = await runCode(c, side, out, runBtn, before); onRun && onRun(r, out, c); };
+  runBtn.addEventListener("click", go);
+  resetBtn.addEventListener("click", () => { set(code); delete S.codes[key]; save(); });
+  queueMicrotask(() => {
+    if (window.CodeMirror) {
+      cm = CodeMirror.fromTextArea(ta, { mode: "python", lineNumbers: true, indentUnit: 4, tabSize: 4, viewportMargin: Infinity, lineWrapping: false,
+        extraKeys: { "Shift-Enter": go, "Ctrl-Enter": go, "Cmd-Enter": go, Tab: c => c.somethingSelected() ? c.indentSelection("add") : c.replaceSelection("    ") } });
+      cm.on("change", () => { S.codes[key] = cm.getValue(); save(); });
+      CMS.push(cm);
+    } else {
+      ta.addEventListener("input", () => { S.codes[key] = ta.value; save(); });
+      ta.addEventListener("keydown", e => { if (e.key === "Enter" && e.shiftKey) { e.preventDefault(); go(); } });
+    }
+  });
+  return wrap;
+}
+
+
+// ---------- left pane ----------
+const colTable = rows => h("details", { class: "cols" }, h("summary", { text: "Columns" }),
+  h("table", { class: "mini" }, h("tbody", {}, rows.map(([c, m]) => h("tr", {}, h("td", {}, h("code", { text: c })), h("td", { text: m }))))));
+
+function renderLeft() {
+  const ex = EX[S.mod - 1], L = $("#L"); L.innerHTML = "";
+  L.append(h("div", { class: "phead" },
+    h("span", { class: "tag" }, "Worked example " + ex.id, h("span", { class: "ds", text: ex.ds })),
+    h("h2", { text: ex.title }), h("p", { class: "goal", html: ex.goal }), colTable(ex.cols)));
+  L.append(h("div", { class: "setup", html: ex.setup }));
+  L.append(h("div", { class: "loadmsg", hidden: true }));
+  ex.steps.forEach((st, idx) => {
+    const prior = ex.steps.slice(0, idx).filter(s => s.code);
+    const card = h("article", { class: "card", id: "ex-" + st.n });
+    const mark = () => { S.leftRun[st.n] = true; save(); refreshLinks(); };
+    card.append(h("div", { class: "chead" }, h("span", { class: "sn", text: st.n }), h("p", { class: "q", html: st.q })));
+    if (st.code) card.append(codeCell({ key: "L" + st.n, code: st.code, side: "left",
+      before: () => prior.filter(s => !sessionRan.has(s.n)).map(s => ({ n: s.n, code: S.codes["L" + s.n] ?? s.code })),
+      onRun: r => { if (!r.error) { sessionRan.add(st.n); mark(); } } }));
+    const det = h("details", { class: "reveal" }, h("summary", { text: st.code ? "Show answer (predict first, then run)" : "Show answer" }), h("div", { class: "ansbody", html: st.ans }));
+    det.addEventListener("toggle", () => { if (det.open && !st.code) mark(); });
+    card.append(det);
+    L.append(card);
+  });
+}
+
+// ---------- right pane ----------
+function taskDone(t) {
+  let parts = 0, ok = 0;
+  if (t.mcq) t.mcq.forEach((m, i) => { parts++; if (S.mcq[t.n + "#" + i]?.pick === m.a) ok++; });
+  if (t.check) { parts++; if (S.checks[t.n] === "pass") ok++; }
+  if (t.code != null && !t.mcq && !t.check) { parts++; if (S.ran[t.n]) ok++; }
+  if (t.written) { parts++; if ((S.obs[t.n] || "").trim().length >= 20) ok++; }
+  return parts > 0 && ok === parts;
+}
+function modProgress(m) { const t = PR[m - 1].tasks; return t.filter(taskDone).length / t.length; }
+
+function refreshProgress() {
+  const all = allTasks(), d = all.filter(taskDone).length;
+  $("#ovtxt").textContent = `${d} / ${all.length} practice tasks`;
+  $("#ovbar").style.width = (d / all.length * 100) + "%";
+  document.querySelectorAll(".mod").forEach(b => { const p = modProgress(+b.dataset.m); b.querySelector(".fg").style.strokeDasharray = `${p * 43.98} 43.98`; });
+  document.querySelectorAll(".right .card[data-n]").forEach(c => {
+    const t = all.find(x => x.n === c.dataset.n), st = c.querySelector(".state");
+    if (!t || !st) return; const dn = taskDone(t);
+    st.className = "state " + (dn ? "done" : "todo"); st.textContent = dn ? "✓ Done" : "To do";
+  });
+}
+function refreshLinks() {
+  document.querySelectorAll(".right .card[data-link]").forEach(c => {
+    const id = c.dataset.link, done = !!S.leftRun[id], chip = c.querySelector(".link");
+    c.classList.toggle("waiting", !done);
+    if (chip) { chip.classList.toggle("pending", !done); chip.textContent = done ? `✓ Built on Example ${id}` : `Study Example ${id} on the left first →`; }
+  });
+}
+function jumpLeft(id) {
+  const el = document.getElementById("ex-" + id); if (!el) return;
+  if (matchMedia("(max-width: 900px)").matches) setPane("left");
+  el.scrollIntoView({ block: "start" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1400);
+}
+
+
+function mcqBlock(t, m, i) {
+  const k = t.n + "#" + i, st = S.mcq[k] || { pick: null, tries: 0 };
+  const box = h("div", { class: "mcq" }, h("div", { class: "mq", html: m.q }));
+  const grid = h("div", { class: "opts" }), why = h("div", { class: "why", hidden: true });
+  const paint = () => {
+    const cur = S.mcq[k] || { pick: null, tries: 0 };
+    [...grid.children].forEach((b, j) => { b.classList.toggle("right", cur.pick === j && j === m.a); b.classList.toggle("wrong", cur.pick === j && j !== m.a); b.setAttribute("aria-pressed", cur.pick === j); });
+    if (cur.pick == null) { why.hidden = true; return; }
+    why.hidden = false;
+    if (cur.pick === m.a) { why.className = "why ok"; why.innerHTML = "<b>Correct.</b> " + m.why; }
+    else if (cur.tries >= 2) { why.className = "why no"; why.innerHTML = `<b>Not quite.</b> The answer is “${esc(m.opts[m.a])}”. ` + m.why; }
+    else { why.className = "why no"; why.innerHTML = "<b>Not quite.</b> Run the code, look at the output again, and try another option."; }
+  };
+  m.opts.forEach((o, j) => grid.append(h("button", { class: "opt", type: "button", onclick: () => {
+    const cur = S.mcq[k] || { pick: null, tries: 0 };
+    if (cur.pick === m.a) return;
+    S.mcq[k] = { pick: j, tries: cur.tries + (j === m.a ? 0 : 1) }; save(); paint(); refreshProgress();
+  } }, h("span", { class: "k", text: "ABCD"[j] }), h("span", { text: o }))));
+  box.append(grid, why); paint();
+  return box;
+}
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+
+function obsBlock(t) {
+  const id = "obs-" + t.n.replace(/\W/g, "_");
+  const inp = t.written
+    ? h("textarea", { id, rows: "4", placeholder: "Write 2 or 3 sentences, using numbers from your output.", "aria-label": "My answer" })
+    : h("input", { id, type: "text", placeholder: t.obsEx ? "One line with a number, e.g. “" + t.obsEx + "”" : "One line with a number from your output.", value: S.obs[t.n] || "" });
+  if (t.written) inp.value = S.obs[t.n] || "";
+  inp.addEventListener("input", () => { S.obs[t.n] = inp.value; save(); refreshProgress(); });
+  return h("div", { class: "obs" }, h("label", { for: id, text: t.written ? "My answer" : "What I observed" }), inp);
+}
+
+function renderRight() {
+  const m = PR[S.mod - 1], R = $("#R"); R.innerHTML = "";
+  R.append(h("div", { class: "phead" },
+    h("span", { class: "tag" }, "Practice P" + m.id, h("span", { class: "ds", text: m.ds })),
+    h("h2", { text: m.title }),
+    h("p", { class: "goal", html: m.intro + " Work through the matching worked example, then apply it here. After each task, write one line with a number." }),
+    colTable(m.cols)));
+  R.append(h("div", { class: "setup", html: m.setup }));
+  R.append(h("div", { class: "loadmsg", hidden: true }));
+  R.append(h("p", { class: "goal", style: "font-size:12.5px", text: "The data is for practice only. Each task starts from the data, so you can run any task on its own." }));
+  for (const t of m.tasks) {
+    const card = h("article", { class: "card", "data-n": t.n, "data-link": t.link || null, id: "pr-" + t.n });
+    card.append(h("div", { class: "chead" }, h("span", { class: "sn", text: t.n }), h("p", { class: "q", html: t.q }), h("span", { class: "state todo", text: "To do" })));
+    if (t.link) card.append(h("button", { class: "link", type: "button", onclick: () => jumpLeft(t.link) }));
+    let chkEl = null;
+    if (t.code != null) {
+      chkEl = h("div", { class: "chk", hidden: true });
+      const paintChk = () => { const v = S.checks[t.n]; if (!t.check || !v) { chkEl.hidden = true; return; } chkEl.hidden = false; chkEl.className = "chk " + v; chkEl.textContent = (v === "pass" ? "✓ Check passed: " + t.check.pass : "✗ Not yet: " + t.check.hint); };
+      card.append(codeCell({ key: "R" + t.n, code: t.code, side: "right", label: "Your code · Shift+Enter to run", hint: t.hint, onHint: () => { S.hints[t.n] = true; save(); }, onRun: (r, o, c) => {
+        if (!pyReady) return;
+        if (!r.error && hasRealCode(c)) S.ran[t.n] = true;
+        if (t.check) S.checks[t.n] = pyCall("_lab_check", t.check.expr);
+        save(); paintChk(); refreshProgress();
+      } }));
+      card.append(chkEl); paintChk();
+    }
+    if (t.mcq) t.mcq.forEach((q, i) => card.append(mcqBlock(t, q, i)));
+    if (t.obs || t.written) card.append(obsBlock(t));
+    R.append(card);
+  }
+  refreshLinks(); refreshProgress();
+  if (!pyReady) readyP.then(ok => { if (!ok) document.querySelectorAll(".loadmsg").forEach(x => x.hidden = false); });
+}
+
+
+// ---------- rail, panes, gutter ----------
+function renderRail() {
+  const rail = $("#rail"); rail.innerHTML = "";
+  PR.forEach((m, i) => {
+    const b = h("button", { class: "mod", role: "tab", type: "button", "data-m": m.id, "aria-selected": S.mod === m.id, title: m.title, onclick: () => go(m.id) },
+      h("span", { class: "num", text: m.id }), h("span", { text: SHORT[i] }));
+    b.insertAdjacentHTML("afterbegin", '<svg class="ring" viewBox="0 0 18 18" aria-hidden="true"><circle class="bg" cx="9" cy="9" r="7"/><circle class="fg" cx="9" cy="9" r="7" stroke-dasharray="0 43.98"/></svg>');
+    rail.append(b);
+  });
+}
+function go(m) {
+  S.mod = m; save(); CMS = [];
+  document.querySelectorAll(".mod").forEach(b => b.setAttribute("aria-selected", +b.dataset.m === m));
+  renderLeft(); renderRight();
+  $("#paneL").scrollTop = 0; $("#paneR").scrollTop = 0;
+  if (matchMedia("(max-width: 900px)").matches) window.scrollTo(0, 0);
+  try { history.replaceState(null, "", "#m" + m); } catch (e) {}
+}
+function setPane(p) {
+  $("#paneL").dataset.hide = p === "left" ? "0" : "1"; $("#paneR").dataset.hide = p === "right" ? "0" : "1";
+  document.querySelectorAll("#switch button").forEach(b => b.setAttribute("aria-pressed", b.dataset.p === p));
+  setTimeout(() => CMS.forEach(c => c.refresh()), 0);
+}
+document.querySelectorAll("#switch button").forEach(b => b.addEventListener("click", () => setPane(b.dataset.p)));
+const split = $("#split"), gut = $("#gutter");
+const setW = w => { S.lw = Math.max(25, Math.min(75, w)); split.style.setProperty("--lw", S.lw + "%"); save(); };
+gut.addEventListener("pointerdown", e => {
+  gut.setPointerCapture(e.pointerId); gut.classList.add("drag");
+  const mv = ev => { const r = split.getBoundingClientRect(); setW((ev.clientX - r.left) / r.width * 100); };
+  const up = () => { gut.classList.remove("drag"); gut.removeEventListener("pointermove", mv); gut.removeEventListener("pointerup", up); };
+  gut.addEventListener("pointermove", mv); gut.addEventListener("pointerup", up);
+});
+gut.addEventListener("keydown", e => { if (e.key === "ArrowLeft") setW(S.lw - 3); if (e.key === "ArrowRight") setW(S.lw + 3); });
+
+
+// ---------- submission (.py file) ----------
+const plain = s => String(s).replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&quot;/g, '"');
+const cmt = (s, w = 92) => {
+  const out = [];
+  for (const para of plain(s).split("\n")) {
+    let line = "";
+    for (const word of para.split(/\s+/)) {
+      if (line && (line + " " + word).length > w) { out.push("# " + line); line = word; } else line = line ? line + " " + word : word;
+    }
+    out.push("# " + line);
+  }
+  return out.join("\n");
+};
+const slug = s => (s || "").trim().replace(/[^A-Za-z0-9_-]+/g, "_").replace(/^_+|_+$/g, "");
+
+function pyFileName() { return `CS3006_Prob_${slug(S.who.roll) || slug(S.who.name) || "student"}.py`; }
+function buildPy() {
+  const all = allTasks(), L = [];
+  const now = new Date();
+  L.push("# " + "=".repeat(78));
+  L.push("# CS3006 Introduction to Data Science for Engineers");
+  L.push("# Probability Distributions Lab: Bernoulli, Binomial, Poisson, Normal");
+  L.push(`# Name     : ${S.who.name || "____"}`);
+  L.push(`# Roll no. : ${S.who.roll || "____"}`);
+  L.push(`# Saved    : ${now.toLocaleString()}`);
+  L.push(`# Completed: ${all.filter(taskDone).length} / ${all.length} practice tasks`);
+  L.push("#");
+  L.push("# Each task is a '# %%' cell: run it cell by cell in Jupyter, VS Code or Spyder.");
+  L.push("# Answers, observations and written answers are recorded as comments.");
+  L.push("# " + "=".repeat(78), "");
+  L.push("import math", "import pandas as pd", "import numpy as np", "import matplotlib.pyplot as plt", "from scipy import stats", "",
+         'sales = pd.read_csv("q3_geometric_sales.csv")', 'defects = pd.read_csv("q1_binomial_defects.csv")',
+         'calls = pd.read_csv("q2_poisson_helpdesk_calls.csv")', 'battery = pd.read_csv("normal_battery_life.csv")', "");
+  for (const m of PR) {
+    L.push("", "# " + "#".repeat(78), `# P${m.id}. ${m.title.toUpperCase()}`, "# " + "#".repeat(78));
+    for (const t of m.tasks) {
+      L.push("", `# %% ${t.n}  [${taskDone(t) ? "done" : "open"}]`);
+      L.push(cmt("Task: " + t.q));
+      if (t.code != null) {
+        const mine = S.codes["R" + t.n];
+        if (mine == null) L.push(t.code.trim() ? "# (starter code, not edited)" : "# (no code written)");
+        if (S.hints[t.n]) L.push("# (hint viewed)");
+        L.push((mine ?? t.code).replace(/\s+$/, ""));
+        if (t.check) L.push(`# Auto-check: ${S.checks[t.n] === "pass" ? "PASSED" : S.checks[t.n] === "fail" ? "not passed" : "not run"}`);
+        else if (!S.ran[t.n]) L.push("# (not run in the lab)");
+      }
+      if (t.mcq) t.mcq.forEach((q, i) => {
+        const st = S.mcq[t.n + "#" + i];
+        const ans = st && st.pick != null ? `${q.opts[st.pick]}  [${st.pick === q.a ? "correct" + (st.tries ? `, after ${st.tries} wrong` : "") : "wrong"}]` : "(not answered)";
+        L.push(cmt(`Q: ${q.q}`), `#   -> ${plain(ans)}`);
+      });
+      if (t.written) L.push(cmt("Answer: " + ((S.obs[t.n] || "").trim() || "(none written)")));
+      else if (t.obs) L.push(cmt("Observation: " + ((S.obs[t.n] || "").trim() || "(none written)")));
+    }
+  }
+  return L.join("\n") + "\n";
+}
+
+async function savePy(btn) {
+  const text = buildPy(), fname = pyFileName();
+  if (!BUNDLED) {
+    const url = URL.createObjectURL(new Blob([text], { type: "text/x-python" }));
+    const a = h("a", { href: url, download: fname }); document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    toast("Downloaded " + fname);
+    return;
+  }
+  // Inside claude.ai the page may only save .txt files; students rename before uploading.
+  const dl = window.claude && window.claude.use ? await window.claude.use("downloads") : null;
+  if (!dl) { toast("Saving files is not available in this view. Use Copy instead."); return; }
+  btn.disabled = true;
+  try { await dl.save({ filename: fname + ".txt", data: text }); toast("Saved. Delete the .txt at the end of the file name before uploading."); }
+  catch (e) { if (e && e.code !== "declined") toast("Could not save the file (" + (e.code || e.message) + "). Use Copy instead."); }
+  finally { btn.disabled = false; }
+}
+$("#submitBtn").addEventListener("click", () => {
+  const nm = h("input", { id: "who-name", type: "text", placeholder: "Your name", value: S.who.name }), rl = h("input", { id: "who-roll", type: "text", placeholder: "Roll number (required)", value: S.who.roll });
+  const ta = h("textarea", { readonly: true, "aria-label": "Your .py file" }); ta.value = buildPy();
+  const fn = h("code", { text: pyFileName() });
+  const dlBtn = h("button", { class: "btn primary", type: "button", text: "Download .py file", onclick: e => savePy(e.currentTarget) });
+  const upd = () => { S.who = { name: nm.value, roll: rl.value }; save(); ta.value = buildPy(); fn.textContent = pyFileName(); dlBtn.disabled = !rl.value.trim(); };
+  nm.addEventListener("input", upd); rl.addEventListener("input", upd); dlBtn.disabled = !rl.value.trim();
+  const close = () => modal.remove();
+  const copy = async () => { try { await navigator.clipboard.writeText(ta.value); toast("Copied the file contents."); } catch (e) { ta.focus(); ta.select(); toast("Text selected: press Ctrl+C to copy"); } };
+  const note = BUNDLED
+    ? "This page can only save text files, so the file arrives as " + "<b>…py.txt</b>. Delete <b>.txt</b> from the end of its name, then upload the .py file."
+    : "The file downloads to your Downloads folder. Upload it at the link your instructor gave you.";
+  const modal = h("div", { class: "modal", role: "dialog", "aria-modal": "true", "aria-label": "Submit my work", onclick: e => { if (e.target === modal) close(); } },
+    h("div", { class: "box" }, h("h2", { text: "Submit my work" }),
+      h("p", { class: "goal" }, "Your code, answers, observations and written answers, as one Python file: ", fn),
+      h("div", { class: "tbl find" }, h("div", { class: "row" }, nm, rl)),
+      h("p", { class: "goal", style: "font-size:13px", html: note }), ta,
+      h("div", { class: "acts" }, h("button", { class: "btn", type: "button", text: "Close", onclick: close }), h("button", { class: "btn", type: "button", text: "Copy text", onclick: copy }), dlBtn)));
+  document.body.append(modal);
+  modal.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+  (rl.value.trim() ? dlBtn : rl).focus();
+});
+
+
+// ---------- how to use ----------
+function showGuide() {
+  const close = () => { modal.remove(); S.seenIntro = true; save(); };
+  const box = h("div", { class: "box guide", html: `
+<h2>How to use this lab</h2>
+<p class="lede">You learn each distribution twice: first on an exam example where every step is worked out for you, then on a new dataset where you do it yourself. The four modules are Bernoulli, binomial, Poisson and normal.</p>
+<div class="schem">
+  <div class="side l"><b>Left: Worked example</b>Read, predict, run, check.<span>exam data: guesses, doubts, marks</span></div>
+  <div class="arr"><i>→</i>same idea,<br>new data</div>
+  <div class="side r"><b>Right: Practice</b>Apply it yourself and answer.<span>sales, defects, help-desk calls, batteries</span></div>
+</div>
+<ol class="gsteps">
+  <li><div><b>Work through modules 1 to 4 in order.</b><p>Choose a module from the bar at the top. Bernoulli comes first because a binomial variable counts Bernoulli trials. The ring next to the number fills as you finish its practice tasks.</p></div></li>
+  <li><div><b>Study a worked step on the left.</b><p>Read the task and guess the answer first. Then press <b>▶ Run</b> (or <span class="kbd">Shift</span> + <span class="kbd">Enter</span> inside the code) and compare with <b>Show answer</b>. You may edit the code to experiment; <b>Reset</b> brings back the original.</p></div></li>
+  <li><div><b>Apply it on the right.</b><p>Each practice task names the example it builds on. A faded card means you have not run that example yet: click the label to jump to it.</p></div></li>
+  <li><div><b>Answer each task.</b><p>Modules 1 and 2 give a skeleton with <code>...</code> gaps; modules 3 and 4 give only a comment saying what to compute. Use the variable names the task asks for, because the check looks for them. Stuck? Press <b>Hint</b>; your file records which hints you opened. In multiple-choice questions, think before you click: wrong attempts are recorded, and two wrong tries reveal the answer.</p></div></li>
+  <li><div><b>Write your observations.</b><p>After each task, write one line with a number from your output, for example “p̂ = 25/66 = 0.379”. The last task of every module asks for a short written answer of two or three sentences.</p></div></li>
+  <li><div><b>Finish and submit.</b><p>Press <b>Submit my work</b>, add your name and roll number, and press <b>Download .py file</b>. Upload that one file at the link your instructor gives you. It contains your code, answers, observations and written answers.</p></div></li>
+</ol>
+<div class="know"><h3>Good to know</h3><ul>
+  <li><b>Wait for the green “Python ready” light.</b> The first load downloads Python (about 15 MB). Your first plot and your first use of <code>stats</code> (scipy) each take a few seconds more.</li>
+  <li><b>Your work is saved in this browser on this computer only.</b> Do not use a private or incognito window, and copy your submission before you switch computers.</li>
+  <li><b>Reloading the page clears Python's memory, not your saved code.</b> Each practice task starts from the data, so you can run any task on its own after a reload.</li>
+  <li><b>Read the error message under a cell.</b> The line after the arrow (→) usually says what to fix.</li>
+  <li><b>Look up any function</b> with <code>help(stats.binom.pmf)</code> in a code cell (no brackets after the function name).</li>
+  <li><b>Use a laptop if you can.</b> Drag the divider to resize the two sides. On a phone, switch sides with the buttons under the module bar.</li>
+</ul></div>
+<div class="acts"><button class="btn primary" type="button" id="guideGo">Start the lab</button></div>` });
+  const modal = h("div", { class: "modal", role: "dialog", "aria-modal": "true", "aria-label": "How to use this lab", onclick: e => { if (e.target === modal) close(); } }, box);
+  modal.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+  document.body.append(modal);
+  $("#guideGo").addEventListener("click", close);
+  $("#guideGo").focus();
+}
+
+$("#helpBtn").addEventListener("click", showGuide);
+
+// ---------- full screen ----------
+(() => {
+  const b = $("#fsBtn");
+  let inFrame = true; try { inFrame = window.self !== window.top; } catch (e) {}
+  if (document.fullscreenEnabled) {
+    b.hidden = false;
+    b.addEventListener("click", () => {
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      else document.documentElement.requestFullscreen().catch(() => toast("Your browser blocked full screen. Press F11 instead."));
+    });
+    document.addEventListener("fullscreenchange", () => { b.textContent = document.fullscreenElement ? "Exit full screen" : "Full screen"; });
+  } else if (inFrame && !BUNDLED) {
+    // Embedded (e.g. in a Moodle page) without permission for full screen: offer the page on its own instead.
+    b.hidden = false; b.textContent = "Open in new tab";
+    b.addEventListener("click", () => { const w = window.open(location.href, "_blank"); if (!w) toast("Pop-up blocked. Press F11, or allow pop-ups for this site."); });
+  }
+})();
+
+
+// ---------- boot ----------
+const hm = /^#m(\d+)$/.exec(location.hash); if (hm && +hm[1] >= 1 && +hm[1] <= 4) S.mod = +hm[1];
+split.style.setProperty("--lw", S.lw + "%");
+renderRail(); setPane("left"); go(S.mod);
+if (!S.seenIntro) showGuide();
+
+</script>
+
+</body></html>

@@ -1,0 +1,8 @@
+Explore the usage of hub, switch, router, repeater and bridge.
+
+Instructions:
+1 - Submit a PDF document that includes your comments and screenshots from Cisco Packet Tracer with ping, and screenshot from Cisco Packet Tracer with simulation for a specific question. Make sure to write your name and roll number clearly before taking the screenshot.
+2 - Submit a ZIP file containing all your PKZ file(s). You may either use separate PKZ files for each question or combine all questions into a single PKZ file, (if possible).
+3 - Each student must submit the assignment individually.
+4 - Submissions will not be awarded after the deadline.
+

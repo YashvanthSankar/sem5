@@ -1,0 +1,38 @@
+--- FOLLOW SETS ---
+FOLLOW(E) = { $ + ) }
+FOLLOW(T) = { $ + * ) }
+FOLLOW(F) = { $ + * ) }
+
+--- ACTION / GOTO TABLE ---
+State	+	*	(	)	i	$	|	E	T	F
+0			s4		s5		|	1	2	3
+1	s6					acc	|			
+2	r2	s7		r2		r2	|			
+3	r4	r4		r4		r4	|			
+4			s4		s5		|	8	2	3
+5	r6	r6		r6		r6	|			
+6			s4		s5		|		9	3
+7			s4		s5		|			10
+8	s6			s11			|			
+9	r1	s7		r1		r1	|			
+10	r3	r3		r3		r3	|			
+11	r5	r5		r5		r5	|			
+
+--- PARSING ---
+STACK	| INPUT	| ACTION
+0 	| i+i*i$	| shift 5
+0 5 	| +i*i$	| reduce F->i
+0 3 	| +i*i$	| reduce T->F
+0 2 	| +i*i$	| reduce E->T
+0 1 	| +i*i$	| shift 6
+0 1 6 	| i*i$	| shift 5
+0 1 6 5 	| *i$	| reduce F->i
+0 1 6 3 	| *i$	| reduce T->F
+0 1 6 9 	| *i$	| shift 7
+0 1 6 9 7 	| i$	| shift 5
+0 1 6 9 7 5 	| $	| reduce F->i
+0 1 6 9 7 10 	| $	| reduce T->T*F
+0 1 6 9 	| $	| reduce E->E+T
+0 1 	| $	| accept
+
+Input string is accepted.

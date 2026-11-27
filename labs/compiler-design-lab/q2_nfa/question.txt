@@ -1,0 +1,28 @@
+Question 2: NFA Construction and String Validation
+
+For the regular expression (a+b)*abb, perform the following tasks using
+Thompson's construction:
+
+1. Regular Expression to NFA Conversion
+   - Construct an NFA for the given regular expression using Thompson's construction.
+   - Represent the NFA in C using a suitable data structure containing:
+     - States
+     - Alphabet
+     - Transition function
+     - Initial state
+     - Accepting state
+
+2. NFA Implementation and String Validation
+   - Implement the constructed NFA in C.
+   - The program should read an input string of up to 100 characters.
+   - Simulate the NFA on the given input string, including the required
+     epsilon-transitions.
+   - Display ACCEPTED if the input string is accepted by the NFA.
+   - Display REJECTED otherwise.
+
+Example:
+For the regular expression (a+b)*abb:
+   - Input: abb    -> ACCEPTED
+   - Input: aabb   -> ACCEPTED
+   - Input: abababb -> ACCEPTED
+   - Input: aba    -> REJECTED

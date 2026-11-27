@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS3006 Lab 03 - Functions & Classes (Interactive, 60 Questions)</title>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+<style>
+  :root{--blue:#214B8C;--tint:#eef2f9;--ink:#1a2330;--muted:#5b6675;--border:#d8dee9;--code-bg:#0f1b2d;--code-ink:#e6edf5;--ok:#16a34a;--bad:#dc2626;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:#f6f8fb;line-height:1.5}
+  .wrap{max-width:900px;margin:0 auto;padding:0 18px}
+  header.hero{background:var(--blue);color:#fff;padding:24px 22px}
+  header.hero h1{margin:0;font-size:1.4rem} header.hero h2{margin:6px 0 0;font-weight:400;font-size:1rem;opacity:.95}
+  header.hero p{margin:8px 0 0;opacity:.85;font-size:.88rem}
+  #pybar{padding:8px 18px;font-size:.85rem;text-align:center;background:#fde68a;color:#7c2d12}
+  #pybar.ready{background:#dcfce7;color:#14532d}
+  #pybar.err{background:#fee2e2;color:#7f1d1d}
+  .idbar{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:16px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .idbar label{font-size:.8rem;color:var(--muted);display:block;margin-bottom:3px}
+  .idbar input,.idbar select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:.9rem}
+  .idbar .full{grid-column:1/3}
+  .toolbar{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--border);padding:10px 0;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .toolbar .wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .progress{font-size:.85rem;color:var(--muted)} .progress b{color:var(--blue)}
+  .bar{flex:1;min-width:120px;height:8px;background:#e6ebf3;border-radius:5px;overflow:hidden}
+  .bar>i{display:block;height:100%;width:0;background:var(--blue);transition:width .2s}
+  .toolbar button{font-size:.85rem;border:0;background:var(--blue);color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer}
+  .toolbar button.ghost{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+  nav.toc{background:#fff;border:1px solid var(--border);border-radius:10px;margin:14px 0;padding:10px 14px}
+  nav.toc a{display:inline-block;font-size:.8rem;background:var(--tint);color:var(--ink);text-decoration:none;padding:4px 10px;border-radius:14px;margin:3px}
+  .note{background:#fff;border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:8px;padding:12px 16px;margin:14px 0;font-size:.9rem}
+  h2.section{color:var(--blue);border-bottom:2px solid var(--blue);padding-bottom:6px;margin:28px 0 12px;font-size:1.12rem}
+  h2.section .srange{font-weight:400;color:var(--muted);font-size:.88rem}
+  .q{background:#fff;border:1px solid var(--border);border-left:4px solid #ccc;border-radius:8px;padding:14px 16px;margin:12px 0}
+  .q.mcq{border-left-color:#2563eb} .q.predict{border-left-color:#16a34a} .q.code{border-left-color:#ea8a1f}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .qnum{font-weight:700;color:var(--blue)}
+  .badge{font-size:.68rem;text-transform:uppercase;letter-spacing:.03em;padding:2px 8px;border-radius:12px;color:#fff}
+  .badge.mcq{background:#2563eb} .badge.predict{background:#16a34a} .badge.code{background:#ea8a1f}
+  .status{margin-left:auto;font-size:.75rem;color:var(--ok);font-weight:600}
+  .prompt{margin:2px 0 8px}
+  .prompt code,.prompt em{background:var(--tint);padding:1px 5px;border-radius:4px;font-style:normal;font-family:ui-monospace,Consolas,monospace;font-size:.9em}
+  .opts{display:flex;flex-direction:column;gap:6px;margin:4px 0}
+  label.opt{background:#f7f9fc;border:1px solid var(--border);border-radius:6px;padding:7px 10px;cursor:pointer;font-size:.9rem}
+  label.opt:hover{background:var(--tint)}
+  .fieldlabel{display:block;font-size:.78rem;color:var(--muted);margin:8px 0 3px}
+  pre.code{background:var(--code-bg);color:var(--code-ink);padding:10px 12px;border-radius:7px;overflow-x:auto;font-size:.85rem;margin:6px 0}
+  pre.code code{font-family:ui-monospace,Consolas,monospace}
+  textarea.ans-in{width:100%;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;padding:8px 10px;border:1px solid var(--border);border-radius:6px;resize:vertical}
+  textarea.code-edit{width:100%;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;padding:10px 12px;border:1px solid #3a5170;border-radius:6px;resize:vertical;background:#0f1b2d;color:#e6edf5;line-height:1.45;tab-size:4}
+  textarea.ans-in:focus,textarea.code-edit:focus{outline:2px solid var(--blue);border-color:var(--blue)}
+  .runrow{display:flex;align-items:center;gap:8px;margin:8px 0 0;flex-wrap:wrap}
+  .runbtn{background:var(--ok);color:#fff;border:0;padding:6px 14px;border-radius:6px;font-size:.85rem;cursor:pointer}
+  .runbtn:hover{opacity:.9} .runbtn:disabled{opacity:.5;cursor:not-allowed}
+  .resetbtn{background:#fff;color:var(--muted);border:1px solid var(--border);padding:6px 12px;border-radius:6px;font-size:.82rem;cursor:pointer}
+  .checkbtn{background:#fff;color:#5b21b6;border:1px solid #7c3aed;padding:6px 12px;border-radius:6px;font-size:.82rem;cursor:pointer}
+  .checkbtn:hover{background:#f5f0ff} .checkbtn:disabled{opacity:.5;cursor:not-allowed}
+  .checkres{font-size:.82rem;font-weight:600}
+  .checkres.pass{color:#16a34a} .checkres.fail{color:#dc2626} .checkres.wait{color:var(--muted);font-weight:400}
+  .runhint{font-size:.8rem;color:var(--muted)}
+  .output{display:none;margin-top:8px;border-radius:6px;overflow:hidden;font-family:ui-monospace,Consolas,monospace;font-size:.82rem}
+  .output.show{display:block}
+  .output .lbl{padding:4px 10px;font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;color:#fff;background:#334155}
+  .output pre{margin:0;padding:8px 12px;background:#0f1b2d;color:#e6edf5;white-space:pre-wrap;word-break:break-word;overflow-x:auto}
+  .output pre.err{color:#fca5a5}
+  .cmp{margin-top:8px;border-radius:6px;overflow:hidden;font-size:.82rem}
+  .cmp .row{display:grid;grid-template-columns:110px 1fr;border:1px solid var(--border);border-top:0}
+  .cmp .row:first-child{border-top:1px solid var(--border)}
+  .cmp .k{background:#f1f5f9;padding:6px 10px;font-size:.75rem;color:var(--muted);font-weight:600}
+  .cmp .v{padding:6px 10px;font-family:ui-monospace,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+  .cmp.match .verdict{background:#dcfce7;color:#14532d}
+  .cmp.nomatch .verdict{background:#fee2e2;color:#7f1d1d}
+  .cmp .verdict{grid-column:1/3;padding:6px 10px;font-weight:600;font-family:inherit}
+  .submitbox{background:#fff;border:2px solid var(--blue);border-radius:10px;padding:18px;margin:24px 0;text-align:center}
+  .submitbox button{font-size:1rem;background:var(--blue);color:#fff;border:0;padding:12px 28px;border-radius:8px;cursor:pointer}
+  .submitbox button.ghost2{background:#fff;color:var(--blue);border:1px solid var(--blue);font-size:.9rem;padding:8px 16px;margin:4px}
+  .submitbox .warn{color:#b45309;font-size:.85rem;margin-top:8px}
+  footer{background:var(--blue);color:#fff;padding:16px 22px;margin-top:26px;font-size:.85rem}
+  @media(max-width:560px){.idbar{grid-template-columns:1fr}.idbar .full{grid-column:1}.cmp .row{grid-template-columns:80px 1fr}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <h1>CS3006 &middot; Lab 03 &mdash; Functions &amp; Classes (Interactive, 60 Questions)</h1>
+  <h2>Run Python in your browser &middot; predict &amp; check &middot; then generate your submission</h2>
+  <p>CSE DD + ECE + MECH &middot; IIITDM Kancheepuram &middot; Module 1 &middot; Odd Semester 2026</p>
+</div></header>
+
+<div id="pybar">Loading Python runtime&hellip;</div>
+
+<div class="toolbar"><div class="wrap">
+  <span class="progress"><b id="done">0</b> / 60 answered</span>
+  <span class="bar"><i id="fill"></i></span>
+  <span id="saveflag" title="Your answers are saved automatically in this browser" style="font-size:.78rem;color:#16a34a;opacity:.55;min-width:70px">auto-save on</span>
+  <button id="checkallbtn" class="ghost" style="border-color:#7c3aed;color:#5b21b6" onclick="checkAll()" title="Practice self-check: run and check every answered question">&#10003; Check all (practice)</button>
+  <button class="ghost" onclick="document.querySelector('.submitbox').scrollIntoView({behavior:'smooth'})">Go to Submit</button>
+  <button class="ghost" style="border-color:#c33;color:#c33" onclick="clearSaved()" title="Erase saved answers on this browser and reset to starter code">Clear saved work</button>
+</div>
+<div class="wrap" style="padding-top:4px"><div id="checkallmsg" style="font-size:.82rem;color:#5b6675"></div></div></div>
+
+<div class="wrap">
+  <div class="note" style="background:#faf5ff;border-left-color:#7c3aed;margin-top:14px">
+    <b>&#10003; Self-check is practice only.</b> The <b>Check</b> button on each question (and <b>Check all</b> above) runs your code and tells you if the output matches &mdash; use it to test yourself. It does <b>not</b> set your grade: your actual marks come from the instructor running your submitted file. So a green &ldquo;correct&rdquo; here means you&rsquo;re on track, not that marks are recorded.
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="restorebar" style="display:none;background:#dcfce7;border:1px solid #86efac;border-left:4px solid #16a34a;border-radius:8px;padding:10px 14px;margin:14px 0;font-size:.9rem;color:#14532d">
+    <b>&#8635; Welcome back.</b> <span class="rtext"></span>
+  </div>
+  <div id="nosavebar" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-left:4px solid #dc2626;border-radius:8px;padding:10px 14px;margin:14px 0;font-size:.9rem;color:#7f1d1d">
+    <b>&#9888; Auto-save is off in this browser</b> (private / incognito mode, or storage blocked). Your answers will <b>not</b> survive a refresh here. Generate &amp; copy your submission before closing, or switch to a normal (non-incognito) window.
+  </div>
+  <div class="note" style="background:#eef7ff;border-left-color:#2563eb">
+    <b>&#128190; Your work saves automatically</b> in this browser as you type &mdash; if you refresh or accidentally close the tab, just reopen the same page on the same computer and your answers come back. To continue on a <b>different computer</b> (e.g. lab &rarr; hostel), use the buttons below.
+  </div>
+
+  <div id="portpanel" style="background:#fff;border:1px solid var(--border);border-left:4px solid #7c3aed;border-radius:8px;padding:12px 16px;margin:14px 0;font-size:.9rem">
+    <b style="color:#5b21b6">&#128194; Continue on another computer</b>
+    <div style="margin-top:6px">Finishing later or elsewhere? <b>Save progress</b> to download a small file, carry it (email it to yourself, a pen drive, or a cloud drive), then <b>Load progress</b> on the other machine to pick up exactly where you stopped.</div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <button class="ghost" style="border-color:#7c3aed;color:#5b21b6" onclick="saveProgressFile()">&#11015; Save progress (.json)</button>
+      <button class="ghost" style="border-color:#7c3aed;color:#5b21b6" onclick="document.getElementById('loadfile').click()">&#128194; Load progress&hellip;</button>
+      <input id="loadfile" type="file" accept=".json,application/json" style="display:none" onchange="loadProgressFile(this)">
+    </div>
+    <div id="portmsg" style="margin-top:8px;font-size:.85rem;color:#5b6675"></div>
+    <div style="margin-top:6px;font-size:.78rem;color:#7c2d12">This progress file is just for resuming your work &mdash; it is <b>not</b> your Moodle submission. When you are done, still use <b>Generate submission file</b> &rarr; <b>Copy answers</b> and paste into Moodle.</div>
+  </div>
+
+  <div class="idbar">
+    <div><label>Full name *</label><input id="stu_name" placeholder="e.g. Asha Kumar"></div>
+    <div><label>Roll number *</label><input id="stu_roll" placeholder="e.g. CS23B1001"></div>
+    <div class="full"><label>Batch *</label>
+      <select id="stu_batch"><option value="">-- select --</option>
+      <option>ECE</option><option>CSE-DD</option><option>Mech</option></select>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>How this lab works:</b> This page runs real Python in your browser (via Pyodide) &mdash; <b>no install and no internet needed</b> (offline build).
+    Every question is a <b>code task</b>: complete the starter and click <b>&#9654; Run</b> to test it &mdash; run it as many times as you like.
+    When done, fill your details, click <b>Generate submission file</b>, then <b>Copy answers</b> and paste it into the Lab 03 <b>edit box</b> on Moodle. Experiment freely; running code does not affect your submission until you generate it.
+  </div>
+
+  <nav class="toc"><a href="#s1">A. Functions I</a><a href="#s16">B. Functions II</a><a href="#s31">C. Classes I</a><a href="#s46">D. Classes II</a></nav>
+
+<h2 class="section" id="s1">Section A &middot; Functions I &mdash; scope, arguments &amp; return <span class="srange">(Q1&ndash;Q15)</span><div style="font-weight:400;color:var(--muted);font-size:.82rem;margin-top:4px">Topics: local vs global &middot; positional &amp; keyword args &middot; return semantics &middot; references vs rebinding &middot; immutability</div></h2>
+<div class="q code" id="q1" data-kind="code" data-n="1">
+<div class="qhead"><span class="qnum">Q1</span><span class="badge code">Short code</span><span class="status" id="st1"></span></div>
+<div class="prompt">Write a function <code>double(x)</code> that returns <code>x*2</code>. Call it on 21 and print the result.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans1" class="code-edit" rows="5" spellcheck="false" oninput="mark(1)">def double(x):
+    # return twice x
+    pass
+
+print(double(21))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(1)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(1)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(1)">Reset</button><span class="runhint" id="rh1"></span><span class="checkres" id="ck1"></span></div>
+<div class="output" id="out1"></div>
+</div>
+<div class="q code" id="q2" data-kind="code" data-n="2">
+<div class="qhead"><span class="qnum">Q2</span><span class="badge code">Short code</span><span class="status" id="st2"></span></div>
+<div class="prompt">A function with no explicit <code>return</code> returns <code>None</code>. Complete <code>greet</code> so it <b>prints</b> a greeting but returns nothing, then print the returned value to confirm it is <code>None</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans2" class="code-edit" rows="5" spellcheck="false" oninput="mark(2)">def greet(name):
+    print(&#x27;Hi &#x27; + name)
+
+r = greet(&#x27;Asha&#x27;)
+print(r)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(2)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(2)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(2)">Reset</button><span class="runhint" id="rh2"></span><span class="checkres" id="ck2"></span></div>
+<div class="output" id="out2"></div>
+</div>
+<div class="q code" id="q3" data-kind="code" data-n="3">
+<div class="qhead"><span class="qnum">Q3</span><span class="badge code">Short code</span><span class="status" id="st3"></span></div>
+<div class="prompt">Local names do not leak out. Inside <code>f</code> bind <code>k = 99</code>. Outside, <code>k = 1</code> is already set. Print <code>k</code> after calling <code>f()</code> to show the outer <code>k</code> is unchanged.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans3" class="code-edit" rows="5" spellcheck="false" oninput="mark(3)">k = 1
+def f():
+    k = 99
+    # local only
+
+f()
+print(k)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(3)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(3)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(3)">Reset</button><span class="runhint" id="rh3"></span><span class="checkres" id="ck3"></span></div>
+<div class="output" id="out3"></div>
+</div>
+<div class="q code" id="q4" data-kind="code" data-n="4">
+<div class="qhead"><span class="qnum">Q4</span><span class="badge code">Short code</span><span class="status" id="st4"></span></div>
+<div class="prompt">Use <code>global</code> to rebind a module-level name. Complete <code>bump</code> so it increases the global <code>total</code> by 10.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans4" class="code-edit" rows="5" spellcheck="false" oninput="mark(4)">total = 0
+def bump():
+    # make total the global one, add 10
+    pass
+
+bump()
+bump()
+print(total)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(4)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(4)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(4)">Reset</button><span class="runhint" id="rh4"></span><span class="checkres" id="ck4"></span></div>
+<div class="output" id="out4"></div>
+</div>
+<div class="q code" id="q5" data-kind="code" data-n="5">
+<div class="qhead"><span class="qnum">Q5</span><span class="badge code">Short code</span><span class="status" id="st5"></span></div>
+<div class="prompt">Positional vs keyword arguments reach the same parameters. Define <code>rate(score, out_of)</code> returning the percentage as an int. Call it once positionally and once with keywords; print both.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans5" class="code-edit" rows="5" spellcheck="false" oninput="mark(5)">def rate(score, out_of):
+    return score * 100 // out_of
+
+print(rate(45, 50))
+print(rate(out_of=50, score=45))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(5)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(5)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(5)">Reset</button><span class="runhint" id="rh5"></span><span class="checkres" id="ck5"></span></div>
+<div class="output" id="out5"></div>
+</div>
+<div class="q code" id="q6" data-kind="code" data-n="6">
+<div class="qhead"><span class="qnum">Q6</span><span class="badge code">Short code</span><span class="status" id="st6"></span></div>
+<div class="prompt">A function can return multiple values as a tuple. Complete <code>min_max</code> to return the smallest and largest of a list, then unpack into two names and print them space-separated.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans6" class="code-edit" rows="5" spellcheck="false" oninput="mark(6)">def min_max(xs):
+    # return two values
+    pass
+
+lo, hi = min_max([72, 55, 91, 63])
+print(lo, hi)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(6)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(6)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(6)">Reset</button><span class="runhint" id="rh6"></span><span class="checkres" id="ck6"></span></div>
+<div class="output" id="out6"></div>
+</div>
+<div class="q code" id="q7" data-kind="code" data-n="7">
+<div class="qhead"><span class="qnum">Q7</span><span class="badge code">Short code</span><span class="status" id="st7"></span></div>
+<div class="prompt">Passing a <b>list</b> passes a reference: mutating it inside the function is visible outside. Complete <code>add_bonus</code> to append 5 to the passed list, then print the caller's list.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans7" class="code-edit" rows="5" spellcheck="false" oninput="mark(7)">def add_bonus(marks):
+    # mutate in place
+    pass
+
+m = [70, 80]
+add_bonus(m)
+print(m)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(7)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(7)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(7)">Reset</button><span class="runhint" id="rh7"></span><span class="checkres" id="ck7"></span></div>
+<div class="output" id="out7"></div>
+</div>
+<div class="q code" id="q8" data-kind="code" data-n="8">
+<div class="qhead"><span class="qnum">Q8</span><span class="badge code">Short code</span><span class="status" id="st8"></span></div>
+<div class="prompt">Rebinding a parameter to a new object does <b>not</b> affect the caller. Inside <code>f</code>, reassign <code>xs</code> to a new list. Show the caller's list is unchanged.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans8" class="code-edit" rows="5" spellcheck="false" oninput="mark(8)">def f(xs):
+    xs = [0, 0, 0]   # new object, local name
+    return xs
+
+original = [1, 2]
+f(original)
+print(original)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(8)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(8)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(8)">Reset</button><span class="runhint" id="rh8"></span><span class="checkres" id="ck8"></span></div>
+<div class="output" id="out8"></div>
+</div>
+<div class="q code" id="q9" data-kind="code" data-n="9">
+<div class="qhead"><span class="qnum">Q9</span><span class="badge code">Short code</span><span class="status" id="st9"></span></div>
+<div class="prompt">Integers are immutable, so a plain <code>x += 1</code> inside a function cannot change the caller's int. Print the caller's value after the call to show it stays 5.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans9" class="code-edit" rows="5" spellcheck="false" oninput="mark(9)">def inc(x):
+    x += 1
+    return x
+
+n = 5
+inc(n)
+print(n)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(9)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(9)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(9)">Reset</button><span class="runhint" id="rh9"></span><span class="checkres" id="ck9"></span></div>
+<div class="output" id="out9"></div>
+</div>
+<div class="q code" id="q10" data-kind="code" data-n="10">
+<div class="qhead"><span class="qnum">Q10</span><span class="badge code">Short code</span><span class="status" id="st10"></span></div>
+<div class="prompt">A function that returns another value based on a condition. Complete <code>grade</code>: return 'PASS' if score &gt;= 40 else 'FAIL'. Print the result for 38.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans10" class="code-edit" rows="5" spellcheck="false" oninput="mark(10)">def grade(score):
+    # return PASS or FAIL
+    pass
+
+print(grade(38))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(10)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(10)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(10)">Reset</button><span class="runhint" id="rh10"></span><span class="checkres" id="ck10"></span></div>
+<div class="output" id="out10"></div>
+</div>
+<div class="q code" id="q11" data-kind="code" data-n="11">
+<div class="qhead"><span class="qnum">Q11</span><span class="badge code">Short code</span><span class="status" id="st11"></span></div>
+<div class="prompt"><code>return</code> stops the function immediately. Complete <code>first_fail</code> to return the first score below 40, or -1 if none. Print it for the given list.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans11" class="code-edit" rows="5" spellcheck="false" oninput="mark(11)">def first_fail(scores):
+    for s in scores:
+        # return early when below 40
+        pass
+    return -1
+
+print(first_fail([80, 55, 30, 20]))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(11)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(11)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(11)">Reset</button><span class="runhint" id="rh11"></span><span class="checkres" id="ck11"></span></div>
+<div class="output" id="out11"></div>
+</div>
+<div class="q code" id="q12" data-kind="code" data-n="12">
+<div class="qhead"><span class="qnum">Q12</span><span class="badge code">Short code</span><span class="status" id="st12"></span></div>
+<div class="prompt">Nested calls: the inner call's return feeds the outer. Given <code>sq</code> and <code>inc</code>, print <code>sq(inc(3))</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans12" class="code-edit" rows="5" spellcheck="false" oninput="mark(12)">def inc(x):
+    return x + 1
+
+def sq(x):
+    return x * x
+
+print(sq(inc(3)))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(12)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(12)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(12)">Reset</button><span class="runhint" id="rh12"></span><span class="checkres" id="ck12"></span></div>
+<div class="output" id="out12"></div>
+</div>
+<div class="q code" id="q13" data-kind="code" data-n="13">
+<div class="qhead"><span class="qnum">Q13</span><span class="badge code">Short code</span><span class="status" id="st13"></span></div>
+<div class="prompt">A parameter and a global can share a name; the parameter wins inside. With global <code>score = 100</code>, calling <code>show(7)</code> should print 7 then the global 100 stays. Print score after the call.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans13" class="code-edit" rows="5" spellcheck="false" oninput="mark(13)">score = 100
+def show(score):
+    print(score)
+
+show(7)
+print(score)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(13)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(13)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(13)">Reset</button><span class="runhint" id="rh13"></span><span class="checkres" id="ck13"></span></div>
+<div class="output" id="out13"></div>
+</div>
+<div class="q code" id="q14" data-kind="code" data-n="14">
+<div class="qhead"><span class="qnum">Q14</span><span class="badge code">Short code</span><span class="status" id="st14"></span></div>
+<div class="prompt">Return a computed dict from a function. Complete <code>tally</code> to return a dict mapping 'pass'/'fail' to counts for the given scores (pass if &gt;=40). Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans14" class="code-edit" rows="5" spellcheck="false" oninput="mark(14)">def tally(scores):
+    d = {&#x27;pass&#x27;: 0, &#x27;fail&#x27;: 0}
+    for s in scores:
+        # bump the right key
+        pass
+    return d
+
+print(tally([80, 30, 55, 20]))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(14)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(14)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(14)">Reset</button><span class="runhint" id="rh14"></span><span class="checkres" id="ck14"></span></div>
+<div class="output" id="out14"></div>
+</div>
+<div class="q code" id="q15" data-kind="code" data-n="15">
+<div class="qhead"><span class="qnum">Q15</span><span class="badge code">Short code</span><span class="status" id="st15"></span></div>
+<div class="prompt">A function can call itself indirectly through a helper. Complete <code>average</code> using a helper <code>total</code> that sums a list. Print the integer average of the scores.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans15" class="code-edit" rows="5" spellcheck="false" oninput="mark(15)">def total(xs):
+    s = 0
+    for x in xs:
+        s += x
+    return s
+
+def average(xs):
+    # use total(); integer division
+    pass
+
+print(average([70, 80, 90]))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(15)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(15)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(15)">Reset</button><span class="runhint" id="rh15"></span><span class="checkres" id="ck15"></span></div>
+<div class="output" id="out15"></div>
+</div>
+<h2 class="section" id="s16">Section B &middot; Functions II &mdash; defaults, *args, closures, recursion, lambda <span class="srange">(Q16&ndash;Q30)</span><div style="font-weight:400;color:var(--muted);font-size:.82rem;margin-top:4px">Topics: default-argument trap &amp; fix &middot; *args / **kwargs &middot; unpacking &middot; closures &middot; recursion &middot; lambda &middot; map / filter / sorted &middot; higher-order functions</div></h2>
+<div class="q code" id="q16" data-kind="code" data-n="16">
+<div class="qhead"><span class="qnum">Q16</span><span class="badge code">Short code</span><span class="status" id="st16"></span></div>
+<div class="prompt">Default arguments are used when the caller omits them. Complete <code>power(base, exp=2)</code> returning base**exp. Print <code>power(5)</code> and <code>power(5, 3)</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans16" class="code-edit" rows="5" spellcheck="false" oninput="mark(16)">def power(base, exp=2):
+    # return base to the exp
+    pass
+
+print(power(5))
+print(power(5, 3))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(16)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(16)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(16)">Reset</button><span class="runhint" id="rh16"></span><span class="checkres" id="ck16"></span></div>
+<div class="output" id="out16"></div>
+</div>
+<div class="q code" id="q17" data-kind="code" data-n="17">
+<div class="qhead"><span class="qnum">Q17</span><span class="badge code">Short code</span><span class="status" id="st17"></span></div>
+<div class="prompt"><b>The mutable-default trap.</b> A default list is created once and shared across calls. Run this as written to observe the shared list growing.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans17" class="code-edit" rows="5" spellcheck="false" oninput="mark(17)">def add(x, bucket=[]):
+    bucket.append(x)
+    return bucket
+
+print(add(1))
+print(add(2))
+print(add(3))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(17)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(17)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(17)">Reset</button><span class="runhint" id="rh17"></span><span class="checkres" id="ck17"></span></div>
+<div class="output" id="out17"></div>
+</div>
+<div class="q code" id="q18" data-kind="code" data-n="18">
+<div class="qhead"><span class="qnum">Q18</span><span class="badge code">Short code</span><span class="status" id="st18"></span></div>
+<div class="prompt"><b>The correct fix.</b> Use <code>None</code> as the default and create a fresh list inside. Now each call starts empty.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans18" class="code-edit" rows="5" spellcheck="false" oninput="mark(18)">def add(x, bucket=None):
+    if bucket is None:
+        bucket = []
+    bucket.append(x)
+    return bucket
+
+print(add(1))
+print(add(2))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(18)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(18)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(18)">Reset</button><span class="runhint" id="rh18"></span><span class="checkres" id="ck18"></span></div>
+<div class="output" id="out18"></div>
+</div>
+<div class="q code" id="q19" data-kind="code" data-n="19">
+<div class="qhead"><span class="qnum">Q19</span><span class="badge code">Short code</span><span class="status" id="st19"></span></div>
+<div class="prompt"><code>*args</code> collects extra positional arguments into a tuple. Complete <code>total</code> to sum any number of arguments. Print <code>total(1, 2, 3, 4)</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans19" class="code-edit" rows="5" spellcheck="false" oninput="mark(19)">def total(*args):
+    # args is a tuple; sum it
+    pass
+
+print(total(1, 2, 3, 4))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(19)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(19)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(19)">Reset</button><span class="runhint" id="rh19"></span><span class="checkres" id="ck19"></span></div>
+<div class="output" id="out19"></div>
+</div>
+<div class="q code" id="q20" data-kind="code" data-n="20">
+<div class="qhead"><span class="qnum">Q20</span><span class="badge code">Short code</span><span class="status" id="st20"></span></div>
+<div class="prompt"><code>**kwargs</code> collects keyword arguments into a dict. Complete <code>describe</code> to print each key=value on its own line, in the order given. Call with name='Asha', score=72.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans20" class="code-edit" rows="5" spellcheck="false" oninput="mark(20)">def describe(**kwargs):
+    for k, v in kwargs.items():
+        # print key=value
+        pass
+
+describe(name=&#x27;Asha&#x27;, score=72)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(20)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(20)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(20)">Reset</button><span class="runhint" id="rh20"></span><span class="checkres" id="ck20"></span></div>
+<div class="output" id="out20"></div>
+</div>
+<div class="q code" id="q21" data-kind="code" data-n="21">
+<div class="qhead"><span class="qnum">Q21</span><span class="badge code">Short code</span><span class="status" id="st21"></span></div>
+<div class="prompt">Unpack a list into positional arguments with <code>*</code>. Given <code>add3(a, b, c)</code> and a 3-element list, call it by unpacking.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans21" class="code-edit" rows="5" spellcheck="false" oninput="mark(21)">def add3(a, b, c):
+    return a + b + c
+
+nums = [10, 20, 30]
+print(add3(*nums))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(21)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(21)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(21)">Reset</button><span class="runhint" id="rh21"></span><span class="checkres" id="ck21"></span></div>
+<div class="output" id="out21"></div>
+</div>
+<div class="q code" id="q22" data-kind="code" data-n="22">
+<div class="qhead"><span class="qnum">Q22</span><span class="badge code">Short code</span><span class="status" id="st22"></span></div>
+<div class="prompt">A <b>closure</b> remembers the enclosing variable. Complete <code>make_adder(n)</code> to return a function that adds n to its argument. Build add10 and print add10(5).</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans22" class="code-edit" rows="5" spellcheck="false" oninput="mark(22)">def make_adder(n):
+    def adder(x):
+        # use n from the closure
+        pass
+    return adder
+
+add10 = make_adder(10)
+print(add10(5))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(22)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(22)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(22)">Reset</button><span class="runhint" id="rh22"></span><span class="checkres" id="ck22"></span></div>
+<div class="output" id="out22"></div>
+</div>
+<div class="q code" id="q23" data-kind="code" data-n="23">
+<div class="qhead"><span class="qnum">Q23</span><span class="badge code">Short code</span><span class="status" id="st23"></span></div>
+<div class="prompt">Each closure keeps its own captured value. Build two adders and show they are independent.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans23" class="code-edit" rows="5" spellcheck="false" oninput="mark(23)">def make_adder(n):
+    return lambda x: x + n
+
+a = make_adder(1)
+b = make_adder(100)
+print(a(5), b(5))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(23)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(23)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(23)">Reset</button><span class="runhint" id="rh23"></span><span class="checkres" id="ck23"></span></div>
+<div class="output" id="out23"></div>
+</div>
+<div class="q code" id="q24" data-kind="code" data-n="24">
+<div class="qhead"><span class="qnum">Q24</span><span class="badge code">Short code</span><span class="status" id="st24"></span></div>
+<div class="prompt">Recursion: a function calling itself with a smaller input. Complete <code>fact(n)</code> (factorial), base case n&lt;=1 returns 1. Print <code>fact(5)</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans24" class="code-edit" rows="5" spellcheck="false" oninput="mark(24)">def fact(n):
+    if n &lt;= 1:
+        return 1
+    # recursive step
+    pass
+
+print(fact(5))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(24)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(24)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(24)">Reset</button><span class="runhint" id="rh24"></span><span class="checkres" id="ck24"></span></div>
+<div class="output" id="out24"></div>
+</div>
+<div class="q code" id="q25" data-kind="code" data-n="25">
+<div class="qhead"><span class="qnum">Q25</span><span class="badge code">Short code</span><span class="status" id="st25"></span></div>
+<div class="prompt">Recursive sum of a list. Complete <code>rsum</code>: empty list returns 0, else first element plus rsum of the rest. Print rsum of the scores.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans25" class="code-edit" rows="5" spellcheck="false" oninput="mark(25)">def rsum(xs):
+    if not xs:
+        return 0
+    # xs[0] + rsum(rest)
+    pass
+
+print(rsum([70, 80, 90]))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(25)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(25)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(25)">Reset</button><span class="runhint" id="rh25"></span><span class="checkres" id="ck25"></span></div>
+<div class="output" id="out25"></div>
+</div>
+<div class="q code" id="q26" data-kind="code" data-n="26">
+<div class="qhead"><span class="qnum">Q26</span><span class="badge code">Short code</span><span class="status" id="st26"></span></div>
+<div class="prompt">A <code>lambda</code> is a small anonymous function. Assign a lambda that squares its argument to <code>sq</code> and print <code>sq(9)</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans26" class="code-edit" rows="5" spellcheck="false" oninput="mark(26)">sq = lambda x: 0   # replace 0 with the square of x
+print(sq(9))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(26)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(26)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(26)">Reset</button><span class="runhint" id="rh26"></span><span class="checkres" id="ck26"></span></div>
+<div class="output" id="out26"></div>
+</div>
+<div class="q code" id="q27" data-kind="code" data-n="27">
+<div class="qhead"><span class="qnum">Q27</span><span class="badge code">Short code</span><span class="status" id="st27"></span></div>
+<div class="prompt"><code>sorted</code> with a <code>key</code> lambda. Sort the gradebook by score ascending and print the names in order.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans27" class="code-edit" rows="5" spellcheck="false" oninput="mark(27)">book = [(&#x27;Asha&#x27;, 72), (&#x27;Ravi&#x27;, 55), (&#x27;Meera&#x27;, 88)]
+# sort by the score (index 1)
+out = sorted(book, key=None)
+print([name for name, _ in out])
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(27)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(27)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(27)">Reset</button><span class="runhint" id="rh27"></span><span class="checkres" id="ck27"></span></div>
+<div class="output" id="out27"></div>
+</div>
+<div class="q code" id="q28" data-kind="code" data-n="28">
+<div class="qhead"><span class="qnum">Q28</span><span class="badge code">Short code</span><span class="status" id="st28"></span></div>
+<div class="prompt"><code>map</code> applies a function to each item. Use a lambda with map to add 5 to every score, then print the resulting list.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans28" class="code-edit" rows="5" spellcheck="false" oninput="mark(28)">scores = [70, 80, 90]
+out = map(None, scores)   # replace None with a lambda adding 5
+print(list(out))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(28)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(28)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(28)">Reset</button><span class="runhint" id="rh28"></span><span class="checkres" id="ck28"></span></div>
+<div class="output" id="out28"></div>
+</div>
+<div class="q code" id="q29" data-kind="code" data-n="29">
+<div class="qhead"><span class="qnum">Q29</span><span class="badge code">Short code</span><span class="status" id="st29"></span></div>
+<div class="prompt"><code>filter</code> keeps items where the function returns True. Use a lambda with filter to keep only passing scores (&gt;=40). Print the list.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans29" class="code-edit" rows="5" spellcheck="false" oninput="mark(29)">scores = [30, 50, 20, 80]
+out = filter(None, scores)   # replace None with a lambda &gt;=40
+print(list(out))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(29)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(29)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(29)">Reset</button><span class="runhint" id="rh29"></span><span class="checkres" id="ck29"></span></div>
+<div class="output" id="out29"></div>
+</div>
+<div class="q code" id="q30" data-kind="code" data-n="30">
+<div class="qhead"><span class="qnum">Q30</span><span class="badge code">Short code</span><span class="status" id="st30"></span></div>
+<div class="prompt">Higher-order: a function taking a function argument. Complete <code>apply_twice(f, x)</code> to return <code>f(f(x))</code>. Test with a lambda that adds 3, starting at 0.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans30" class="code-edit" rows="5" spellcheck="false" oninput="mark(30)">def apply_twice(f, x):
+    # call f on x, then on the result
+    pass
+
+print(apply_twice(lambda y: y + 3, 0))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(30)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(30)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(30)">Reset</button><span class="runhint" id="rh30"></span><span class="checkres" id="ck30"></span></div>
+<div class="output" id="out30"></div>
+</div>
+<h2 class="section" id="s31">Section C &middot; Classes I &mdash; __init__, self, attributes <span class="srange">(Q31&ndash;Q45)</span><div style="font-weight:400;color:var(--muted);font-size:.82rem;margin-top:4px">Topics: self &amp; methods &middot; instance vs class attributes &middot; class counters &middot; attribute shadowing &middot; mutable class-attribute gotcha &middot; composition</div></h2>
+<div class="q code" id="q31" data-kind="code" data-n="31">
+<div class="qhead"><span class="qnum">Q31</span><span class="badge code">Short code</span><span class="status" id="st31"></span></div>
+<div class="prompt">Define a class <code>Student</code> with <code>__init__(self, name, score)</code> storing both on the instance. Create one and print its name and score.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans31" class="code-edit" rows="5" spellcheck="false" oninput="mark(31)">class Student:
+    def __init__(self, name, score):
+        # store name and score on self
+        pass
+
+s = Student(&#x27;Asha&#x27;, 72)
+print(s.name, s.score)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(31)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(31)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(31)">Reset</button><span class="runhint" id="rh31"></span><span class="checkres" id="ck31"></span></div>
+<div class="output" id="out31"></div>
+</div>
+<div class="q code" id="q32" data-kind="code" data-n="32">
+<div class="qhead"><span class="qnum">Q32</span><span class="badge code">Short code</span><span class="status" id="st32"></span></div>
+<div class="prompt"><code>self</code> is the instance, inserted automatically. <code>Student('Asha', 72)</code> runs <code>__init__(&lt;new obj&gt;, 'Asha', 72)</code>. Add a method <code>passed()</code> returning True if score &gt;= 40. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans32" class="code-edit" rows="5" spellcheck="false" oninput="mark(32)">class Student:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+    def passed(self):
+        # return the pass/fail boolean
+        pass
+
+print(Student(&#x27;Ravi&#x27;, 30).passed())
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(32)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(32)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(32)">Reset</button><span class="runhint" id="rh32"></span><span class="checkres" id="ck32"></span></div>
+<div class="output" id="out32"></div>
+</div>
+<div class="q code" id="q33" data-kind="code" data-n="33">
+<div class="qhead"><span class="qnum">Q33</span><span class="badge code">Short code</span><span class="status" id="st33"></span></div>
+<div class="prompt">A method can use another method via <code>self</code>. Add <code>label()</code> that returns the name plus ' PASS' or ' FAIL' using <code>passed()</code>. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans33" class="code-edit" rows="5" spellcheck="false" oninput="mark(33)">class Student:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+    def passed(self):
+        return self.score &gt;= 40
+    def label(self):
+        # name + &#x27; PASS&#x27; or &#x27; FAIL&#x27;
+        pass
+
+print(Student(&#x27;Asha&#x27;, 72).label())
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(33)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(33)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(33)">Reset</button><span class="runhint" id="rh33"></span><span class="checkres" id="ck33"></span></div>
+<div class="output" id="out33"></div>
+</div>
+<div class="q code" id="q34" data-kind="code" data-n="34">
+<div class="qhead"><span class="qnum">Q34</span><span class="badge code">Short code</span><span class="status" id="st34"></span></div>
+<div class="prompt"><b>Instance attributes</b> are per-object. Create two students and change one's score; the other is unaffected. Print both scores.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans34" class="code-edit" rows="5" spellcheck="false" oninput="mark(34)">class Student:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+
+a = Student(&#x27;Asha&#x27;, 72)
+b = Student(&#x27;Ravi&#x27;, 55)
+a.score = 99
+print(a.score, b.score)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(34)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(34)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(34)">Reset</button><span class="runhint" id="rh34"></span><span class="checkres" id="ck34"></span></div>
+<div class="output" id="out34"></div>
+</div>
+<div class="q code" id="q35" data-kind="code" data-n="35">
+<div class="qhead"><span class="qnum">Q35</span><span class="badge code">Short code</span><span class="status" id="st35"></span></div>
+<div class="prompt"><b>Class attributes</b> are shared by all instances. Add a class attribute <code>pass_mark = 40</code> and a method using it. Print the pass_mark via an instance.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans35" class="code-edit" rows="5" spellcheck="false" oninput="mark(35)">class Student:
+    pass_mark = 40
+    def __init__(self, score):
+        self.score = score
+    def passed(self):
+        return self.score &gt;= Student.pass_mark
+
+print(Student(50).pass_mark)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(35)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(35)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(35)">Reset</button><span class="runhint" id="rh35"></span><span class="checkres" id="ck35"></span></div>
+<div class="output" id="out35"></div>
+</div>
+<div class="q code" id="q36" data-kind="code" data-n="36">
+<div class="qhead"><span class="qnum">Q36</span><span class="badge code">Short code</span><span class="status" id="st36"></span></div>
+<div class="prompt">A <b>class-level counter</b>. Increment <code>Student.count</code> (not self.count) in <code>__init__</code> so it tracks how many were created. Create three, print the count.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans36" class="code-edit" rows="5" spellcheck="false" oninput="mark(36)">class Student:
+    count = 0
+    def __init__(self, name):
+        self.name = name
+        # bump the shared counter
+        pass
+
+Student(&#x27;A&#x27;); Student(&#x27;B&#x27;); Student(&#x27;C&#x27;)
+print(Student.count)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(36)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(36)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(36)">Reset</button><span class="runhint" id="rh36"></span><span class="checkres" id="ck36"></span></div>
+<div class="output" id="out36"></div>
+</div>
+<div class="q code" id="q37" data-kind="code" data-n="37">
+<div class="qhead"><span class="qnum">Q37</span><span class="badge code">Short code</span><span class="status" id="st37"></span></div>
+<div class="prompt">Assigning <code>self.x</code> when a class attribute <code>x</code> exists creates an instance attribute that <b>shadows</b> the class one. Show the class attribute is still 40 after one instance overrides it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans37" class="code-edit" rows="5" spellcheck="false" oninput="mark(37)">class Student:
+    pass_mark = 40
+    def __init__(self):
+        self.pass_mark = 50   # shadows only on this instance
+
+s = Student()
+print(s.pass_mark, Student.pass_mark)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(37)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(37)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(37)">Reset</button><span class="runhint" id="rh37"></span><span class="checkres" id="ck37"></span></div>
+<div class="output" id="out37"></div>
+</div>
+<div class="q code" id="q38" data-kind="code" data-n="38">
+<div class="qhead"><span class="qnum">Q38</span><span class="badge code">Short code</span><span class="status" id="st38"></span></div>
+<div class="prompt"><b>The mutable class-attribute gotcha.</b> A shared list class attribute is mutated by <code>.append</code> through any instance. Show both instances see the same list.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans38" class="code-edit" rows="5" spellcheck="false" oninput="mark(38)">class Roll:
+    names = []
+    def add(self, n):
+        self.names.append(n)
+
+a = Roll(); b = Roll()
+a.add(&#x27;Asha&#x27;); b.add(&#x27;Ravi&#x27;)
+print(a.names)
+print(b.names)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(38)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(38)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(38)">Reset</button><span class="runhint" id="rh38"></span><span class="checkres" id="ck38"></span></div>
+<div class="output" id="out38"></div>
+</div>
+<div class="q code" id="q39" data-kind="code" data-n="39">
+<div class="qhead"><span class="qnum">Q39</span><span class="badge code">Short code</span><span class="status" id="st39"></span></div>
+<div class="prompt">Methods can update instance state. Add <code>add_bonus(self, b)</code> that increases <code>self.score</code> by b. Apply +8 and print the score.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans39" class="code-edit" rows="5" spellcheck="false" oninput="mark(39)">class Student:
+    def __init__(self, score):
+        self.score = score
+    def add_bonus(self, b):
+        # increase self.score
+        pass
+
+s = Student(72)
+s.add_bonus(8)
+print(s.score)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(39)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(39)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(39)">Reset</button><span class="runhint" id="rh39"></span><span class="checkres" id="ck39"></span></div>
+<div class="output" id="out39"></div>
+</div>
+<div class="q code" id="q40" data-kind="code" data-n="40">
+<div class="qhead"><span class="qnum">Q40</span><span class="badge code">Short code</span><span class="status" id="st40"></span></div>
+<div class="prompt">An object can hold a list attribute. Complete <code>Gradebook</code> so <code>add</code> appends a score and <code>average</code> returns the integer mean. Print the average.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans40" class="code-edit" rows="5" spellcheck="false" oninput="mark(40)">class Gradebook:
+    def __init__(self):
+        self.scores = []
+    def add(self, s):
+        self.scores.append(s)
+    def average(self):
+        # integer mean of self.scores
+        pass
+
+g = Gradebook()
+for s in [70, 80, 90]:
+    g.add(s)
+print(g.average())
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(40)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(40)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(40)">Reset</button><span class="runhint" id="rh40"></span><span class="checkres" id="ck40"></span></div>
+<div class="output" id="out40"></div>
+</div>
+<div class="q code" id="q41" data-kind="code" data-n="41">
+<div class="qhead"><span class="qnum">Q41</span><span class="badge code">Short code</span><span class="status" id="st41"></span></div>
+<div class="prompt">Two different objects are not equal by default even with equal data. Create two students with identical values and print whether they are the same object with <code>is</code>.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans41" class="code-edit" rows="5" spellcheck="false" oninput="mark(41)">class Student:
+    def __init__(self, name):
+        self.name = name
+
+a = Student(&#x27;Asha&#x27;)
+b = Student(&#x27;Asha&#x27;)
+print(a is b)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(41)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(41)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(41)">Reset</button><span class="runhint" id="rh41"></span><span class="checkres" id="ck41"></span></div>
+<div class="output" id="out41"></div>
+</div>
+<div class="q code" id="q42" data-kind="code" data-n="42">
+<div class="qhead"><span class="qnum">Q42</span><span class="badge code">Short code</span><span class="status" id="st42"></span></div>
+<div class="prompt">A default parameter in <code>__init__</code>. Give score a default of 0 so <code>Student('New')</code> works. Print name and score.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans42" class="code-edit" rows="5" spellcheck="false" oninput="mark(42)">class Student:
+    def __init__(self, name, score=0):
+        self.name = name
+        self.score = score
+
+s = Student(&#x27;New&#x27;)
+print(s.name, s.score)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(42)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(42)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(42)">Reset</button><span class="runhint" id="rh42"></span><span class="checkres" id="ck42"></span></div>
+<div class="output" id="out42"></div>
+</div>
+<div class="q code" id="q43" data-kind="code" data-n="43">
+<div class="qhead"><span class="qnum">Q43</span><span class="badge code">Short code</span><span class="status" id="st43"></span></div>
+<div class="prompt">Return a computed value from an instance. Add <code>grade()</code> returning 'A' if score&gt;=80, 'B' if &gt;=60, else 'C'. Print for 72.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans43" class="code-edit" rows="5" spellcheck="false" oninput="mark(43)">class Student:
+    def __init__(self, score):
+        self.score = score
+    def grade(self):
+        # A/B/C by threshold
+        pass
+
+print(Student(72).grade())
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(43)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(43)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(43)">Reset</button><span class="runhint" id="rh43"></span><span class="checkres" id="ck43"></span></div>
+<div class="output" id="out43"></div>
+</div>
+<div class="q code" id="q44" data-kind="code" data-n="44">
+<div class="qhead"><span class="qnum">Q44</span><span class="badge code">Short code</span><span class="status" id="st44"></span></div>
+<div class="prompt">A method calling a temporary object's method inline: <code>Student(30).passed()</code> creates an object, calls the method, discards the object. Print the boolean.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans44" class="code-edit" rows="5" spellcheck="false" oninput="mark(44)">class Student:
+    def __init__(self, score):
+        self.score = score
+    def passed(self):
+        return self.score &gt;= 40
+
+print(Student(30).passed())
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(44)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(44)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(44)">Reset</button><span class="runhint" id="rh44"></span><span class="checkres" id="ck44"></span></div>
+<div class="output" id="out44"></div>
+</div>
+<div class="q code" id="q45" data-kind="code" data-n="45">
+<div class="qhead"><span class="qnum">Q45</span><span class="badge code">Short code</span><span class="status" id="st45"></span></div>
+<div class="prompt">Build a list of objects and iterate. Create students from names/scores, then print each name of those who passed (&gt;=40), one per line.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans45" class="code-edit" rows="5" spellcheck="false" oninput="mark(45)">class Student:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+
+data = [(&#x27;Asha&#x27;, 72), (&#x27;Ravi&#x27;, 30), (&#x27;Meera&#x27;, 88)]
+roster = [Student(n, s) for n, s in data]
+for st in roster:
+    if st.score &gt;= 40:
+        print(st.name)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(45)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(45)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(45)">Reset</button><span class="runhint" id="rh45"></span><span class="checkres" id="ck45"></span></div>
+<div class="output" id="out45"></div>
+</div>
+<h2 class="section" id="s46">Section D &middot; Classes II &mdash; dunders, inheritance, encapsulation <span class="srange">(Q46&ndash;Q60)</span><div style="font-weight:400;color:var(--muted);font-size:.82rem;margin-top:4px">Topics: __str__ / __repr__ / __len__ / __eq__ / __add__ &middot; inheritance &amp; override &middot; super() &middot; isinstance &middot; encapsulation &middot; @property &middot; method chaining</div></h2>
+<div class="q code" id="q46" data-kind="code" data-n="46">
+<div class="qhead"><span class="qnum">Q46</span><span class="badge code">Short code</span><span class="status" id="st46"></span></div>
+<div class="prompt"><code>__str__</code> controls what <code>print(obj)</code> shows. Complete it to return 'Asha:72' style. Print a student.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans46" class="code-edit" rows="5" spellcheck="false" oninput="mark(46)">class Student:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+    def __str__(self):
+        # &#x27;name:score&#x27;
+        pass
+
+print(Student(&#x27;Asha&#x27;, 72))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(46)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(46)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(46)">Reset</button><span class="runhint" id="rh46"></span><span class="checkres" id="ck46"></span></div>
+<div class="output" id="out46"></div>
+</div>
+<div class="q code" id="q47" data-kind="code" data-n="47">
+<div class="qhead"><span class="qnum">Q47</span><span class="badge code">Short code</span><span class="status" id="st47"></span></div>
+<div class="prompt">Without <code>__str__</code>, printing shows a default object repr. Add <code>__repr__</code> returning 'Student(Asha)' and print the object.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans47" class="code-edit" rows="5" spellcheck="false" oninput="mark(47)">class Student:
+    def __init__(self, name):
+        self.name = name
+    def __repr__(self):
+        # return &#x27;Student(name)&#x27;
+        pass
+
+print(Student(&#x27;Asha&#x27;))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(47)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(47)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(47)">Reset</button><span class="runhint" id="rh47"></span><span class="checkres" id="ck47"></span></div>
+<div class="output" id="out47"></div>
+</div>
+<div class="q code" id="q48" data-kind="code" data-n="48">
+<div class="qhead"><span class="qnum">Q48</span><span class="badge code">Short code</span><span class="status" id="st48"></span></div>
+<div class="prompt"><code>__len__</code> lets <code>len(obj)</code> work. Complete it to return the number of scores. Print len of a gradebook with three scores.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans48" class="code-edit" rows="5" spellcheck="false" oninput="mark(48)">class Gradebook:
+    def __init__(self):
+        self.scores = [70, 80, 90]
+    def __len__(self):
+        # number of scores
+        pass
+
+print(len(Gradebook()))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(48)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(48)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(48)">Reset</button><span class="runhint" id="rh48"></span><span class="checkres" id="ck48"></span></div>
+<div class="output" id="out48"></div>
+</div>
+<div class="q code" id="q49" data-kind="code" data-n="49">
+<div class="qhead"><span class="qnum">Q49</span><span class="badge code">Short code</span><span class="status" id="st49"></span></div>
+<div class="prompt"><code>__eq__</code> defines equality. Make two students equal when names match. Print whether two same-named students compare equal.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans49" class="code-edit" rows="5" spellcheck="false" oninput="mark(49)">class Student:
+    def __init__(self, name):
+        self.name = name
+    def __eq__(self, other):
+        # equal if names match
+        pass
+
+print(Student(&#x27;Asha&#x27;) == Student(&#x27;Asha&#x27;))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(49)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(49)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(49)">Reset</button><span class="runhint" id="rh49"></span><span class="checkres" id="ck49"></span></div>
+<div class="output" id="out49"></div>
+</div>
+<div class="q code" id="q50" data-kind="code" data-n="50">
+<div class="qhead"><span class="qnum">Q50</span><span class="badge code">Short code</span><span class="status" id="st50"></span></div>
+<div class="prompt"><code>__add__</code> defines the <code>+</code> operator. Make adding two gradebooks return the combined score total. Print the sum.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans50" class="code-edit" rows="5" spellcheck="false" oninput="mark(50)">class Gradebook:
+    def __init__(self, total):
+        self.total = total
+    def __add__(self, other):
+        # return combined total (an int)
+        pass
+
+print(Gradebook(100) + Gradebook(50))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(50)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(50)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(50)">Reset</button><span class="runhint" id="rh50"></span><span class="checkres" id="ck50"></span></div>
+<div class="output" id="out50"></div>
+</div>
+<div class="q code" id="q51" data-kind="code" data-n="51">
+<div class="qhead"><span class="qnum">Q51</span><span class="badge code">Short code</span><span class="status" id="st51"></span></div>
+<div class="prompt"><b>Inheritance</b>: a subclass reuses the parent. <code>Topper</code> extends <code>Student</code> and inherits <code>passed()</code>. Create a Topper and print passed().</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans51" class="code-edit" rows="5" spellcheck="false" oninput="mark(51)">class Student:
+    def __init__(self, score):
+        self.score = score
+    def passed(self):
+        return self.score &gt;= 40
+
+class Topper(Student):
+    pass
+
+print(Topper(95).passed())
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(51)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(51)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(51)">Reset</button><span class="runhint" id="rh51"></span><span class="checkres" id="ck51"></span></div>
+<div class="output" id="out51"></div>
+</div>
+<div class="q code" id="q52" data-kind="code" data-n="52">
+<div class="qhead"><span class="qnum">Q52</span><span class="badge code">Short code</span><span class="status" id="st52"></span></div>
+<div class="prompt">A subclass can <b>override</b> a method. <code>Topper.grade()</code> always returns 'A'. Print a Topper's grade even with a low score.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans52" class="code-edit" rows="5" spellcheck="false" oninput="mark(52)">class Student:
+    def __init__(self, score):
+        self.score = score
+    def grade(self):
+        return &#x27;C&#x27;
+
+class Topper(Student):
+    def grade(self):
+        # always &#x27;A&#x27;
+        pass
+
+print(Topper(10).grade())
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(52)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(52)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(52)">Reset</button><span class="runhint" id="rh52"></span><span class="checkres" id="ck52"></span></div>
+<div class="output" id="out52"></div>
+</div>
+<div class="q code" id="q53" data-kind="code" data-n="53">
+<div class="qhead"><span class="qnum">Q53</span><span class="badge code">Short code</span><span class="status" id="st53"></span></div>
+<div class="prompt">Use <code>super().__init__</code> to run the parent's constructor. <code>Topper</code> adds a <code>prize</code> after calling super. Print score and prize.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans53" class="code-edit" rows="5" spellcheck="false" oninput="mark(53)">class Student:
+    def __init__(self, score):
+        self.score = score
+
+class Topper(Student):
+    def __init__(self, score, prize):
+        super().__init__(score)
+        # store prize
+        pass
+
+t = Topper(95, &#x27;Gold&#x27;)
+print(t.score, t.prize)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(53)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(53)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(53)">Reset</button><span class="runhint" id="rh53"></span><span class="checkres" id="ck53"></span></div>
+<div class="output" id="out53"></div>
+</div>
+<div class="q code" id="q54" data-kind="code" data-n="54">
+<div class="qhead"><span class="qnum">Q54</span><span class="badge code">Short code</span><span class="status" id="st54"></span></div>
+<div class="prompt">A subclass method can call the parent version with <code>super()</code>. <code>Topper.grade</code> returns the parent grade plus '+'. Print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans54" class="code-edit" rows="5" spellcheck="false" oninput="mark(54)">class Student:
+    def grade(self):
+        return &#x27;A&#x27;
+
+class Topper(Student):
+    def grade(self):
+        # parent grade + &#x27;+&#x27;
+        pass
+
+print(Topper().grade())
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(54)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(54)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(54)">Reset</button><span class="runhint" id="rh54"></span><span class="checkres" id="ck54"></span></div>
+<div class="output" id="out54"></div>
+</div>
+<div class="q code" id="q55" data-kind="code" data-n="55">
+<div class="qhead"><span class="qnum">Q55</span><span class="badge code">Short code</span><span class="status" id="st55"></span></div>
+<div class="prompt"><code>isinstance</code> checks type across inheritance. A Topper is both a Topper and a Student. Print both checks.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans55" class="code-edit" rows="5" spellcheck="false" oninput="mark(55)">class Student: pass
+class Topper(Student): pass
+
+t = Topper()
+print(isinstance(t, Topper), isinstance(t, Student))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(55)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(55)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(55)">Reset</button><span class="runhint" id="rh55"></span><span class="checkres" id="ck55"></span></div>
+<div class="output" id="out55"></div>
+</div>
+<div class="q code" id="q56" data-kind="code" data-n="56">
+<div class="qhead"><span class="qnum">Q56</span><span class="badge code">Short code</span><span class="status" id="st56"></span></div>
+<div class="prompt"><b>Encapsulation by convention</b>: a leading underscore marks 'internal'. Expose <code>_score</code> only through a method. Print the score via the getter.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans56" class="code-edit" rows="5" spellcheck="false" oninput="mark(56)">class Student:
+    def __init__(self, score):
+        self._score = score
+    def get_score(self):
+        # return the internal score
+        pass
+
+print(Student(72).get_score())
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(56)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(56)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(56)">Reset</button><span class="runhint" id="rh56"></span><span class="checkres" id="ck56"></span></div>
+<div class="output" id="out56"></div>
+</div>
+<div class="q code" id="q57" data-kind="code" data-n="57">
+<div class="qhead"><span class="qnum">Q57</span><span class="badge code">Short code</span><span class="status" id="st57"></span></div>
+<div class="prompt">A <b>property</b> lets a method act like an attribute. Make <code>percent</code> a read-only property returning score (already a percent). Access it without parentheses.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans57" class="code-edit" rows="5" spellcheck="false" oninput="mark(57)">class Student:
+    def __init__(self, score):
+        self._score = score
+    @property
+    def percent(self):
+        # return the score
+        pass
+
+print(Student(88).percent)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(57)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(57)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(57)">Reset</button><span class="runhint" id="rh57"></span><span class="checkres" id="ck57"></span></div>
+<div class="output" id="out57"></div>
+</div>
+<div class="q code" id="q58" data-kind="code" data-n="58">
+<div class="qhead"><span class="qnum">Q58</span><span class="badge code">Short code</span><span class="status" id="st58"></span></div>
+<div class="prompt"><b>Composition</b>: an object holding other objects. A <code>Section</code> holds a list of students and reports how many passed. Print the count.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans58" class="code-edit" rows="5" spellcheck="false" oninput="mark(58)">class Student:
+    def __init__(self, score):
+        self.score = score
+
+class Section:
+    def __init__(self, students):
+        self.students = students
+    def num_passed(self):
+        # count students with score &gt;= 40
+        pass
+
+sec = Section([Student(72), Student(30), Student(55)])
+print(sec.num_passed())
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(58)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(58)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(58)">Reset</button><span class="runhint" id="rh58"></span><span class="checkres" id="ck58"></span></div>
+<div class="output" id="out58"></div>
+</div>
+<div class="q code" id="q59" data-kind="code" data-n="59">
+<div class="qhead"><span class="qnum">Q59</span><span class="badge code">Short code</span><span class="status" id="st59"></span></div>
+<div class="prompt">A class method-driven pipeline. <code>Gradebook</code> has <code>add</code> returning self, enabling chaining. Chain three adds and print the total.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans59" class="code-edit" rows="5" spellcheck="false" oninput="mark(59)">class Gradebook:
+    def __init__(self):
+        self.total = 0
+    def add(self, s):
+        self.total += s
+        return self   # enables chaining
+
+g = Gradebook().add(70).add(80).add(90)
+print(g.total)
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(59)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(59)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(59)">Reset</button><span class="runhint" id="rh59"></span><span class="checkres" id="ck59"></span></div>
+<div class="output" id="out59"></div>
+</div>
+<div class="q code" id="q60" data-kind="code" data-n="60">
+<div class="qhead"><span class="qnum">Q60</span><span class="badge code">Short code</span><span class="status" id="st60"></span></div>
+<div class="prompt">Putting it together: a subclass with a dunder. <code>Topper</code> extends <code>Student</code>, overrides <code>__str__</code> to append ' (top)'. Print the Topper.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans60" class="code-edit" rows="5" spellcheck="false" oninput="mark(60)">class Student:
+    def __init__(self, name):
+        self.name = name
+    def __str__(self):
+        return self.name
+
+class Topper(Student):
+    def __str__(self):
+        # parent name + &#x27; (top)&#x27;
+        pass
+
+print(Topper(&#x27;Asha&#x27;))
+</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(60)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(60)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(60)">Reset</button><span class="runhint" id="rh60"></span><span class="checkres" id="ck60"></span></div>
+<div class="output" id="out60"></div>
+</div>
+
+  <div id="howto" style="background:#fff;border:2px solid var(--blue);border-radius:10px;padding:16px 18px;margin:22px 0">
+    <div style="font-weight:700;color:var(--blue);font-size:1.05rem;margin-bottom:8px">&#128221; How to submit your work</div>
+    <ol style="margin:0;padding-left:20px;font-size:.92rem;line-height:1.7">
+      <li><b>Answer the questions.</b> Each one is a code task &mdash; complete the starter and click <b>&#9654; Run</b> to test it. Watch the counter at the top move towards 60.</li>
+      <li><b>Fill your details</b> at the top: Name, Roll number, and Batch. All three are required.</li>
+      <li><b>Click <span style="color:var(--blue)">&#11015; Generate submission file (.py)</span></b> below, then click <b>&#128203; Copy answers</b>. This copies your full submission to the clipboard.</li>
+      <li><b>Open the Lab 03 assignment on Moodle</b> &rarr; <i>Add submission</i>. In the <b>online text / edit box</b>, <b>paste</b> (Ctrl+V) everything you copied.</li>
+      <li><b>Save and submit:</b> <i>Save changes</i> &rarr; <i>Submit assignment</i>. Check that your pasted code appears in the submission area. Done!</li>
+    </ol>
+  </div>
+
+  <div class="submitbox">
+    <button id="genbtn" onclick="generate()">&#11015; Generate submission file (.py)</button>
+    <div class="warn" id="subwarn"></div>
+    <div id="fallback" style="display:none;margin-top:14px">
+      <div style="font-size:.85rem;color:#5b6675;margin-bottom:8px">Copy your submission, then paste it into the Moodle edit box:</div>
+      <button id="copybtn" class="ghost2" onclick="copyAnswers()">&#128203; Copy answers</button>
+      <button id="tabbtn" class="ghost2" onclick="openInTab()">&#128194; Open in new tab</button>
+      <div style="font-size:.8rem;color:#5b6675;margin-top:8px">Paste (Ctrl+V) into the Lab 03 <b>online text / edit</b> box on Moodle, then Save &amp; Submit.</div>
+    </div>
+  </div>
+</div>
+
+<footer><div class="wrap">CS3006 &middot; Lab 03 &middot; Functions &amp; Classes &middot; IIITDM Kancheepuram &middot; 60 questions</div></footer>
+
+<script>
+const KIND = {"1": "code", "2": "code", "3": "code", "4": "code", "5": "code", "6": "code", "7": "code", "8": "code", "9": "code", "10": "code", "11": "code", "12": "code", "13": "code", "14": "code", "15": "code", "16": "code", "17": "code", "18": "code", "19": "code", "20": "code", "21": "code", "22": "code", "23": "code", "24": "code", "25": "code", "26": "code", "27": "code", "28": "code", "29": "code", "30": "code", "31": "code", "32": "code", "33": "code", "34": "code", "35": "code", "36": "code", "37": "code", "38": "code", "39": "code", "40": "code", "41": "code", "42": "code", "43": "code", "44": "code", "45": "code", "46": "code", "47": "code", "48": "code", "49": "code", "50": "code", "51": "code", "52": "code", "53": "code", "54": "code", "55": "code", "56": "code", "57": "code", "58": "code", "59": "code", "60": "code"};
+const KEY = {"1": {"m": "exact", "e": "42"}, "2": {"m": "exact", "e": "Hi Asha\nNone"}, "3": {"m": "exact", "e": "1"}, "4": {"m": "exact", "e": "20"}, "5": {"m": "exact", "e": "90\n90"}, "6": {"m": "exact", "e": "55 91"}, "7": {"m": "exact", "e": "[70, 80, 5]"}, "8": {"m": "exact", "e": "[1, 2]"}, "9": {"m": "exact", "e": "5"}, "10": {"m": "exact", "e": "FAIL"}, "11": {"m": "exact", "e": "30"}, "12": {"m": "exact", "e": "16"}, "13": {"m": "exact", "e": "7\n100"}, "14": {"m": "exact", "e": "{'pass': 2, 'fail': 2}"}, "15": {"m": "exact", "e": "80"}, "16": {"m": "exact", "e": "25\n125"}, "17": {"m": "exact", "e": "[1]\n[1, 2]\n[1, 2, 3]"}, "18": {"m": "exact", "e": "[1]\n[2]"}, "19": {"m": "exact", "e": "10"}, "20": {"m": "exact", "e": "name=Asha\nscore=72"}, "21": {"m": "exact", "e": "60"}, "22": {"m": "exact", "e": "15"}, "23": {"m": "exact", "e": "6 105"}, "24": {"m": "exact", "e": "120"}, "25": {"m": "exact", "e": "240"}, "26": {"m": "exact", "e": "81"}, "27": {"m": "exact", "e": "['Ravi', 'Asha', 'Meera']"}, "28": {"m": "exact", "e": "[75, 85, 95]"}, "29": {"m": "exact", "e": "[50, 80]"}, "30": {"m": "exact", "e": "6"}, "31": {"m": "exact", "e": "Asha 72"}, "32": {"m": "exact", "e": "False"}, "33": {"m": "exact", "e": "Asha PASS"}, "34": {"m": "exact", "e": "99 55"}, "35": {"m": "exact", "e": "40"}, "36": {"m": "exact", "e": "3"}, "37": {"m": "exact", "e": "50 40"}, "38": {"m": "exact", "e": "['Asha', 'Ravi']\n['Asha', 'Ravi']"}, "39": {"m": "exact", "e": "80"}, "40": {"m": "exact", "e": "80"}, "41": {"m": "exact", "e": "False"}, "42": {"m": "exact", "e": "New 0"}, "43": {"m": "exact", "e": "B"}, "44": {"m": "exact", "e": "False"}, "45": {"m": "exact", "e": "Asha\nMeera"}, "46": {"m": "exact", "e": "Asha:72"}, "47": {"m": "exact", "e": "Student(Asha)"}, "48": {"m": "exact", "e": "3"}, "49": {"m": "exact", "e": "True"}, "50": {"m": "exact", "e": "150"}, "51": {"m": "exact", "e": "True"}, "52": {"m": "exact", "e": "A"}, "53": {"m": "exact", "e": "95 Gold"}, "54": {"m": "exact", "e": "A+"}, "55": {"m": "exact", "e": "True True"}, "56": {"m": "exact", "e": "72"}, "57": {"m": "exact", "e": "88"}, "58": {"m": "exact", "e": "2"}, "59": {"m": "exact", "e": "240"}, "60": {"m": "exact", "e": "Asha (top)"}};   // self-check answer key (practice only)
+const EXPECTED = {};
+const SNIPPET = {};
+const STARTER = {"1": "def double(x):\n    # return twice x\n    pass\n\nprint(double(21))\n", "2": "def greet(name):\n    print('Hi ' + name)\n\nr = greet('Asha')\nprint(r)\n", "3": "k = 1\ndef f():\n    k = 99\n    # local only\n\nf()\nprint(k)\n", "4": "total = 0\ndef bump():\n    # make total the global one, add 10\n    pass\n\nbump()\nbump()\nprint(total)\n", "5": "def rate(score, out_of):\n    return score * 100 // out_of\n\nprint(rate(45, 50))\nprint(rate(out_of=50, score=45))\n", "6": "def min_max(xs):\n    # return two values\n    pass\n\nlo, hi = min_max([72, 55, 91, 63])\nprint(lo, hi)\n", "7": "def add_bonus(marks):\n    # mutate in place\n    pass\n\nm = [70, 80]\nadd_bonus(m)\nprint(m)\n", "8": "def f(xs):\n    xs = [0, 0, 0]   # new object, local name\n    return xs\n\noriginal = [1, 2]\nf(original)\nprint(original)\n", "9": "def inc(x):\n    x += 1\n    return x\n\nn = 5\ninc(n)\nprint(n)\n", "10": "def grade(score):\n    # return PASS or FAIL\n    pass\n\nprint(grade(38))\n", "11": "def first_fail(scores):\n    for s in scores:\n        # return early when below 40\n        pass\n    return -1\n\nprint(first_fail([80, 55, 30, 20]))\n", "12": "def inc(x):\n    return x + 1\n\ndef sq(x):\n    return x * x\n\nprint(sq(inc(3)))\n", "13": "score = 100\ndef show(score):\n    print(score)\n\nshow(7)\nprint(score)\n", "14": "def tally(scores):\n    d = {'pass': 0, 'fail': 0}\n    for s in scores:\n        # bump the right key\n        pass\n    return d\n\nprint(tally([80, 30, 55, 20]))\n", "15": "def total(xs):\n    s = 0\n    for x in xs:\n        s += x\n    return s\n\ndef average(xs):\n    # use total(); integer division\n    pass\n\nprint(average([70, 80, 90]))\n", "16": "def power(base, exp=2):\n    # return base to the exp\n    pass\n\nprint(power(5))\nprint(power(5, 3))\n", "17": "def add(x, bucket=[]):\n    bucket.append(x)\n    return bucket\n\nprint(add(1))\nprint(add(2))\nprint(add(3))\n", "18": "def add(x, bucket=None):\n    if bucket is None:\n        bucket = []\n    bucket.append(x)\n    return bucket\n\nprint(add(1))\nprint(add(2))\n", "19": "def total(*args):\n    # args is a tuple; sum it\n    pass\n\nprint(total(1, 2, 3, 4))\n", "20": "def describe(**kwargs):\n    for k, v in kwargs.items():\n        # print key=value\n        pass\n\ndescribe(name='Asha', score=72)\n", "21": "def add3(a, b, c):\n    return a + b + c\n\nnums = [10, 20, 30]\nprint(add3(*nums))\n", "22": "def make_adder(n):\n    def adder(x):\n        # use n from the closure\n        pass\n    return adder\n\nadd10 = make_adder(10)\nprint(add10(5))\n", "23": "def make_adder(n):\n    return lambda x: x + n\n\na = make_adder(1)\nb = make_adder(100)\nprint(a(5), b(5))\n", "24": "def fact(n):\n    if n <= 1:\n        return 1\n    # recursive step\n    pass\n\nprint(fact(5))\n", "25": "def rsum(xs):\n    if not xs:\n        return 0\n    # xs[0] + rsum(rest)\n    pass\n\nprint(rsum([70, 80, 90]))\n", "26": "sq = lambda x: 0   # replace 0 with the square of x\nprint(sq(9))\n", "27": "book = [('Asha', 72), ('Ravi', 55), ('Meera', 88)]\n# sort by the score (index 1)\nout = sorted(book, key=None)\nprint([name for name, _ in out])\n", "28": "scores = [70, 80, 90]\nout = map(None, scores)   # replace None with a lambda adding 5\nprint(list(out))\n", "29": "scores = [30, 50, 20, 80]\nout = filter(None, scores)   # replace None with a lambda >=40\nprint(list(out))\n", "30": "def apply_twice(f, x):\n    # call f on x, then on the result\n    pass\n\nprint(apply_twice(lambda y: y + 3, 0))\n", "31": "class Student:\n    def __init__(self, name, score):\n        # store name and score on self\n        pass\n\ns = Student('Asha', 72)\nprint(s.name, s.score)\n", "32": "class Student:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = score\n    def passed(self):\n        # return the pass/fail boolean\n        pass\n\nprint(Student('Ravi', 30).passed())\n", "33": "class Student:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = score\n    def passed(self):\n        return self.score >= 40\n    def label(self):\n        # name + ' PASS' or ' FAIL'\n        pass\n\nprint(Student('Asha', 72).label())\n", "34": "class Student:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = score\n\na = Student('Asha', 72)\nb = Student('Ravi', 55)\na.score = 99\nprint(a.score, b.score)\n", "35": "class Student:\n    pass_mark = 40\n    def __init__(self, score):\n        self.score = score\n    def passed(self):\n        return self.score >= Student.pass_mark\n\nprint(Student(50).pass_mark)\n", "36": "class Student:\n    count = 0\n    def __init__(self, name):\n        self.name = name\n        # bump the shared counter\n        pass\n\nStudent('A'); Student('B'); Student('C')\nprint(Student.count)\n", "37": "class Student:\n    pass_mark = 40\n    def __init__(self):\n        self.pass_mark = 50   # shadows only on this instance\n\ns = Student()\nprint(s.pass_mark, Student.pass_mark)\n", "38": "class Roll:\n    names = []\n    def add(self, n):\n        self.names.append(n)\n\na = Roll(); b = Roll()\na.add('Asha'); b.add('Ravi')\nprint(a.names)\nprint(b.names)\n", "39": "class Student:\n    def __init__(self, score):\n        self.score = score\n    def add_bonus(self, b):\n        # increase self.score\n        pass\n\ns = Student(72)\ns.add_bonus(8)\nprint(s.score)\n", "40": "class Gradebook:\n    def __init__(self):\n        self.scores = []\n    def add(self, s):\n        self.scores.append(s)\n    def average(self):\n        # integer mean of self.scores\n        pass\n\ng = Gradebook()\nfor s in [70, 80, 90]:\n    g.add(s)\nprint(g.average())\n", "41": "class Student:\n    def __init__(self, name):\n        self.name = name\n\na = Student('Asha')\nb = Student('Asha')\nprint(a is b)\n", "42": "class Student:\n    def __init__(self, name, score=0):\n        self.name = name\n        self.score = score\n\ns = Student('New')\nprint(s.name, s.score)\n", "43": "class Student:\n    def __init__(self, score):\n        self.score = score\n    def grade(self):\n        # A/B/C by threshold\n        pass\n\nprint(Student(72).grade())\n", "44": "class Student:\n    def __init__(self, score):\n        self.score = score\n    def passed(self):\n        return self.score >= 40\n\nprint(Student(30).passed())\n", "45": "class Student:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = score\n\ndata = [('Asha', 72), ('Ravi', 30), ('Meera', 88)]\nroster = [Student(n, s) for n, s in data]\nfor st in roster:\n    if st.score >= 40:\n        print(st.name)\n", "46": "class Student:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = score\n    def __str__(self):\n        # 'name:score'\n        pass\n\nprint(Student('Asha', 72))\n", "47": "class Student:\n    def __init__(self, name):\n        self.name = name\n    def __repr__(self):\n        # return 'Student(name)'\n        pass\n\nprint(Student('Asha'))\n", "48": "class Gradebook:\n    def __init__(self):\n        self.scores = [70, 80, 90]\n    def __len__(self):\n        # number of scores\n        pass\n\nprint(len(Gradebook()))\n", "49": "class Student:\n    def __init__(self, name):\n        self.name = name\n    def __eq__(self, other):\n        # equal if names match\n        pass\n\nprint(Student('Asha') == Student('Asha'))\n", "50": "class Gradebook:\n    def __init__(self, total):\n        self.total = total\n    def __add__(self, other):\n        # return combined total (an int)\n        pass\n\nprint(Gradebook(100) + Gradebook(50))\n", "51": "class Student:\n    def __init__(self, score):\n        self.score = score\n    def passed(self):\n        return self.score >= 40\n\nclass Topper(Student):\n    pass\n\nprint(Topper(95).passed())\n", "52": "class Student:\n    def __init__(self, score):\n        self.score = score\n    def grade(self):\n        return 'C'\n\nclass Topper(Student):\n    def grade(self):\n        # always 'A'\n        pass\n\nprint(Topper(10).grade())\n", "53": "class Student:\n    def __init__(self, score):\n        self.score = score\n\nclass Topper(Student):\n    def __init__(self, score, prize):\n        super().__init__(score)\n        # store prize\n        pass\n\nt = Topper(95, 'Gold')\nprint(t.score, t.prize)\n", "54": "class Student:\n    def grade(self):\n        return 'A'\n\nclass Topper(Student):\n    def grade(self):\n        # parent grade + '+'\n        pass\n\nprint(Topper().grade())\n", "55": "class Student: pass\nclass Topper(Student): pass\n\nt = Topper()\nprint(isinstance(t, Topper), isinstance(t, Student))\n", "56": "class Student:\n    def __init__(self, score):\n        self._score = score\n    def get_score(self):\n        # return the internal score\n        pass\n\nprint(Student(72).get_score())\n", "57": "class Student:\n    def __init__(self, score):\n        self._score = score\n    @property\n    def percent(self):\n        # return the score\n        pass\n\nprint(Student(88).percent)\n", "58": "class Student:\n    def __init__(self, score):\n        self.score = score\n\nclass Section:\n    def __init__(self, students):\n        self.students = students\n    def num_passed(self):\n        # count students with score >= 40\n        pass\n\nsec = Section([Student(72), Student(30), Student(55)])\nprint(sec.num_passed())\n", "59": "class Gradebook:\n    def __init__(self):\n        self.total = 0\n    def add(self, s):\n        self.total += s\n        return self   # enables chaining\n\ng = Gradebook().add(70).add(80).add(90)\nprint(g.total)\n", "60": "class Student:\n    def __init__(self, name):\n        self.name = name\n    def __str__(self):\n        return self.name\n\nclass Topper(Student):\n    def __str__(self):\n        # parent name + ' (top)'\n        pass\n\nprint(Topper('Asha'))\n"};
+const NQ = 60;
+let pyodide = null, pyReady = false;
+
+// ---------- Pyodide bootstrap ----------
+async function initPy(){
+  const bar=document.getElementById('pybar');
+  if(location.protocol==='file:'){
+    bar.className='err';
+    bar.innerHTML='\u26A0 <b>Run buttons need the page served over http, not opened directly.</b> '+
+      'You opened this as a local file (file://), where browsers block WebAssembly. '+
+      'Open it from a web address instead (your teacher\u2019s course page / GitHub Pages), '+
+      'or run a quick local server \u2014 see the instructions box below. '+
+      'You can still answer every question and generate your submission here; only the \u25B6 Run buttons are affected.';
+    var help=document.getElementById('serverhelp'); if(help) help.style.display='block';
+    return;
+  }
+  try{
+    bar.textContent='Loading Python (Pyodide) from local files\u2026 ~5\u201310s.';
+    pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/" });
+    pyReady = true;
+    bar.className='ready';
+    bar.innerHTML='\u2713 Python is ready \u2014 use the \u25B6 Run buttons to execute code in your browser.';
+    document.querySelectorAll('.runbtn').forEach(b=>b.disabled=false);
+  }catch(e){
+    bar.className='err';
+    bar.innerHTML='\u26A0 Could not load the Python runtime (needs internet on first load, and the page must be served over http/https). '+
+      'You can still answer and submit; \u25B6 Run buttons are disabled. Details: '+escapeHtml(String(e).slice(0,120));
+    var h2=document.getElementById('serverhelp'); if(h2) h2.style.display='block';
+  }
+}
+
+async function pyRun(src){
+  if(!pyReady) return {out:'', err:'Python is still loading \u2014 please wait for the green bar.'};
+  const wrapped =
+    "import sys, io\n" +
+    "_o=io.StringIO(); _e=io.StringIO()\n" +
+    "_so=sys.stdout; _se=sys.stderr\n" +
+    "sys.stdout=_o; sys.stderr=_e\n" +
+    "try:\n" +
+    "    exec(compile(__USERSRC__, '<cell>', 'exec'), {})\n" +
+    "except Exception:\n" +
+    "    import traceback; traceback.print_exc()\n" +
+    "finally:\n" +
+    "    sys.stdout=_so; sys.stderr=_se\n" +
+    "_out=_o.getvalue(); _err=_e.getvalue()\n";
+  try{
+    pyodide.globals.set('__USERSRC__', src);
+    await pyodide.runPythonAsync(wrapped);
+    const out = pyodide.globals.get('_out');
+    const err = pyodide.globals.get('_err');
+    return {out: out||'', err: err||''};
+  }catch(e){
+    return {out:'', err:String(e)};
+  }
+}
+
+function showOutput(n, out, err){
+  const box=document.getElementById('out'+n);
+  let h='';
+  if(out){ h+='<div class="lbl">output</div><pre>'+escapeHtml(out.replace(/\n$/,''))+'</pre>'; }
+  if(err){ h+='<div class="lbl" style="background:#7f1d1d">error / traceback</div><pre class="err">'+escapeHtml(err.replace(/\n$/,''))+'</pre>'; }
+  if(!out && !err){ h='<div class="lbl">output</div><pre>(no output \u2014 did you use print()?)</pre>'; }
+  box.innerHTML=h; box.classList.add('show');
+}
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function norm(s){
+  return String(s).replace(/\r/g,'').split('\n').map(l=>l.replace(/\s+$/,'')).join('\n').replace(/\n+$/,'').trim();
+}
+
+async function runPredict(n){
+  const btn=event.target; btn.disabled=true; const hint=document.getElementById('rh'+n);
+  hint.textContent='running\u2026';
+  const {out, err} = await pyRun(SNIPPET[n]);
+  showOutput(n, out, err);
+  const actual = err ? (out+err) : out;
+  const guess = (document.getElementById('ans'+n).value)||'';
+  const box=document.getElementById('out'+n);
+  const match = norm(guess)!=='' && norm(guess)===norm(actual);
+  const cmp=document.createElement('div');
+  cmp.className='cmp '+(match?'match':'nomatch');
+  cmp.innerHTML =
+    '<div class="row"><div class="k">your guess</div><div class="v">'+escapeHtml(guess||'(empty)')+'</div></div>'+
+    '<div class="row"><div class="k">real output</div><div class="v">'+escapeHtml(norm(actual)||'(none)')+'</div></div>'+
+    '<div class="verdict">'+(match?'\u2713 Your prediction matches the real output!':(norm(guess)===''?'\u2192 Type your prediction above, then Run again to compare.':'\u2717 Not a match \u2014 compare the two and figure out why.'))+'</div>';
+  box.appendChild(cmp);
+  hint.textContent=''; btn.disabled=false;
+  mark(n);
+}
+
+async function runCode(n){
+  const btn=event.target; btn.disabled=true; const hint=document.getElementById('rh'+n);
+  hint.textContent='running\u2026';
+  const src=document.getElementById('ans'+n).value;
+  const {out, err} = await pyRun(src);
+  showOutput(n, out, err);
+  hint.textContent = err ? '' : '\u2713 ran';
+  btn.disabled=false;
+  mark(n);
+}
+
+// ---------- self-check (PRACTICE ONLY - does not affect your grade) ----------
+// Mirrors the instructor grader's comparison so practice matches real marking.
+function _normLines(s){
+  s = String(s).replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  let lines = s.split('\n').map(l=>l.replace(/\s+$/,''));
+  while(lines.length && lines[lines.length-1]==='') lines.pop();
+  return lines;
+}
+// Canonicalize a set/dict literal line so order doesn't matter.
+function _canonSetish(line){
+  const t=line.trim();
+  if(!(t.startsWith('{') && t.endsWith('}'))) return line;
+  const inner=t.slice(1,-1).trim();
+  if(inner==='') return line;
+  // dict if top-level ':' present (not inside quotes)
+  const parts=_splitTop(inner);
+  let isDict=false;
+  for(const p of parts){ if(_topColon(p)){ isDict=true; break; } }
+  if(isDict){
+    const kv=parts.map(p=>{ const c=_topColon(p); return [p.slice(0,c).trim(), p.slice(c+1).trim()]; });
+    kv.sort((a,b)=> a[0]<b[0]?-1:a[0]>b[0]?1:(a[1]<b[1]?-1:a[1]>b[1]?1:0));
+    return '{'+kv.map(x=>x[0]+': '+x[1]).join(', ')+'}';
+  } else {
+    const items=parts.map(p=>p.trim()).sort();
+    return '{'+items.join(', ')+'}';
+  }
+}
+function _splitTop(s){ // split on top-level commas
+  const out=[]; let d=0,q='',cur='';
+  for(let i=0;i<s.length;i++){ const ch=s[i];
+    if(q){ cur+=ch; if(ch===q) q=''; continue; }
+    if(ch==="'"||ch==='"'){ q=ch; cur+=ch; continue; }
+    if(ch==='{'||ch==='['||ch==='(') d++;
+    if(ch==='}'||ch===']'||ch===')') d--;
+    if(ch===','&&d===0){ out.push(cur); cur=''; } else cur+=ch;
+  }
+  if(cur.trim()!=='') out.push(cur);
+  return out;
+}
+function _topColon(s){ // index of top-level ':' or -1
+  let d=0,q='';
+  for(let i=0;i<s.length;i++){ const ch=s[i];
+    if(q){ if(ch===q) q=''; continue; }
+    if(ch==="'"||ch==='"'){ q=ch; continue; }
+    if(ch==='{'||ch==='['||ch==='(') d++;
+    if(ch==='}'||ch===']'||ch===')') d--;
+    if(ch===':'&&d===0) return i;
+  }
+  return -1;
+}
+function cmpOutput(expected, actual, mode){
+  const exp=_normLines(expected), act=_normLines(actual);
+  if(mode==='manual') return null;
+  if(mode==='set'){
+    const a=exp.slice().sort(), b=act.slice().sort();
+    return a.length===b.length && a.every((x,i)=>x===b[i]);
+  }
+  if(mode && mode.indexOf('setline:')===0){
+    const idx=parseInt(mode.split(':')[1],10);
+    if(exp.length!==act.length) return false;
+    for(let i=0;i<exp.length;i++){
+      if(i===idx){ if(_canonSetish(exp[i])!==_canonSetish(act[i])) return false; }
+      else if(exp[i]!==act[i]) return false;
+    }
+    return true;
+  }
+  return exp.length===act.length && exp.every((x,i)=>x===act[i]);
+}
+
+async function checkOne(n, silent){
+  const k=KEY[n]; const res=document.getElementById('ck'+n);
+  if(!k){ if(res){res.className='checkres wait'; res.textContent='';} return null; }
+  if(!silent && res){ res.className='checkres wait'; res.textContent='checking\u2026'; }
+  const src=document.getElementById('ans'+n).value;
+  const {out, err} = await pyRun(src);
+  if(!silent) showOutput(n, out, err);
+  const actual = err ? (out+err) : out;
+  const ok = cmpOutput(k.e, actual, k.m);
+  if(res){
+    if(ok===null){ res.className='checkres wait'; res.textContent='manual review'; }
+    else if(ok){ res.className='checkres pass'; res.textContent='\u2713 correct'; }
+    else { res.className='checkres fail'; res.textContent='\u2717 not yet'; }
+  }
+  return ok;
+}
+
+async function checkAll(){
+  const btn=document.getElementById('checkallbtn');
+  const bar=document.getElementById('checkallmsg');
+  if(!pyReady){ bar.textContent='Python is still loading \u2014 wait for the green bar, then try again.'; return; }
+  btn.disabled=true;
+  let pass=0, fail=0, manual=0, blank=0;
+  const failed=[];
+  for(let n=1;n<=NQ;n++){
+    bar.textContent='Checking Q'+n+' of '+NQ+'\u2026';
+    const cur=document.getElementById('ans'+n).value;
+    if(String(cur).trim()==='' || cur===STARTER[n]){ blank++; 
+      const r=document.getElementById('ck'+n); if(r){r.className='checkres wait';r.textContent='';}
+      continue; }
+    const ok=await checkOne(n, true);
+    if(ok===null) manual++; else if(ok) pass++; else { fail++; failed.push(n); }
+  }
+  window.__selfcheck={pass,fail,manual,blank,failed,when:new Date().toISOString()};
+  bar.innerHTML='<b>Self-check (practice):</b> \u2713 '+pass+' correct, \u2717 '+fail+' to fix'
+    + (manual?(', '+manual+' manual'):'') + (blank?(', '+blank+' not attempted'):'')
+    + '. '+(failed.length? ('Review: Q'+failed.slice(0,25).join(', Q')+(failed.length>25?'\u2026':'')):'Great work!')
+    + ' <button class="ghost" style="margin-left:8px" onclick="downloadSelfCheck()">\u2b07 Save my self-check</button>';
+  btn.disabled=false;
+}
+
+function downloadSelfCheck(){
+  const sc=window.__selfcheck; if(!sc){ return; }
+  const name=(document.getElementById('stu_name')||{}).value||'';
+  const roll=(document.getElementById('stu_roll')||{}).value||'';
+  const batch=(document.getElementById('stu_batch')||{}).value||'';
+  const L=[];
+  L.push('CS3006 Lab 03 - Self-check (PRACTICE ONLY, not your grade)');
+  L.push('Name : '+name); L.push('Roll : '+roll); L.push('Batch: '+batch);
+  L.push('When : '+new Date().toLocaleString());
+  L.push('----------------------------------------------------');
+  L.push('Correct     : '+sc.pass);
+  L.push('To fix      : '+sc.fail);
+  if(sc.manual) L.push('Manual      : '+sc.manual);
+  L.push('Not attempted: '+sc.blank);
+  if(sc.failed.length){ L.push(''); L.push('Questions to review: Q'+sc.failed.join(', Q')); }
+  L.push(''); L.push('Remember: your real marks come from the instructor grading your');
+  L.push('submitted file. This self-check is only to help you practise.');
+  const rollTag=(roll||'student').replace(/[^A-Za-z0-9_-]/g,'_');
+  triggerDownload(L.join('\n'), 'selfcheck_'+rollTag+'.txt');
+}
+
+const STORAGE_KEY = 'cs3006_lab03_functions_classes_v1';
+let _saveTimer = null;
+function storageAvailable(){
+  try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }
+  catch(e){ return false; }
+}
+const CAN_SAVE = storageAvailable();
+
+function collectState(){
+  const ans = {};
+  for(let n=1;n<=NQ;n++){
+    const v = getAns(n);
+    if(String(v) !== String(STARTER[n]||'')) ans[n] = v;   // only store real edits
+  }
+  return {
+    v: 1,
+    name: (document.getElementById('stu_name')||{}).value || '',
+    roll: (document.getElementById('stu_roll')||{}).value || '',
+    batch:(document.getElementById('stu_batch')||{}).value || '',
+    ans: ans,
+    saved: new Date().toISOString()
+  };
+}
+function saveNow(){
+  if(!CAN_SAVE) return;
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState()));
+    flagSaved();
+  }catch(e){ /* quota or private mode: ignore */ }
+}
+function saveSoon(){          // debounced: called on every keystroke
+  if(!CAN_SAVE) return;
+  if(_saveTimer) clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveNow, 400);
+}
+function flagSaved(){
+  const el = document.getElementById('saveflag'); if(!el) return;
+  const t = new Date();
+  el.textContent = '\u2713 saved ' + t.toLocaleTimeString();
+  el.style.opacity = '1';
+  setTimeout(()=>{ el.style.opacity = '0.55'; }, 1200);
+}
+function loadSaved(){
+  if(!CAN_SAVE) return false;
+  let raw; try{ raw = localStorage.getItem(STORAGE_KEY); }catch(e){ return false; }
+  if(!raw) return false;
+  let data; try{ data = JSON.parse(raw); }catch(e){ return false; }
+  if(!data || !data.ans) return false;
+  if('name' in data)  { const e=document.getElementById('stu_name');  if(e) e.value=data.name; }
+  if('roll' in data)  { const e=document.getElementById('stu_roll');  if(e) e.value=data.roll; }
+  if('batch' in data) { const e=document.getElementById('stu_batch'); if(e) e.value=data.batch; }
+  let restored = 0;
+  for(const n in data.ans){
+    const el = document.getElementById('ans'+n);
+    if(el){ el.value = data.ans[n]; restored++; }
+  }
+  // show a small banner so the student knows work was recovered
+  const b = document.getElementById('restorebar');
+  if(b && (restored>0 || data.name || data.roll)){
+    b.style.display='block';
+    let when=''; try{ when=new Date(data.saved).toLocaleString(); }catch(e){}
+    b.querySelector('.rtext').textContent =
+      'Your earlier work was restored ('+restored+' answer'+(restored===1?'':'s')+
+      ' recovered'+(when?', last saved '+when:'')+'). Keep going where you left off.';
+  }
+  return true;
+}
+function clearSaved(){
+  if(!confirm('Clear all saved answers on THIS browser and reset every question to its starter code? This cannot be undone.')) return;
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  for(let n=1;n<=NQ;n++){
+    const el=document.getElementById('ans'+n);
+    if(el) el.value = STARTER[n]||'';
+    const box=document.getElementById('out'+n); if(box){ box.classList.remove('show'); box.innerHTML=''; }
+    const rh=document.getElementById('rh'+n); if(rh) rh.textContent='';
+    const st=document.getElementById('st'+n); if(st) st.textContent='';
+  }
+  const nm=document.getElementById('stu_name'); if(nm) nm.value='';
+  const rl=document.getElementById('stu_roll'); if(rl) rl.value='';
+  const bt=document.getElementById('stu_batch'); if(bt) bt.value='';
+  const rb=document.getElementById('restorebar'); if(rb) rb.style.display='none';
+  updateProgress();
+  const el=document.getElementById('saveflag'); if(el) el.textContent='cleared';
+}
+
+// ---------- portable progress file: continue on another computer ----------
+// Writes an answer into a cell and refreshes its status.
+function applyAnswer(n, val){
+  const el=document.getElementById('ans'+n);
+  if(!el) return false;
+  el.value = val;
+  const st=document.getElementById('st'+n);
+  if(st) st.textContent = isAnswered(n) ? '\u2713 answered' : '';
+  return true;
+}
+// Save a .json the student can carry to another machine.
+function saveProgressFile(){
+  const state = collectState();
+  const answered = Object.keys(state.ans).length;
+  const rollTag = (state.roll || 'student').replace(/[^A-Za-z0-9_-]/g,'_');
+  const content = JSON.stringify(state, null, 2);
+  const fname = 'CS3006_Lab02_progress_' + rollTag + '.json';
+  const ok = triggerDownload(content, fname);
+  const msg = document.getElementById('portmsg');
+  if(msg){
+    if(ok){ msg.style.color='#14532d';
+      msg.textContent='\u2713 Saved "'+fname+'" ('+answered+'/60 answered). Carry this file (email it to yourself / pen drive / cloud), then use "Load progress" on the other computer to continue.'; }
+    else { msg.style.color='#b45309';
+      msg.textContent='\u26A0 Download blocked. Try the "Copy answers" button in the submit area instead, or allow downloads for this page.'; }
+  }
+}
+// Load a progress .json the student picked; ask before overwriting existing work.
+function loadProgressFile(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    let data;
+    try{ data = JSON.parse(ev.target.result); }
+    catch(e){ alert('That file is not a valid progress file (could not read JSON).'); input.value=''; return; }
+    if(!data || typeof data!=='object' || !data.ans){
+      alert('That does not look like a CS3006 progress file (no answers found).'); input.value=''; return;
+    }
+    const incoming = Object.keys(data.ans).length;
+    // does the student already have their own edits here?
+    let existing = 0; for(let n=1;n<=NQ;n++){ if(isAnswered(n)) existing++; }
+    let merge = false;
+    if(existing > 0){
+      const choice = confirm(
+        'This browser already has '+existing+' answer(s).\n\n'+
+        'The file you picked has '+incoming+' answer(s).\n\n'+
+        'OK  = REPLACE: use the file\u2019s answers (your current answers here are discarded).\n'+
+        'Cancel = MERGE: keep your current answers and only fill in questions you have not answered yet.'
+      );
+      merge = !choice;   // Cancel => merge
+    }
+    // name / roll / batch: fill from file only if empty (never clobber a typed roll on merge)
+    ['name','roll','batch'].forEach(function(k){
+      const el=document.getElementById('stu_'+k); if(!el) return;
+      if(!merge || !el.value) { if(k in data && data[k]) el.value = data[k]; }
+    });
+    let applied = 0, skipped = 0;
+    for(const n in data.ans){
+      if(merge && isAnswered(n)) { skipped++; continue; }   // keep local answer
+      if(applyAnswer(n, data.ans[n])) applied++;
+    }
+    updateProgress();
+    saveNow();   // persist the merged/replaced state to this browser too
+    input.value=''; // allow re-picking the same file later
+    const msg=document.getElementById('portmsg');
+    if(msg){ msg.style.color='#14532d';
+      let when=''; try{ when=new Date(data.saved).toLocaleString(); }catch(e){}
+      msg.textContent='\u2713 Loaded '+applied+' answer(s)'+(merge?(' (merged; kept '+skipped+' you already had)'):' (replaced)')+
+        (when?', from a file saved '+when:'')+'. You can carry on from where you left off.';
+    }
+  };
+  reader.onerror = function(){ alert('Could not read that file.'); input.value=''; };
+  reader.readAsText(file);
+}
+
+function resetCode(n){
+  document.getElementById('ans'+n).value = STARTER[n]||'';
+  const box=document.getElementById('out'+n); box.classList.remove('show'); box.innerHTML='';
+  document.getElementById('rh'+n).textContent='';
+  mark(n);
+}
+
+function getAns(n){
+  if(KIND[n]==='mcq'){
+    const el=document.querySelector('input[name="q'+n+'"]:checked');
+    return el ? el.value : '';
+  } else {
+    const el=document.getElementById('ans'+n);
+    return el ? el.value : '';
+  }
+}
+function isAnswered(n){
+  const v=getAns(n);
+  if(KIND[n]==='code'){ return String(v).trim()!=='' && norm(v)!==norm(STARTER[n]||''); }
+  return String(v).trim()!=='';
+}
+function mark(n){
+  document.getElementById('st'+n).textContent = isAnswered(n) ? '\u2713 answered' : '';
+  updateProgress();
+  saveSoon();
+}
+function updateProgress(){
+  let c=0; for(let n=1;n<=NQ;n++){ if(isAnswered(n)) c++; }
+  document.getElementById('done').textContent=c;
+  document.getElementById('fill').style.width=(c/NQ*100)+'%';
+}
+
+function pyLiteral(s){
+  s=String(s); let out='';
+  for(const ch of s){
+    if(ch==='\\') out+='\\\\';
+    else if(ch==='"') out+='\\"';
+    else if(ch==='\n') out+='\\n';
+    else if(ch==='\r') out+='';
+    else if(ch==='\t') out+='\\t';
+    else out+=ch;
+  }
+  return '"'+out+'"';
+}
+function triggerDownload(content, fname){
+  try{
+    const blob=new Blob([content],{type:'application/octet-stream'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download=fname; a.rel='noopener'; a.style.display='none';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},4000);
+    return true;
+  }catch(e){
+    try{ const a=document.createElement('a');
+      a.href='data:application/octet-stream;charset=utf-8,'+encodeURIComponent(content);
+      a.download=fname; a.style.display='none'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      return true;
+    }catch(e2){ return false; }
+  }
+}
+function generate(){
+  const name=document.getElementById('stu_name').value.trim();
+  const roll=document.getElementById('stu_roll').value.trim();
+  const batch=document.getElementById('stu_batch').value.trim();
+  const w=document.getElementById('subwarn');
+  if(!name||!roll||!batch){
+    w.style.color='#b45309';
+    w.textContent='\u26A0 Please fill Name, Roll number and Batch before generating.';
+    document.querySelector('.idbar').scrollIntoView({behavior:'smooth'}); return;
+  }
+  let answered=0; const L=[];
+  L.push('# ============================================================');
+  L.push('# CS3006 - Functions & Classes Lab - 60 questions (interactive)');
+  L.push('# AUTO-GENERATED SUBMISSION FILE - do not edit by hand.');
+  L.push('# Generated: '+new Date().toISOString());
+  L.push('# ============================================================');
+  L.push('');
+  L.push('student = {');
+  L.push('    "name": '+pyLiteral(name)+',');
+  L.push('    "roll": '+pyLiteral(roll)+',');
+  L.push('    "batch": '+pyLiteral(batch)+',');
+  L.push('}');
+  L.push('');
+  L.push('# answers[q] : MCQ -> letter ; predict -> predicted output text ; code -> edited Python');
+  L.push('answers = {}');
+  L.push('');
+  for(let n=1;n<=NQ;n++){
+    const val=getAns(n)||'';
+    if(isAnswered(n)) answered++;
+    const tag=(KIND[n]==='mcq')?'  # MCQ':(KIND[n]==='predict')?'  # predict':'  # code';
+    L.push('answers['+n+'] = '+pyLiteral(val)+tag);
+  }
+  L.push('');
+  L.push('meta = {"answered": '+answered+', "total": '+NQ+'}');
+  L.push('');
+  const content=L.join('\n');
+  const safeRoll=(roll.replace(/[^A-Za-z0-9_-]/g,'_'))||'student';
+  const fname='submission_'+safeRoll+'.py';
+  window.__lastContent=content; window.__lastName=fname;
+  const ok=triggerDownload(content, fname);
+  if(ok){ w.style.color='#16a34a';
+    w.textContent='\u2713 Submission generated ('+answered+'/60 answered). Now click "Copy answers" below and paste it into the Lab 03 edit box on Moodle.'; }
+  else { w.style.color='#b45309';
+    w.textContent='\u26A0 Download blocked ('+answered+'/60). Use "Copy answers" or "Open in new tab" below, save as '+fname+'.'; }
+  document.getElementById('fallback').style.display='block';
+}
+function openInTab(){
+  const c=window.__lastContent||''; const t=window.open('','_blank');
+  if(!t){ alert('Popup blocked. Allow popups or use Copy answers.'); return; }
+  const pre=t.document.createElement('pre'); pre.textContent=c;
+  t.document.title=window.__lastName||'submission.py'; t.document.body.appendChild(pre);
+}
+function copyAnswers(){
+  const c=window.__lastContent||'';
+  const done=()=>{const b=document.getElementById('copybtn');const t=b.textContent;b.textContent='\u2713 Copied!';setTimeout(()=>b.textContent=t,2000);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(c).then(done).catch(()=>legacyCopy(c,done)); }
+  else legacyCopy(c,done);
+}
+function legacyCopy(text,cb){
+  const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{ document.execCommand('copy'); cb(); }catch(e){ alert('Copy failed \u2014 select the text manually.'); }
+  document.body.removeChild(ta);
+}
+
+function wireUp(){
+  document.querySelectorAll('textarea.code-edit').forEach(function(t){
+    t.addEventListener('keydown', function(e){
+      if(e.key==='Tab'){ e.preventDefault();
+        const s=this.selectionStart, en=this.selectionEnd;
+        this.value=this.value.slice(0,s)+'    '+this.value.slice(en);
+        this.selectionStart=this.selectionEnd=s+4;
+      }
+    });
+  });
+  document.querySelectorAll('.runbtn').forEach(b=>b.disabled=true);
+  // restore any earlier work BEFORE computing progress / marking status
+  loadSaved();
+  // keep the name / roll / batch fields saved too
+  ['stu_name','stu_roll','stu_batch'].forEach(function(id){
+    const el=document.getElementById(id);
+    if(el){ el.addEventListener('input', saveSoon); el.addEventListener('change', saveSoon); }
+  });
+  // refresh every question's status after a restore
+  for(let n=1;n<=NQ;n++){
+    const st=document.getElementById('st'+n);
+    if(st) st.textContent = isAnswered(n) ? '\u2713 answered' : '';
+  }
+  updateProgress();
+  // last-chance save if the page is being closed / refreshed
+  window.addEventListener('beforeunload', saveNow);
+  if(!CAN_SAVE){
+    const bar=document.getElementById('nosavebar'); if(bar) bar.style.display='block';
+  }
+  initPy();
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', wireUp); }
+else { wireUp(); }
+</script>
+</body>
+</html>

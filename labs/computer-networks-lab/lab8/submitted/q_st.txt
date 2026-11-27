@@ -1,0 +1,21 @@
+Q1. Develop a quiz application using Python socket programming with the following properties:
+
+Develop both server.py and client.py programs. Use a simple Python GUI (Tkinter) for interaction.
+The server should contain a preloaded set of multiple-choice questions with four options and the correct answer.
+Initially, the client should provide a username to connect to the server. If the username already exists, the client should be prompted to choose another username.
+The server should send the questions to the player upon start and receive the answers. The answer checking and score calculation must be performed by the server.
+The client GUI should display the question, options, save choice option and reset choice button (Types of questions, navigation, autosave choice, GUI design, etc can be done as per your choice).
+At the end of the quiz, the final score should be displayed. After the quiz ends, provide options to REPLAY or EXIT.
+The server GUI should display basic logs such as player joining/leaving, username, socket address, quiz start/end, answers, scores, and quiz duration.
+Testing requirement: Each student must test the application in both roles:
+Act as the server while a friend acts as the client.
+Act as the client while a friend acts as the server.
+Take screenshots of the server GUI and client GUI showing important functionalities such as player connection, quiz questions, score display, quiz completion, and REPLAY/EXIT.
+
+Instructions:
+
+Write both the client and server programs on your own system. Include your name and roll number as comments at the top of each program.
+Test your server with at least one friend acting as the client, and test your client with your friend acting as the server.
+Compile all screenshots into one PDF, with your name and roll number clearly mentioned on every page.
+Submit the following as three separate files (do not zip/compress): server.py, client.py, Quiz_Screenshots.pdf
+Submit all files before the specified deadline. Late submissions will not be accepted.

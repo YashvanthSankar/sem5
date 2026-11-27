@@ -1,0 +1,5 @@
+--- LL(1) PARSING TABLE ---
+
+	a	b	c	$
+S	S=aA	error	error	error
+A	error	A=bA	A=c	A=#

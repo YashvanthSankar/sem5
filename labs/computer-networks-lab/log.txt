@@ -1,0 +1,6 @@
+[2026-10-24 21:22:56] : 127.0.0.1:51957, Username: alice, Activity: joined
+[2026-10-24 21:22:56] : 127.0.0.1:51957, Username: alice, Activity: left, session_duration: [0:00:00]
+[2026-10-24 21:23:03] : 127.0.0.1:51963, Username: alice, Activity: joined
+[2026-10-24 21:23:03] : 127.0.0.1:51964, Username: bob, Activity: joined
+[2026-10-24 21:23:03] : 127.0.0.1:51963, Username: alice, Activity: left, session_duration: [0:00:00]
+[2026-10-24 21:23:03] : 127.0.0.1:51964, Username: bob, Activity: left, session_duration: [0:00:00]

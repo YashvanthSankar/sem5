@@ -1,0 +1,8 @@
+A. Create a Local Area Network (LAN) using one switch and at least three end devices such as PCs or laptops. Connect a DNS server and name it “dns.iiitdm.ac.in” and connect a Web Server to the network. Configure the DNS server with appropriate domain names and map it to the IP address of the Web Server. Configure the Web Server to host a simple web page that can be accessed from all the end devices using the configured domain name.  
+
+B. Create two separate Local Area Networks named L512 and L509, with each LAN containing a minimum of five end devices connected through a switch. Interconnect the two LANs using a router. Configure a DNS server to resolve the domain names moodle.com, google.com, iiitdm.ac.in, to the IP address of the server. Ensure that all end devices in both LANs obtain their domain names, and communicate with devices in the other LAN through the router. Finally, observe and analyze the behavior of DNS protocol during network communication in simulation mode, and take the screenshots during simulation. 
+
+Instructions:   
+1 - Submit a PDF document that includes your comments and screenshots from Cisco Packet Tracer with ping and screenshot from Cisco Packet Tracer with simulation, realtime for a specific question. Make sure to write your name and roll number clearly before taking the screenshot. 
+2 - Combine all questions into a single PKZ file, and submit. 
+3 - Each student must submit the assignment individually.

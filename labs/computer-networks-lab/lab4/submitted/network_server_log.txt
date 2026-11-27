@@ -1,0 +1,4 @@
+[2026-09-01 15:41:20] ServerSocket: 172.16.14.28:5000, ClientSocket: 172.16.14.27:55066, Username: user1, File: user1_hello.cpp, Action: Accepted, Size: 669 bytes
+[2026-09-01 15:42:45] ServerSocket: 172.16.14.28:5000, ClientSocket: 172.16.14.29:35378, Username: user2, File: user2_suiii.txt, Action: Accepted, Size: 45 bytes
+[2026-09-01 15:44:37] ServerSocket: 172.16.14.28:5000, ClientSocket: 172.16.14.26:33974, Username: user3, File: user3_python3 client.py, Action: Accepted
+[2026-09-01 15:44:53] ServerSocket: 172.16.14.28:5000, ClientSocket: 172.16.14.26:54848, Username: user3, File: user3_index.html, Action: Accepted, Size: 84748 bytes

@@ -1,0 +1,37 @@
+Q1. Write a Single Server-Multiple Client program in which clients can send video files to other clients through the server using a GUI, with the following requirements: 
+• Each client connection is handled in a separate thread on the server. 
+• The client should send its username to the server through a Username Text Field. The server should return a success message if the username is available; otherwise, it should ask the client to choose a different username. 
+• The client can send and receive video files simultaneously. 
+•  The client GUI should provide the following functionalities: 
+(i) [Connect Button] – connect to the server using the username entered in the [Username Text Field]. 
+(ii) [Active Users List/Dropdown] – display the active users currently connected to the server and allow the sender to select the receiver. 
+(iii) [Browse Video Button] – browse and select an .mp4 video file to be sent. 
+(iv) [Selected File Text Field/Label] – display the complete path/name of the selected video     file. 
+(v) [Packet Size Text Field/Dropdown] – specify the packet size used for transmission. 
+(vi) [Transmission Delay Text Field/Dropdown] – specify the time.sleep() value between consecutive packet transmissions. 
+(vii) [Send Video Button] – send the selected video file to the selected receiver through the server. (viii) [Sending Progress Bar] – display video sending progress. 
+(ix) [Receiving Progress Bar] – display video receiving progress. 
+(x) [Status/Output Text Area] – display connection status, sender username, received video name, packet statistics and errors such as “User Not Online”. 
+(xi) [Refresh Users Button] – request and update the currently active user list. 
+(xii) [Disconnect/Exit Button] – disconnect the client from the server. 
+• Before sending the video file, the sender should send the required metadata such as: (i) Sender username (ii) Receiver username (iii) Complete video file name (iv) Video file size (v) Packet size (vi) Total number of packets 
+• The sender should divide the video file into packets and send the packets to the server. The server should forward the received packets to the intended receiver. 
+• The receiver should reconstruct the received packets and save the received video file. 
+• The receiver GUI should display the sender username, video file name, original video size and received video size. 
+• The server should maintain a dynamic list of connected users in the format (socket:user_name). When a user disconnects, the corresponding entry should be removed. 
+• If the receiver is not available or has disconnected from the server, the server should send the message “User Not Online” back to the sender. 
+• The server should display the count and list of active client connections, including socket address and username, whenever a client connects or disconnects. 
+• For each video transmission, calculate packet loss at both the server and receiver. 
+• Perform video transfer by varying the packet size and the time.sleep and log the required details. Analyse how changing the packet size and time.sleep() value affects: (i) Packet loss at server (ii) Packet loss at receiver (iii) Overall packet loss (iv) Received video file size (v) Transmission time 
+• Plot suitable graphs such as: (i) Packet Size vs Packet Loss (ii) time.sleep() vs Packet Loss (iii) Packet Size vs Received File Size (iv) time.sleep() vs Received File Size (v) Packet Size vs Transmission Time 
+
+INSTRUCTIONS: 
+1. Write both client.py and server.py. Include your name and roll number as comments at the top of each program file. 
+2. Test the program with one server and at least two clients using separate terminals. 
+3. Test sending an .mp4 video from one client to another client through the server. 
+4. Test sending a video to an offline/non-existing user and display “User Not Online” in the client GUI. 
+5. Test duplicate usernames and active user listing through the GUI. 
+6. Perform experiments using at least 4–5 different packet sizes and 4–5 different time.sleep() values. 
+7. Record the number of packets sent, packets received by server, packets received by receiver, packet loss and received video size for each experiment. 
+8. Take screenshots of the sender GUI, receiver GUI and server terminal showing video transmission and packet-loss results. 
+9. Submit client.py, server.py, screenshots, experimental result tables and graphs. Make sure to submit before the deadline. Late submissions will not be accepted. Thanks

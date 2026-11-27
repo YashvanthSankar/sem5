@@ -1,0 +1,5 @@
+Write a Single Server-Multiple Client program using Python threading on the server side, where:
+each thread handles a single client.
+the client sends a single word as string to the server. The server checks if it has that word in its global string. If the word is in the string, then no change to the string occurs; else the word is added at the end of string separated by a comma, and the string is updated.
+The server then responds with the latest value of the global string to the client (even if there was no updation).
+The connection to the server is terminated if the client sends the word 'exit'. Always show the count of active connections when a new client joins or leaves the server.

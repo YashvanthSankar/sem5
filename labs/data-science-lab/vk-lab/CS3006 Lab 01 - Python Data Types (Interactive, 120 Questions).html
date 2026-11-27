@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS3006 Lab 01 - Python Data Types (Interactive, 120 Questions)</title>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+<style>
+  :root{--blue:#214B8C;--tint:#eef2f9;--ink:#1a2330;--muted:#5b6675;--border:#d8dee9;--code-bg:#0f1b2d;--code-ink:#e6edf5;--ok:#16a34a;--bad:#dc2626;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:#f6f8fb;line-height:1.5}
+  .wrap{max-width:900px;margin:0 auto;padding:0 18px}
+  header.hero{background:var(--blue);color:#fff;padding:24px 22px}
+  header.hero h1{margin:0;font-size:1.4rem} header.hero h2{margin:6px 0 0;font-weight:400;font-size:1rem;opacity:.95}
+  header.hero p{margin:8px 0 0;opacity:.85;font-size:.88rem}
+  #pybar{padding:8px 18px;font-size:.85rem;text-align:center;background:#fde68a;color:#7c2d12}
+  #pybar.ready{background:#dcfce7;color:#14532d}
+  #pybar.err{background:#fee2e2;color:#7f1d1d}
+  .idbar{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:16px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .idbar label{font-size:.8rem;color:var(--muted);display:block;margin-bottom:3px}
+  .idbar input,.idbar select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:.9rem}
+  .idbar .full{grid-column:1/3}
+  .toolbar{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--border);padding:10px 0;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .toolbar .wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .progress{font-size:.85rem;color:var(--muted)} .progress b{color:var(--blue)}
+  .bar{flex:1;min-width:120px;height:8px;background:#e6ebf3;border-radius:5px;overflow:hidden}
+  .bar>i{display:block;height:100%;width:0;background:var(--blue);transition:width .2s}
+  .toolbar button{font-size:.85rem;border:0;background:var(--blue);color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer}
+  .toolbar button.ghost{background:#fff;color:var(--blue);border:1px solid var(--blue)}
+  nav.toc{background:#fff;border:1px solid var(--border);border-radius:10px;margin:14px 0;padding:10px 14px}
+  nav.toc a{display:inline-block;font-size:.8rem;background:var(--tint);color:var(--ink);text-decoration:none;padding:4px 10px;border-radius:14px;margin:3px}
+  .note{background:#fff;border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:8px;padding:12px 16px;margin:14px 0;font-size:.9rem}
+  h2.section{color:var(--blue);border-bottom:2px solid var(--blue);padding-bottom:6px;margin:28px 0 12px;font-size:1.12rem}
+  h2.section .srange{font-weight:400;color:var(--muted);font-size:.88rem}
+  .q{background:#fff;border:1px solid var(--border);border-left:4px solid #ccc;border-radius:8px;padding:14px 16px;margin:12px 0}
+  .q.mcq{border-left-color:#2563eb} .q.predict{border-left-color:#16a34a} .q.code{border-left-color:#ea8a1f}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .qnum{font-weight:700;color:var(--blue)}
+  .badge{font-size:.68rem;text-transform:uppercase;letter-spacing:.03em;padding:2px 8px;border-radius:12px;color:#fff}
+  .badge.mcq{background:#2563eb} .badge.predict{background:#16a34a} .badge.code{background:#ea8a1f}
+  .status{margin-left:auto;font-size:.75rem;color:var(--ok);font-weight:600}
+  .prompt{margin:2px 0 8px}
+  .prompt code,.prompt em{background:var(--tint);padding:1px 5px;border-radius:4px;font-style:normal;font-family:ui-monospace,Consolas,monospace;font-size:.9em}
+  .opts{display:flex;flex-direction:column;gap:6px;margin:4px 0}
+  label.opt{background:#f7f9fc;border:1px solid var(--border);border-radius:6px;padding:7px 10px;cursor:pointer;font-size:.9rem}
+  label.opt:hover{background:var(--tint)}
+  .fieldlabel{display:block;font-size:.78rem;color:var(--muted);margin:8px 0 3px}
+  pre.code{background:var(--code-bg);color:var(--code-ink);padding:10px 12px;border-radius:7px;overflow-x:auto;font-size:.85rem;margin:6px 0}
+  pre.code code{font-family:ui-monospace,Consolas,monospace}
+  textarea.ans-in{width:100%;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;padding:8px 10px;border:1px solid var(--border);border-radius:6px;resize:vertical}
+  textarea.code-edit{width:100%;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;padding:10px 12px;border:1px solid #3a5170;border-radius:6px;resize:vertical;background:#0f1b2d;color:#e6edf5;line-height:1.45;tab-size:4}
+  textarea.ans-in:focus,textarea.code-edit:focus{outline:2px solid var(--blue);border-color:var(--blue)}
+  .runrow{display:flex;align-items:center;gap:8px;margin:8px 0 0;flex-wrap:wrap}
+  .runbtn{background:var(--ok);color:#fff;border:0;padding:6px 14px;border-radius:6px;font-size:.85rem;cursor:pointer}
+  .runbtn:hover{opacity:.9} .runbtn:disabled{opacity:.5;cursor:not-allowed}
+  .resetbtn{background:#fff;color:var(--muted);border:1px solid var(--border);padding:6px 12px;border-radius:6px;font-size:.82rem;cursor:pointer}
+  .checkbtn{background:#fff;color:#5b21b6;border:1px solid #7c3aed;padding:6px 12px;border-radius:6px;font-size:.82rem;cursor:pointer}
+  .checkbtn:hover{background:#f5f0ff} .checkbtn:disabled{opacity:.5;cursor:not-allowed}
+  .checkres{font-size:.82rem;font-weight:600}
+  .checkres.pass{color:#16a34a} .checkres.fail{color:#dc2626} .checkres.wait{color:var(--muted);font-weight:400}
+  .runhint{font-size:.8rem;color:var(--muted)}
+  .output{display:none;margin-top:8px;border-radius:6px;overflow:hidden;font-family:ui-monospace,Consolas,monospace;font-size:.82rem}
+  .output.show{display:block}
+  .output .lbl{padding:4px 10px;font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;color:#fff;background:#334155}
+  .output pre{margin:0;padding:8px 12px;background:#0f1b2d;color:#e6edf5;white-space:pre-wrap;word-break:break-word;overflow-x:auto}
+  .output pre.err{color:#fca5a5}
+  .cmp{margin-top:8px;border-radius:6px;overflow:hidden;font-size:.82rem}
+  .cmp .row{display:grid;grid-template-columns:110px 1fr;border:1px solid var(--border);border-top:0}
+  .cmp .row:first-child{border-top:1px solid var(--border)}
+  .cmp .k{background:#f1f5f9;padding:6px 10px;font-size:.75rem;color:var(--muted);font-weight:600}
+  .cmp .v{padding:6px 10px;font-family:ui-monospace,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+  .cmp.match .verdict{background:#dcfce7;color:#14532d}
+  .cmp.nomatch .verdict{background:#fee2e2;color:#7f1d1d}
+  .cmp .verdict{grid-column:1/3;padding:6px 10px;font-weight:600;font-family:inherit}
+  .submitbox{background:#fff;border:2px solid var(--blue);border-radius:10px;padding:18px;margin:24px 0;text-align:center}
+  .submitbox button{font-size:1rem;background:var(--blue);color:#fff;border:0;padding:12px 28px;border-radius:8px;cursor:pointer}
+  .submitbox button.ghost2{background:#fff;color:var(--blue);border:1px solid var(--blue);font-size:.9rem;padding:8px 16px;margin:4px}
+  .submitbox .warn{color:#b45309;font-size:.85rem;margin-top:8px}
+  footer{background:var(--blue);color:#fff;padding:16px 22px;margin-top:26px;font-size:.85rem}
+  @media(max-width:560px){.idbar{grid-template-columns:1fr}.idbar .full{grid-column:1}.cmp .row{grid-template-columns:80px 1fr}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <h1>CS3006 &middot; Lab 01 &mdash; Python Data Types (Interactive, 120 Questions)</h1>
+  <h2>Run Python in your browser &middot; predict &amp; check &middot; then generate your submission</h2>
+  <p>CSE DD + Mechanical &middot; Friday, 21 Aug 2026 &middot; Afternoon session &middot; IIITDM Kancheepuram</p>
+</div></header>
+
+<div id="pybar">Loading Python runtime&hellip;</div>
+
+<div class="toolbar"><div class="wrap">
+  <span class="progress"><b id="done">0</b> / 120 answered</span>
+  <span class="bar"><i id="fill"></i></span>
+  <span id="saveflag" title="Your answers are saved automatically in this browser" style="font-size:.78rem;color:#16a34a;opacity:.55;min-width:70px">auto-save on</span>
+  <button id="checkallbtn" class="ghost" style="border-color:#7c3aed;color:#5b21b6" onclick="checkAll()" title="Practice self-check: check every answered question">&#10003; Check all (practice)</button>
+  <button class="ghost" onclick="document.querySelector('.submitbox').scrollIntoView({behavior:'smooth'})">Go to Submit</button>
+  <button class="ghost" style="border-color:#c33;color:#c33" onclick="clearSaved()" title="Erase saved answers on this browser and reset">Clear saved work</button>
+</div>
+<div class="wrap" style="padding-top:4px"><div id="checkallmsg" style="font-size:.82rem;color:#5b6675"></div></div></div>
+
+<div class="wrap">
+  <div class="note" style="background:#faf5ff;border-left-color:#7c3aed;margin-top:14px">
+    <b>&#10003; Self-check is practice only.</b> MCQ answers check instantly. Predict and Short-code cells run in your browser (needs Python/Pyodide loaded) and compare to the expected output. It does <b>not</b> set your grade &mdash; your real marks come from the instructor grading your submitted file.
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="restorebar" style="display:none;background:#dcfce7;border:1px solid #86efac;border-left:4px solid #16a34a;border-radius:8px;padding:10px 14px;margin:14px 0;font-size:.9rem;color:#14532d">
+    <b>&#8635; Welcome back.</b> <span class="rtext"></span>
+  </div>
+  <div id="nosavebar" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-left:4px solid #dc2626;border-radius:8px;padding:10px 14px;margin:14px 0;font-size:.9rem;color:#7f1d1d">
+    <b>&#9888; Auto-save is off in this browser</b> (private / incognito mode, or storage blocked). Your answers will <b>not</b> survive a refresh here. Generate &amp; copy your submission before closing, or switch to a normal (non-incognito) window.
+  </div>
+  <div class="note" style="background:#eef7ff;border-left-color:#2563eb">
+    <b>&#128190; Your work saves automatically</b> in this browser as you type &mdash; if you refresh or accidentally close the tab, just reopen the same page on the same computer and your answers come back. To continue on a <b>different computer</b> (e.g. lab &rarr; hostel), use the buttons below.
+  </div>
+
+  <div id="portpanel" style="background:#fff;border:1px solid var(--border);border-left:4px solid #7c3aed;border-radius:8px;padding:12px 16px;margin:14px 0;font-size:.9rem">
+    <b style="color:#5b21b6">&#128194; Continue on another computer</b>
+    <div style="margin-top:6px">Finishing later or elsewhere? <b>Save progress</b> to download a small file, carry it (email it to yourself, a pen drive, or a cloud drive), then <b>Load progress</b> on the other machine to pick up exactly where you stopped.</div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <button class="ghost" style="border-color:#7c3aed;color:#5b21b6" onclick="saveProgressFile()">&#11015; Save progress (.json)</button>
+      <button class="ghost" style="border-color:#7c3aed;color:#5b21b6" onclick="document.getElementById('loadfile').click()">&#128194; Load progress&hellip;</button>
+      <input id="loadfile" type="file" accept=".json,application/json" style="display:none" onchange="loadProgressFile(this)">
+    </div>
+    <div id="portmsg" style="margin-top:8px;font-size:.85rem;color:#5b6675"></div>
+    <div style="margin-top:6px;font-size:.78rem;color:#7c2d12">This progress file is just for resuming your work &mdash; it is <b>not</b> your Moodle submission. When you are done, still use <b>Generate submission file</b> &rarr; <b>Copy answers</b> and paste into Moodle.</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="idbar">
+    <div><label>Full name *</label><input id="stu_name" placeholder="e.g. Asha Kumar"></div>
+    <div><label>Roll number *</label><input id="stu_roll" placeholder="e.g. CS23B1001"></div>
+    <div class="full"><label>Batch *</label>
+      <select id="stu_batch"><option value="">-- select --</option>
+      <option>ECE</option><option>CSE-DD</option><option>Mech</option></select>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>How this lab works:</b> This page runs real Python in your browser (via Pyodide) &mdash; no install needed.
+    <b>MCQ</b>: pick an option. <b>Predict</b>: type the output you expect, then <b>&#9654; Run &amp; compare</b> to check your guess against the real result. <b>Code</b>: edit the starter and <b>&#9654; Run</b> it as many times as you like.
+    When done, fill your details and <b>Generate submission file</b> &mdash; upload the downloaded <code>submission_&lt;roll&gt;.py</code> to Moodle. Experiment freely; running code does not affect your submission until you generate the file.
+  </div>
+
+  <div id="serverhelp" style="display:none;background:#fff7ed;border:1px solid #fdba74;border-left:4px solid #ea8a1f;border-radius:8px;padding:12px 16px;margin:14px 0;font-size:.9rem">
+    <b>To enable the &#9654; Run buttons, open this page over http (not file://).</b> Two easy options:
+    <div style="margin-top:8px"><b>A. Teacher hosts it (best for students):</b> put this .html on the course page / GitHub Pages / Google Sites and share the link. Opening that link just works.</div>
+    <div style="margin-top:8px"><b>B. Run a local server (for your own machine):</b> put the file in a folder, open a terminal there, and run one of:
+      <pre class="code" style="margin:6px 0"><code>python -m http.server 8000</code></pre>
+      then visit <code>http://localhost:8000/</code> and click this file. (Node users: <code>npx serve</code>.)
+    </div>
+    <div style="margin-top:8px;color:#7c2d12">Answering and generating your submission works either way &mdash; only the in-browser Python runner needs http.</div>
+  </div>
+
+  <nav class="toc"><a href="#s1">Section 1</a><a href="#s21">Section 2</a><a href="#s41">Section 3</a><a href="#s61">Section 4</a><a href="#s81">Section 5</a><a href="#s101">Section 6</a></nav>
+
+<h2 class="section" id="s1">Section 1 · Numeric types — int, float, complex, bool <span class="srange">(Q1–Q20)</span></h2><div class="q mcq" id="q1" data-kind="mcq" data-n="1">
+<div class="qhead"><span class="qnum">Q1</span><span class="badge mcq">MCQ</span><span class="status" id="st1"></span><span class="checkres" id="ck1"></span></div>
+<div class="prompt">Which built-in function returns the <em>type</em> of an object?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q1" value="A" onchange="mark(1);checkOne(1)"> <b>A)</b> typeof()</label>
+<label class="opt"><input type="radio" name="q1" value="B" onchange="mark(1);checkOne(1)"> <b>B)</b> type()</label>
+<label class="opt"><input type="radio" name="q1" value="C" onchange="mark(1);checkOne(1)"> <b>C)</b> class()</label>
+<label class="opt"><input type="radio" name="q1" value="D" onchange="mark(1);checkOne(1)"> <b>D)</b> dtype()</label>
+</div>
+</div><div class="q predict" id="q2" data-kind="predict" data-n="2">
+<div class="qhead"><span class="qnum">Q2</span><span class="badge predict">Predict the output</span><span class="status" id="st2"></span></div>
+<div class="prompt">What does integer division give here?</div>
+<pre class="code"><code>print(7 // 2)
+print(-7 // 2)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans2" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(2)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(2)">&#9654; Run &amp; compare</button><span class="runhint" id="rh2"></span><span class="checkres" id="ck2"></span></div>
+<div class="output" id="out2"></div>
+</div><div class="q mcq" id="q3" data-kind="mcq" data-n="3">
+<div class="qhead"><span class="qnum">Q3</span><span class="badge mcq">MCQ</span><span class="status" id="st3"></span><span class="checkres" id="ck3"></span></div>
+<div class="prompt">What is the type of <code>3 / 1</code> in Python 3?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q3" value="A" onchange="mark(3);checkOne(3)"> <b>A)</b> int</label>
+<label class="opt"><input type="radio" name="q3" value="B" onchange="mark(3);checkOne(3)"> <b>B)</b> float</label>
+<label class="opt"><input type="radio" name="q3" value="C" onchange="mark(3);checkOne(3)"> <b>C)</b> complex</label>
+<label class="opt"><input type="radio" name="q3" value="D" onchange="mark(3);checkOne(3)"> <b>D)</b> Decimal</label>
+</div>
+</div><div class="q predict" id="q4" data-kind="predict" data-n="4">
+<div class="qhead"><span class="qnum">Q4</span><span class="badge predict">Predict the output</span><span class="status" id="st4"></span></div>
+<div class="prompt">Floating-point precision surprise:</div>
+<pre class="code"><code>print(0.1 + 0.2)
+print(0.1 + 0.2 == 0.3)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans4" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(4)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(4)">&#9654; Run &amp; compare</button><span class="runhint" id="rh4"></span><span class="checkres" id="ck4"></span></div>
+<div class="output" id="out4"></div>
+</div><div class="q code" id="q5" data-kind="code" data-n="5">
+<div class="qhead"><span class="qnum">Q5</span><span class="badge code">Short code</span><span class="status" id="st5"></span></div>
+<div class="prompt">Without using ==, check that 0.1 + 0.2 is <em>approximately</em> 0.3.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans5" class="code-edit" rows="4" spellcheck="false" oninput="mark(5)">a = 0.1 + 0.2
+# your check here</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(5)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(5)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(5)">Reset</button><span class="runhint" id="rh5"></span><span class="checkres" id="ck5"></span></div>
+<div class="output" id="out5"></div>
+</div><div class="q mcq" id="q6" data-kind="mcq" data-n="6">
+<div class="qhead"><span class="qnum">Q6</span><span class="badge mcq">MCQ</span><span class="status" id="st6"></span><span class="checkres" id="ck6"></span></div>
+<div class="prompt">In Python, <code>bool</code> is a subclass of which type?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q6" value="A" onchange="mark(6);checkOne(6)"> <b>A)</b> str</label>
+<label class="opt"><input type="radio" name="q6" value="B" onchange="mark(6);checkOne(6)"> <b>B)</b> int</label>
+<label class="opt"><input type="radio" name="q6" value="C" onchange="mark(6);checkOne(6)"> <b>C)</b> float</label>
+<label class="opt"><input type="radio" name="q6" value="D" onchange="mark(6);checkOne(6)"> <b>D)</b> None</label>
+</div>
+</div><div class="q predict" id="q7" data-kind="predict" data-n="7">
+<div class="qhead"><span class="qnum">Q7</span><span class="badge predict">Predict the output</span><span class="status" id="st7"></span></div>
+<div class="prompt">Booleans behaving as numbers:</div>
+<pre class="code"><code>print(True + True + False)
+print(True * 5)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans7" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(7)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(7)">&#9654; Run &amp; compare</button><span class="runhint" id="rh7"></span><span class="checkres" id="ck7"></span></div>
+<div class="output" id="out7"></div>
+</div><div class="q predict" id="q8" data-kind="predict" data-n="8">
+<div class="qhead"><span class="qnum">Q8</span><span class="badge predict">Predict the output</span><span class="status" id="st8"></span></div>
+<div class="prompt">How big is a small int?</div>
+<pre class="code"><code>import sys
+print(sys.getsizeof(0))
+print(sys.getsizeof(1))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans8" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(8)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(8)">&#9654; Run &amp; compare</button><span class="runhint" id="rh8"></span><span class="checkres" id="ck8"></span></div>
+<div class="output" id="out8"></div>
+</div><div class="q mcq" id="q9" data-kind="mcq" data-n="9">
+<div class="qhead"><span class="qnum">Q9</span><span class="badge mcq">MCQ</span><span class="status" id="st9"></span><span class="checkres" id="ck9"></span></div>
+<div class="prompt">Which literal creates a complex number with imaginary part 4?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q9" value="A" onchange="mark(9);checkOne(9)"> <b>A)</b> 4i</label>
+<label class="opt"><input type="radio" name="q9" value="B" onchange="mark(9);checkOne(9)"> <b>B)</b> complex(4)</label>
+<label class="opt"><input type="radio" name="q9" value="C" onchange="mark(9);checkOne(9)"> <b>C)</b> 4j</label>
+<label class="opt"><input type="radio" name="q9" value="D" onchange="mark(9);checkOne(9)"> <b>D)</b> j4</label>
+</div>
+</div><div class="q predict" id="q10" data-kind="predict" data-n="10">
+<div class="qhead"><span class="qnum">Q10</span><span class="badge predict">Predict the output</span><span class="status" id="st10"></span></div>
+<div class="prompt">Complex arithmetic:</div>
+<pre class="code"><code>z = 2 + 3j
+print(z.real, z.imag)
+print(abs(z))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans10" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(10)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(10)">&#9654; Run &amp; compare</button><span class="runhint" id="rh10"></span><span class="checkres" id="ck10"></span></div>
+<div class="output" id="out10"></div>
+</div><div class="q predict" id="q11" data-kind="predict" data-n="11">
+<div class="qhead"><span class="qnum">Q11</span><span class="badge predict">Predict the output</span><span class="status" id="st11"></span></div>
+<div class="prompt">Integer caching / identity:</div>
+<pre class="code"><code>a = 256
+b = 256
+print(a is b)
+c = 257
+d = 257
+print(c is d)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans11" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(11)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(11)">&#9654; Run &amp; compare</button><span class="runhint" id="rh11"></span><span class="checkres" id="ck11"></span></div>
+<div class="output" id="out11"></div>
+</div><div class="q mcq" id="q12" data-kind="mcq" data-n="12">
+<div class="qhead"><span class="qnum">Q12</span><span class="badge mcq">MCQ</span><span class="status" id="st12"></span><span class="checkres" id="ck12"></span></div>
+<div class="prompt">What is the result type of <code>5 ** 2</code>?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q12" value="A" onchange="mark(12);checkOne(12)"> <b>A)</b> int</label>
+<label class="opt"><input type="radio" name="q12" value="B" onchange="mark(12);checkOne(12)"> <b>B)</b> float</label>
+<label class="opt"><input type="radio" name="q12" value="C" onchange="mark(12);checkOne(12)"> <b>C)</b> complex</label>
+<label class="opt"><input type="radio" name="q12" value="D" onchange="mark(12);checkOne(12)"> <b>D)</b> depends on values</label>
+</div>
+</div><div class="q predict" id="q13" data-kind="predict" data-n="13">
+<div class="qhead"><span class="qnum">Q13</span><span class="badge predict">Predict the output</span><span class="status" id="st13"></span></div>
+<div class="prompt">Negative exponent changes the type:</div>
+<pre class="code"><code>print(type(2 ** 3))
+print(type(2 ** -1))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans13" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(13)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(13)">&#9654; Run &amp; compare</button><span class="runhint" id="rh13"></span><span class="checkres" id="ck13"></span></div>
+<div class="output" id="out13"></div>
+</div><div class="q code" id="q14" data-kind="code" data-n="14">
+<div class="qhead"><span class="qnum">Q14</span><span class="badge code">Short code</span><span class="status" id="st14"></span></div>
+<div class="prompt">Compute 2 raised to the 100th power and print how many digits it has.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans14" class="code-edit" rows="4" spellcheck="false" oninput="mark(14)">n = 2 ** 100
+# print number of digits</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(14)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(14)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(14)">Reset</button><span class="runhint" id="rh14"></span><span class="checkres" id="ck14"></span></div>
+<div class="output" id="out14"></div>
+</div><div class="q mcq" id="q15" data-kind="mcq" data-n="15">
+<div class="qhead"><span class="qnum">Q15</span><span class="badge mcq">MCQ</span><span class="status" id="st15"></span><span class="checkres" id="ck15"></span></div>
+<div class="prompt">Which module gives <em>exact</em> decimal arithmetic?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q15" value="A" onchange="mark(15);checkOne(15)"> <b>A)</b> math</label>
+<label class="opt"><input type="radio" name="q15" value="B" onchange="mark(15);checkOne(15)"> <b>B)</b> statistics</label>
+<label class="opt"><input type="radio" name="q15" value="C" onchange="mark(15);checkOne(15)"> <b>C)</b> decimal</label>
+<label class="opt"><input type="radio" name="q15" value="D" onchange="mark(15);checkOne(15)"> <b>D)</b> numbers</label>
+</div>
+</div><div class="q predict" id="q16" data-kind="predict" data-n="16">
+<div class="qhead"><span class="qnum">Q16</span><span class="badge predict">Predict the output</span><span class="status" id="st16"></span></div>
+<div class="prompt">Decimal vs float:</div>
+<pre class="code"><code>from decimal import Decimal
+print(Decimal('0.1') + Decimal('0.2'))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans16" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(16)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(16)">&#9654; Run &amp; compare</button><span class="runhint" id="rh16"></span><span class="checkres" id="ck16"></span></div>
+<div class="output" id="out16"></div>
+</div><div class="q predict" id="q17" data-kind="predict" data-n="17">
+<div class="qhead"><span class="qnum">Q17</span><span class="badge predict">Predict the output</span><span class="status" id="st17"></span></div>
+<div class="prompt">The bit_length() method:</div>
+<pre class="code"><code>print((10).bit_length())
+print((255).bit_length())</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans17" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(17)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(17)">&#9654; Run &amp; compare</button><span class="runhint" id="rh17"></span><span class="checkres" id="ck17"></span></div>
+<div class="output" id="out17"></div>
+</div><div class="q mcq" id="q18" data-kind="mcq" data-n="18">
+<div class="qhead"><span class="qnum">Q18</span><span class="badge mcq">MCQ</span><span class="status" id="st18"></span><span class="checkres" id="ck18"></span></div>
+<div class="prompt">What does <code>int('0b1010', 2)</code> return?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q18" value="A" onchange="mark(18);checkOne(18)"> <b>A)</b> Error</label>
+<label class="opt"><input type="radio" name="q18" value="B" onchange="mark(18);checkOne(18)"> <b>B)</b> 10</label>
+<label class="opt"><input type="radio" name="q18" value="C" onchange="mark(18);checkOne(18)"> <b>C)</b> 0b1010</label>
+<label class="opt"><input type="radio" name="q18" value="D" onchange="mark(18);checkOne(18)"> <b>D)</b> 1010</label>
+</div>
+</div><div class="q predict" id="q19" data-kind="predict" data-n="19">
+<div class="qhead"><span class="qnum">Q19</span><span class="badge predict">Predict the output</span><span class="status" id="st19"></span></div>
+<div class="prompt">Chained comparison quirk:</div>
+<pre class="code"><code>print(1 &lt; 2 &lt; 3)
+print(3 &gt; 2 == 2)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans19" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(19)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(19)">&#9654; Run &amp; compare</button><span class="runhint" id="rh19"></span><span class="checkres" id="ck19"></span></div>
+<div class="output" id="out19"></div>
+</div><div class="q code" id="q20" data-kind="code" data-n="20">
+<div class="qhead"><span class="qnum">Q20</span><span class="badge code">Short code</span><span class="status" id="st20"></span></div>
+<div class="prompt">Convert the float 3.99 to an int two ways (truncation vs rounding).</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans20" class="code-edit" rows="4" spellcheck="false" oninput="mark(20)">x = 3.99
+# truncate and round</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(20)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(20)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(20)">Reset</button><span class="runhint" id="rh20"></span><span class="checkres" id="ck20"></span></div>
+<div class="output" id="out20"></div>
+</div><h2 class="section" id="s21">Section 2 · Strings — str <span class="srange">(Q21–Q40)</span></h2><div class="q mcq" id="q21" data-kind="mcq" data-n="21">
+<div class="qhead"><span class="qnum">Q21</span><span class="badge mcq">MCQ</span><span class="status" id="st21"></span><span class="checkres" id="ck21"></span></div>
+<div class="prompt">Strings in Python are:</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q21" value="A" onchange="mark(21);checkOne(21)"> <b>A)</b> mutable</label>
+<label class="opt"><input type="radio" name="q21" value="B" onchange="mark(21);checkOne(21)"> <b>B)</b> immutable</label>
+<label class="opt"><input type="radio" name="q21" value="C" onchange="mark(21);checkOne(21)"> <b>C)</b> mutable only for ASCII</label>
+<label class="opt"><input type="radio" name="q21" value="D" onchange="mark(21);checkOne(21)"> <b>D)</b> mutable via index assignment</label>
+</div>
+</div><div class="q predict" id="q22" data-kind="predict" data-n="22">
+<div class="qhead"><span class="qnum">Q22</span><span class="badge predict">Predict the output</span><span class="status" id="st22"></span></div>
+<div class="prompt">Immutability check:</div>
+<pre class="code"><code>s = 'hello'
+print(s.upper())
+print(s)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans22" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(22)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(22)">&#9654; Run &amp; compare</button><span class="runhint" id="rh22"></span><span class="checkres" id="ck22"></span></div>
+<div class="output" id="out22"></div>
+</div><div class="q predict" id="q23" data-kind="predict" data-n="23">
+<div class="qhead"><span class="qnum">Q23</span><span class="badge predict">Predict the output</span><span class="status" id="st23"></span></div>
+<div class="prompt">String multiplication:</div>
+<pre class="code"><code>print('ab' * 3)
+print('-' * 10)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans23" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(23)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(23)">&#9654; Run &amp; compare</button><span class="runhint" id="rh23"></span><span class="checkres" id="ck23"></span></div>
+<div class="output" id="out23"></div>
+</div><div class="q mcq" id="q24" data-kind="mcq" data-n="24">
+<div class="qhead"><span class="qnum">Q24</span><span class="badge mcq">MCQ</span><span class="status" id="st24"></span><span class="checkres" id="ck24"></span></div>
+<div class="prompt">What does <code>'Python'[-2]</code> return?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q24" value="A" onchange="mark(24);checkOne(24)"> <b>A)</b> 'o'</label>
+<label class="opt"><input type="radio" name="q24" value="B" onchange="mark(24);checkOne(24)"> <b>B)</b> 'n'</label>
+<label class="opt"><input type="radio" name="q24" value="C" onchange="mark(24);checkOne(24)"> <b>C)</b> 't'</label>
+<label class="opt"><input type="radio" name="q24" value="D" onchange="mark(24);checkOne(24)"> <b>D)</b> IndexError</label>
+</div>
+</div><div class="q predict" id="q25" data-kind="predict" data-n="25">
+<div class="qhead"><span class="qnum">Q25</span><span class="badge predict">Predict the output</span><span class="status" id="st25"></span></div>
+<div class="prompt">Slicing basics:</div>
+<pre class="code"><code>s = 'DataScience'
+print(s[0:4])
+print(s[4:])
+print(s[::-1])</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans25" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(25)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(25)">&#9654; Run &amp; compare</button><span class="runhint" id="rh25"></span><span class="checkres" id="ck25"></span></div>
+<div class="output" id="out25"></div>
+</div><div class="q code" id="q26" data-kind="code" data-n="26">
+<div class="qhead"><span class="qnum">Q26</span><span class="badge code">Short code</span><span class="status" id="st26"></span></div>
+<div class="prompt">Check whether 'racecar' is a palindrome using slicing.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans26" class="code-edit" rows="4" spellcheck="false" oninput="mark(26)">s = 'racecar'
+# your check here</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(26)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(26)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(26)">Reset</button><span class="runhint" id="rh26"></span><span class="checkres" id="ck26"></span></div>
+<div class="output" id="out26"></div>
+</div><div class="q mcq" id="q27" data-kind="mcq" data-n="27">
+<div class="qhead"><span class="qnum">Q27</span><span class="badge mcq">MCQ</span><span class="status" id="st27"></span><span class="checkres" id="ck27"></span></div>
+<div class="prompt">Which method splits a string on whitespace by default?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q27" value="A" onchange="mark(27);checkOne(27)"> <b>A)</b> divide()</label>
+<label class="opt"><input type="radio" name="q27" value="B" onchange="mark(27);checkOne(27)"> <b>B)</b> split()</label>
+<label class="opt"><input type="radio" name="q27" value="C" onchange="mark(27);checkOne(27)"> <b>C)</b> partition()</label>
+<label class="opt"><input type="radio" name="q27" value="D" onchange="mark(27);checkOne(27)"> <b>D)</b> cut()</label>
+</div>
+</div><div class="q predict" id="q28" data-kind="predict" data-n="28">
+<div class="qhead"><span class="qnum">Q28</span><span class="badge predict">Predict the output</span><span class="status" id="st28"></span></div>
+<div class="prompt">join is the inverse of split:</div>
+<pre class="code"><code>words = ['data', 'is', 'oil']
+print(' '.join(words))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans28" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(28)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(28)">&#9654; Run &amp; compare</button><span class="runhint" id="rh28"></span><span class="checkres" id="ck28"></span></div>
+<div class="output" id="out28"></div>
+</div><div class="q predict" id="q29" data-kind="predict" data-n="29">
+<div class="qhead"><span class="qnum">Q29</span><span class="badge predict">Predict the output</span><span class="status" id="st29"></span></div>
+<div class="prompt">f-string formatting:</div>
+<pre class="code"><code>name = 'VJ'
+n = 42
+print(f'{name} scored {n}/50 = {n/50:.1%}')</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans29" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(29)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(29)">&#9654; Run &amp; compare</button><span class="runhint" id="rh29"></span><span class="checkres" id="ck29"></span></div>
+<div class="output" id="out29"></div>
+</div><div class="q mcq" id="q30" data-kind="mcq" data-n="30">
+<div class="qhead"><span class="qnum">Q30</span><span class="badge mcq">MCQ</span><span class="status" id="st30"></span><span class="checkres" id="ck30"></span></div>
+<div class="prompt">Type of <code>'a', 'b'</code> (note the comma) on the RHS of an assignment?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q30" value="A" onchange="mark(30);checkOne(30)"> <b>A)</b> str</label>
+<label class="opt"><input type="radio" name="q30" value="B" onchange="mark(30);checkOne(30)"> <b>B)</b> list</label>
+<label class="opt"><input type="radio" name="q30" value="C" onchange="mark(30);checkOne(30)"> <b>C)</b> tuple</label>
+<label class="opt"><input type="radio" name="q30" value="D" onchange="mark(30);checkOne(30)"> <b>D)</b> SyntaxError</label>
+</div>
+</div><div class="q predict" id="q31" data-kind="predict" data-n="31">
+<div class="qhead"><span class="qnum">Q31</span><span class="badge predict">Predict the output</span><span class="status" id="st31"></span></div>
+<div class="prompt">String is a sequence:</div>
+<pre class="code"><code>for ch in 'AI':
+    print(ch)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans31" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(31)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(31)">&#9654; Run &amp; compare</button><span class="runhint" id="rh31"></span><span class="checkres" id="ck31"></span></div>
+<div class="output" id="out31"></div>
+</div><div class="q predict" id="q32" data-kind="predict" data-n="32">
+<div class="qhead"><span class="qnum">Q32</span><span class="badge predict">Predict the output</span><span class="status" id="st32"></span></div>
+<div class="prompt">in membership on strings:</div>
+<pre class="code"><code>print('Sci' in 'DataScience')
+print('sci' in 'DataScience')</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans32" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(32)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(32)">&#9654; Run &amp; compare</button><span class="runhint" id="rh32"></span><span class="checkres" id="ck32"></span></div>
+<div class="output" id="out32"></div>
+</div><div class="q code" id="q33" data-kind="code" data-n="33">
+<div class="qhead"><span class="qnum">Q33</span><span class="badge code">Short code</span><span class="status" id="st33"></span></div>
+<div class="prompt">Count how many times 's' (case-insensitive) appears in 'Mississippi'.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans33" class="code-edit" rows="4" spellcheck="false" oninput="mark(33)">s = 'Mississippi'
+# your count here</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(33)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(33)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(33)">Reset</button><span class="runhint" id="rh33"></span><span class="checkres" id="ck33"></span></div>
+<div class="output" id="out33"></div>
+</div><div class="q mcq" id="q34" data-kind="mcq" data-n="34">
+<div class="qhead"><span class="qnum">Q34</span><span class="badge mcq">MCQ</span><span class="status" id="st34"></span><span class="checkres" id="ck34"></span></div>
+<div class="prompt"><code>str.strip()</code> removes:</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q34" value="A" onchange="mark(34);checkOne(34)"> <b>A)</b> all spaces everywhere</label>
+<label class="opt"><input type="radio" name="q34" value="B" onchange="mark(34);checkOne(34)"> <b>B)</b> leading and trailing whitespace</label>
+<label class="opt"><input type="radio" name="q34" value="C" onchange="mark(34);checkOne(34)"> <b>C)</b> only leading whitespace</label>
+<label class="opt"><input type="radio" name="q34" value="D" onchange="mark(34);checkOne(34)"> <b>D)</b> vowels</label>
+</div>
+</div><div class="q predict" id="q35" data-kind="predict" data-n="35">
+<div class="qhead"><span class="qnum">Q35</span><span class="badge predict">Predict the output</span><span class="status" id="st35"></span></div>
+<div class="prompt">Escape sequences and raw strings:</div>
+<pre class="code"><code>print('a\tb')
+print(r'a\tb')</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans35" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(35)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(35)">&#9654; Run &amp; compare</button><span class="runhint" id="rh35"></span><span class="checkres" id="ck35"></span></div>
+<div class="output" id="out35"></div>
+</div><div class="q predict" id="q36" data-kind="predict" data-n="36">
+<div class="qhead"><span class="qnum">Q36</span><span class="badge predict">Predict the output</span><span class="status" id="st36"></span></div>
+<div class="prompt">String comparison is lexicographic:</div>
+<pre class="code"><code>print('apple' &lt; 'banana')
+print('Apple' &lt; 'apple')</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans36" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(36)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(36)">&#9654; Run &amp; compare</button><span class="runhint" id="rh36"></span><span class="checkres" id="ck36"></span></div>
+<div class="output" id="out36"></div>
+</div><div class="q mcq" id="q37" data-kind="mcq" data-n="37">
+<div class="qhead"><span class="qnum">Q37</span><span class="badge mcq">MCQ</span><span class="status" id="st37"></span><span class="checkres" id="ck37"></span></div>
+<div class="prompt">Which gives the number of characters in a string?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q37" value="A" onchange="mark(37);checkOne(37)"> <b>A)</b> s.length()</label>
+<label class="opt"><input type="radio" name="q37" value="B" onchange="mark(37);checkOne(37)"> <b>B)</b> len(s)</label>
+<label class="opt"><input type="radio" name="q37" value="C" onchange="mark(37);checkOne(37)"> <b>C)</b> s.size()</label>
+<label class="opt"><input type="radio" name="q37" value="D" onchange="mark(37);checkOne(37)"> <b>D)</b> count(s)</label>
+</div>
+</div><div class="q predict" id="q38" data-kind="predict" data-n="38">
+<div class="qhead"><span class="qnum">Q38</span><span class="badge predict">Predict the output</span><span class="status" id="st38"></span></div>
+<div class="prompt">isdigit() and friends:</div>
+<pre class="code"><code>print('123'.isdigit())
+print('12.3'.isdigit())
+print('abc'.isalpha())</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans38" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(38)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(38)">&#9654; Run &amp; compare</button><span class="runhint" id="rh38"></span><span class="checkres" id="ck38"></span></div>
+<div class="output" id="out38"></div>
+</div><div class="q code" id="q39" data-kind="code" data-n="39">
+<div class="qhead"><span class="qnum">Q39</span><span class="badge code">Short code</span><span class="status" id="st39"></span></div>
+<div class="prompt">From email = 'vj@iiitdm.ac.in', extract username and domain.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans39" class="code-edit" rows="4" spellcheck="false" oninput="mark(39)">email = 'vj@iiitdm.ac.in'
+# split into user and domain</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(39)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(39)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(39)">Reset</button><span class="runhint" id="rh39"></span><span class="checkres" id="ck39"></span></div>
+<div class="output" id="out39"></div>
+</div><div class="q predict" id="q40" data-kind="predict" data-n="40">
+<div class="qhead"><span class="qnum">Q40</span><span class="badge predict">Predict the output</span><span class="status" id="st40"></span></div>
+<div class="prompt">Concatenation vs types:</div>
+<pre class="code"><code>age = 20
+print('age: ' + str(age))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans40" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(40)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(40)">&#9654; Run &amp; compare</button><span class="runhint" id="rh40"></span><span class="checkres" id="ck40"></span></div>
+<div class="output" id="out40"></div>
+</div><h2 class="section" id="s41">Section 3 · Lists &amp; Tuples — list, tuple <span class="srange">(Q41–Q60)</span></h2><div class="q mcq" id="q41" data-kind="mcq" data-n="41">
+<div class="qhead"><span class="qnum">Q41</span><span class="badge mcq">MCQ</span><span class="status" id="st41"></span><span class="checkres" id="ck41"></span></div>
+<div class="prompt">The key difference between a list and a tuple:</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q41" value="A" onchange="mark(41);checkOne(41)"> <b>A)</b> lists are ordered, tuples are not</label>
+<label class="opt"><input type="radio" name="q41" value="B" onchange="mark(41);checkOne(41)"> <b>B)</b> lists are mutable, tuples are immutable</label>
+<label class="opt"><input type="radio" name="q41" value="C" onchange="mark(41);checkOne(41)"> <b>C)</b> tuples can't hold mixed types</label>
+<label class="opt"><input type="radio" name="q41" value="D" onchange="mark(41);checkOne(41)"> <b>D)</b> lists can't be nested</label>
+</div>
+</div><div class="q predict" id="q42" data-kind="predict" data-n="42">
+<div class="qhead"><span class="qnum">Q42</span><span class="badge predict">Predict the output</span><span class="status" id="st42"></span></div>
+<div class="prompt">Lists are mutable:</div>
+<pre class="code"><code>a = [1, 2, 3]
+a[0] = 99
+print(a)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans42" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(42)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(42)">&#9654; Run &amp; compare</button><span class="runhint" id="rh42"></span><span class="checkres" id="ck42"></span></div>
+<div class="output" id="out42"></div>
+</div><div class="q predict" id="q43" data-kind="predict" data-n="43">
+<div class="qhead"><span class="qnum">Q43</span><span class="badge predict">Predict the output</span><span class="status" id="st43"></span></div>
+<div class="prompt">Tuple immutability:</div>
+<pre class="code"><code>t = (1, 2, 3)
+try:
+    t[0] = 99
+except TypeError:
+    print('TypeError')</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans43" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(43)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(43)">&#9654; Run &amp; compare</button><span class="runhint" id="rh43"></span><span class="checkres" id="ck43"></span></div>
+<div class="output" id="out43"></div>
+</div><div class="q mcq" id="q44" data-kind="mcq" data-n="44">
+<div class="qhead"><span class="qnum">Q44</span><span class="badge mcq">MCQ</span><span class="status" id="st44"></span><span class="checkres" id="ck44"></span></div>
+<div class="prompt">Single-element tuple containing just 5?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q44" value="A" onchange="mark(44);checkOne(44)"> <b>A)</b> (5)</label>
+<label class="opt"><input type="radio" name="q44" value="B" onchange="mark(44);checkOne(44)"> <b>B)</b> (5,)</label>
+<label class="opt"><input type="radio" name="q44" value="C" onchange="mark(44);checkOne(44)"> <b>C)</b> [5]</label>
+<label class="opt"><input type="radio" name="q44" value="D" onchange="mark(44);checkOne(44)"> <b>D)</b> tuple(5)</label>
+</div>
+</div><div class="q predict" id="q45" data-kind="predict" data-n="45">
+<div class="qhead"><span class="qnum">Q45</span><span class="badge predict">Predict the output</span><span class="status" id="st45"></span></div>
+<div class="prompt">Aliasing — a classic bug:</div>
+<pre class="code"><code>a = [1, 2, 3]
+b = a
+b.append(4)
+print(a)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans45" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(45)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(45)">&#9654; Run &amp; compare</button><span class="runhint" id="rh45"></span><span class="checkres" id="ck45"></span></div>
+<div class="output" id="out45"></div>
+</div><div class="q code" id="q46" data-kind="code" data-n="46">
+<div class="qhead"><span class="qnum">Q46</span><span class="badge code">Short code</span><span class="status" id="st46"></span></div>
+<div class="prompt">Make an independent copy of a list.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans46" class="code-edit" rows="4" spellcheck="false" oninput="mark(46)">a = [1, 2, 3]
+# make a copy b, then modify b</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(46)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(46)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(46)">Reset</button><span class="runhint" id="rh46"></span><span class="checkres" id="ck46"></span></div>
+<div class="output" id="out46"></div>
+</div><div class="q predict" id="q47" data-kind="predict" data-n="47">
+<div class="qhead"><span class="qnum">Q47</span><span class="badge predict">Predict the output</span><span class="status" id="st47"></span></div>
+<div class="prompt">List slicing returns a new list:</div>
+<pre class="code"><code>a = [10, 20, 30, 40, 50]
+print(a[1:4])
+print(a[::2])</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans47" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(47)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(47)">&#9654; Run &amp; compare</button><span class="runhint" id="rh47"></span><span class="checkres" id="ck47"></span></div>
+<div class="output" id="out47"></div>
+</div><div class="q mcq" id="q48" data-kind="mcq" data-n="48">
+<div class="qhead"><span class="qnum">Q48</span><span class="badge mcq">MCQ</span><span class="status" id="st48"></span><span class="checkres" id="ck48"></span></div>
+<div class="prompt">Which adds a single element to the <em>end</em> of a list?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q48" value="A" onchange="mark(48);checkOne(48)"> <b>A)</b> add()</label>
+<label class="opt"><input type="radio" name="q48" value="B" onchange="mark(48);checkOne(48)"> <b>B)</b> append()</label>
+<label class="opt"><input type="radio" name="q48" value="C" onchange="mark(48);checkOne(48)"> <b>C)</b> extend()</label>
+<label class="opt"><input type="radio" name="q48" value="D" onchange="mark(48);checkOne(48)"> <b>D)</b> insert()</label>
+</div>
+</div><div class="q predict" id="q49" data-kind="predict" data-n="49">
+<div class="qhead"><span class="qnum">Q49</span><span class="badge predict">Predict the output</span><span class="status" id="st49"></span></div>
+<div class="prompt">append vs extend:</div>
+<pre class="code"><code>a = [1, 2]
+a.append([3, 4])
+print(a)
+b = [1, 2]
+b.extend([3, 4])
+print(b)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans49" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(49)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(49)">&#9654; Run &amp; compare</button><span class="runhint" id="rh49"></span><span class="checkres" id="ck49"></span></div>
+<div class="output" id="out49"></div>
+</div><div class="q predict" id="q50" data-kind="predict" data-n="50">
+<div class="qhead"><span class="qnum">Q50</span><span class="badge predict">Predict the output</span><span class="status" id="st50"></span></div>
+<div class="prompt">The mutable default argument trap:</div>
+<pre class="code"><code>def f(x, acc=[]):
+    acc.append(x)
+    return acc
+print(f(1))
+print(f(2))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans50" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(50)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(50)">&#9654; Run &amp; compare</button><span class="runhint" id="rh50"></span><span class="checkres" id="ck50"></span></div>
+<div class="output" id="out50"></div>
+</div><div class="q code" id="q51" data-kind="code" data-n="51">
+<div class="qhead"><span class="qnum">Q51</span><span class="badge code">Short code</span><span class="status" id="st51"></span></div>
+<div class="prompt">Sort [3,1,4,1,5,9,2,6] descending without changing the original.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans51" class="code-edit" rows="4" spellcheck="false" oninput="mark(51)">nums = [3, 1, 4, 1, 5, 9, 2, 6]
+# produce a sorted copy</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(51)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(51)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(51)">Reset</button><span class="runhint" id="rh51"></span><span class="checkres" id="ck51"></span></div>
+<div class="output" id="out51"></div>
+</div><div class="q mcq" id="q52" data-kind="mcq" data-n="52">
+<div class="qhead"><span class="qnum">Q52</span><span class="badge mcq">MCQ</span><span class="status" id="st52"></span><span class="checkres" id="ck52"></span></div>
+<div class="prompt">What does <code>[0] * 3</code> produce?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q52" value="A" onchange="mark(52);checkOne(52)"> <b>A)</b> [0, 3]</label>
+<label class="opt"><input type="radio" name="q52" value="B" onchange="mark(52);checkOne(52)"> <b>B)</b> [0, 0, 0]</label>
+<label class="opt"><input type="radio" name="q52" value="C" onchange="mark(52);checkOne(52)"> <b>C)</b> [3]</label>
+<label class="opt"><input type="radio" name="q52" value="D" onchange="mark(52);checkOne(52)"> <b>D)</b> TypeError</label>
+</div>
+</div><div class="q predict" id="q53" data-kind="predict" data-n="53">
+<div class="qhead"><span class="qnum">Q53</span><span class="badge predict">Predict the output</span><span class="status" id="st53"></span></div>
+<div class="prompt">Nested-list repetition pitfall:</div>
+<pre class="code"><code>grid = [[0] * 2] * 2
+grid[0][0] = 9
+print(grid)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans53" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(53)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(53)">&#9654; Run &amp; compare</button><span class="runhint" id="rh53"></span><span class="checkres" id="ck53"></span></div>
+<div class="output" id="out53"></div>
+</div><div class="q predict" id="q54" data-kind="predict" data-n="54">
+<div class="qhead"><span class="qnum">Q54</span><span class="badge predict">Predict the output</span><span class="status" id="st54"></span></div>
+<div class="prompt">List comprehension:</div>
+<pre class="code"><code>squares = [x*x for x in range(5)]
+print(squares)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans54" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(54)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(54)">&#9654; Run &amp; compare</button><span class="runhint" id="rh54"></span><span class="checkres" id="ck54"></span></div>
+<div class="output" id="out54"></div>
+</div><div class="q code" id="q55" data-kind="code" data-n="55">
+<div class="qhead"><span class="qnum">Q55</span><span class="badge code">Short code</span><span class="status" id="st55"></span></div>
+<div class="prompt">List comprehension: even numbers 0..20 inclusive.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans55" class="code-edit" rows="4" spellcheck="false" oninput="mark(55)"># even numbers 0..20</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(55)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(55)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(55)">Reset</button><span class="runhint" id="rh55"></span><span class="checkres" id="ck55"></span></div>
+<div class="output" id="out55"></div>
+</div><div class="q mcq" id="q56" data-kind="mcq" data-n="56">
+<div class="qhead"><span class="qnum">Q56</span><span class="badge mcq">MCQ</span><span class="status" id="st56"></span><span class="checkres" id="ck56"></span></div>
+<div class="prompt">After <code>a, b, c = (1, 2, 3)</code>, what is b?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q56" value="A" onchange="mark(56);checkOne(56)"> <b>A)</b> 1</label>
+<label class="opt"><input type="radio" name="q56" value="B" onchange="mark(56);checkOne(56)"> <b>B)</b> 2</label>
+<label class="opt"><input type="radio" name="q56" value="C" onchange="mark(56);checkOne(56)"> <b>C)</b> 3</label>
+<label class="opt"><input type="radio" name="q56" value="D" onchange="mark(56);checkOne(56)"> <b>D)</b> (2,)</label>
+</div>
+</div><div class="q predict" id="q57" data-kind="predict" data-n="57">
+<div class="qhead"><span class="qnum">Q57</span><span class="badge predict">Predict the output</span><span class="status" id="st57"></span></div>
+<div class="prompt">Swapping without a temp variable:</div>
+<pre class="code"><code>a, b = 5, 10
+a, b = b, a
+print(a, b)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans57" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(57)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(57)">&#9654; Run &amp; compare</button><span class="runhint" id="rh57"></span><span class="checkres" id="ck57"></span></div>
+<div class="output" id="out57"></div>
+</div><div class="q predict" id="q58" data-kind="predict" data-n="58">
+<div class="qhead"><span class="qnum">Q58</span><span class="badge predict">Predict the output</span><span class="status" id="st58"></span></div>
+<div class="prompt">Star unpacking:</div>
+<pre class="code"><code>first, *rest = [1, 2, 3, 4]
+print(first, rest)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans58" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(58)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(58)">&#9654; Run &amp; compare</button><span class="runhint" id="rh58"></span><span class="checkres" id="ck58"></span></div>
+<div class="output" id="out58"></div>
+</div><div class="q mcq" id="q59" data-kind="mcq" data-n="59">
+<div class="qhead"><span class="qnum">Q59</span><span class="badge mcq">MCQ</span><span class="status" id="st59"></span><span class="checkres" id="ck59"></span></div>
+<div class="prompt">Why can a tuple be a dict key but a list cannot?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q59" value="A" onchange="mark(59);checkOne(59)"> <b>A)</b> tuples are shorter</label>
+<label class="opt"><input type="radio" name="q59" value="B" onchange="mark(59);checkOne(59)"> <b>B)</b> tuples are hashable (immutable), lists are not</label>
+<label class="opt"><input type="radio" name="q59" value="C" onchange="mark(59);checkOne(59)"> <b>C)</b> lists are hashable, tuples are not</label>
+<label class="opt"><input type="radio" name="q59" value="D" onchange="mark(59);checkOne(59)"> <b>D)</b> both can be keys</label>
+</div>
+</div><div class="q code" id="q60" data-kind="code" data-n="60">
+<div class="qhead"><span class="qnum">Q60</span><span class="badge code">Short code</span><span class="status" id="st60"></span></div>
+<div class="prompt">points = [(1,2),(3,4),(5,6)] — unpack in a loop to print x and y.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans60" class="code-edit" rows="4" spellcheck="false" oninput="mark(60)">points = [(1,2), (3,4), (5,6)]
+# loop and unpack</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(60)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(60)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(60)">Reset</button><span class="runhint" id="rh60"></span><span class="checkres" id="ck60"></span></div>
+<div class="output" id="out60"></div>
+</div><h2 class="section" id="s61">Section 4 · Dictionaries &amp; Sets — dict, set <span class="srange">(Q61–Q80)</span></h2><div class="q mcq" id="q61" data-kind="mcq" data-n="61">
+<div class="qhead"><span class="qnum">Q61</span><span class="badge mcq">MCQ</span><span class="status" id="st61"></span><span class="checkres" id="ck61"></span></div>
+<div class="prompt">A Python dictionary stores data as:</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q61" value="A" onchange="mark(61);checkOne(61)"> <b>A)</b> ordered indices</label>
+<label class="opt"><input type="radio" name="q61" value="B" onchange="mark(61);checkOne(61)"> <b>B)</b> key–value pairs</label>
+<label class="opt"><input type="radio" name="q61" value="C" onchange="mark(61);checkOne(61)"> <b>C)</b> duplicate keys allowed</label>
+<label class="opt"><input type="radio" name="q61" value="D" onchange="mark(61);checkOne(61)"> <b>D)</b> a fixed-size array</label>
+</div>
+</div><div class="q predict" id="q62" data-kind="predict" data-n="62">
+<div class="qhead"><span class="qnum">Q62</span><span class="badge predict">Predict the output</span><span class="status" id="st62"></span></div>
+<div class="prompt">Accessing dict values:</div>
+<pre class="code"><code>d = {'a': 1, 'b': 2}
+print(d['a'])
+print(d.get('c', 0))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans62" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(62)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(62)">&#9654; Run &amp; compare</button><span class="runhint" id="rh62"></span><span class="checkres" id="ck62"></span></div>
+<div class="output" id="out62"></div>
+</div><div class="q mcq" id="q63" data-kind="mcq" data-n="63">
+<div class="qhead"><span class="qnum">Q63</span><span class="badge mcq">MCQ</span><span class="status" id="st63"></span><span class="checkres" id="ck63"></span></div>
+<div class="prompt">Assigning to an existing key <code>d['a'] = 5</code>:</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q63" value="A" onchange="mark(63);checkOne(63)"> <b>A)</b> raises error</label>
+<label class="opt"><input type="radio" name="q63" value="B" onchange="mark(63);checkOne(63)"> <b>B)</b> creates duplicate key</label>
+<label class="opt"><input type="radio" name="q63" value="C" onchange="mark(63);checkOne(63)"> <b>C)</b> overwrites the value</label>
+<label class="opt"><input type="radio" name="q63" value="D" onchange="mark(63);checkOne(63)"> <b>D)</b> appends to a list</label>
+</div>
+</div><div class="q predict" id="q64" data-kind="predict" data-n="64">
+<div class="qhead"><span class="qnum">Q64</span><span class="badge predict">Predict the output</span><span class="status" id="st64"></span></div>
+<div class="prompt">Keys must be unique — later wins:</div>
+<pre class="code"><code>d = {'x': 1, 'x': 2}
+print(d)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans64" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(64)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(64)">&#9654; Run &amp; compare</button><span class="runhint" id="rh64"></span><span class="checkres" id="ck64"></span></div>
+<div class="output" id="out64"></div>
+</div><div class="q code" id="q65" data-kind="code" data-n="65">
+<div class="qhead"><span class="qnum">Q65</span><span class="badge code">Short code</span><span class="status" id="st65"></span></div>
+<div class="prompt">marks = {'Asha':88,'Ravi':72} — add 'Meera' with 95 and print.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans65" class="code-edit" rows="4" spellcheck="false" oninput="mark(65)">marks = {'Asha': 88, 'Ravi': 72}
+# add Meera</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(65)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(65)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(65)">Reset</button><span class="runhint" id="rh65"></span><span class="checkres" id="ck65"></span></div>
+<div class="output" id="out65"></div>
+</div><div class="q predict" id="q66" data-kind="predict" data-n="66">
+<div class="qhead"><span class="qnum">Q66</span><span class="badge predict">Predict the output</span><span class="status" id="st66"></span></div>
+<div class="prompt">Iterating a dict yields keys:</div>
+<pre class="code"><code>d = {'a': 1, 'b': 2}
+for k in d:
+    print(k, d[k])</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans66" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(66)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(66)">&#9654; Run &amp; compare</button><span class="runhint" id="rh66"></span><span class="checkres" id="ck66"></span></div>
+<div class="output" id="out66"></div>
+</div><div class="q mcq" id="q67" data-kind="mcq" data-n="67">
+<div class="qhead"><span class="qnum">Q67</span><span class="badge mcq">MCQ</span><span class="status" id="st67"></span><span class="checkres" id="ck67"></span></div>
+<div class="prompt">Which returns a view of all key–value pairs?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q67" value="A" onchange="mark(67);checkOne(67)"> <b>A)</b> d.keys()</label>
+<label class="opt"><input type="radio" name="q67" value="B" onchange="mark(67);checkOne(67)"> <b>B)</b> d.values()</label>
+<label class="opt"><input type="radio" name="q67" value="C" onchange="mark(67);checkOne(67)"> <b>C)</b> d.items()</label>
+<label class="opt"><input type="radio" name="q67" value="D" onchange="mark(67);checkOne(67)"> <b>D)</b> d.pairs()</label>
+</div>
+</div><div class="q predict" id="q68" data-kind="predict" data-n="68">
+<div class="qhead"><span class="qnum">Q68</span><span class="badge predict">Predict the output</span><span class="status" id="st68"></span></div>
+<div class="prompt">Dict comprehension:</div>
+<pre class="code"><code>sq = {x: x*x for x in range(4)}
+print(sq)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans68" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(68)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(68)">&#9654; Run &amp; compare</button><span class="runhint" id="rh68"></span><span class="checkres" id="ck68"></span></div>
+<div class="output" id="out68"></div>
+</div><div class="q code" id="q69" data-kind="code" data-n="69">
+<div class="qhead"><span class="qnum">Q69</span><span class="badge code">Short code</span><span class="status" id="st69"></span></div>
+<div class="prompt">marks={'Asha':88,'Ravi':72,'Meera':95} — dict of only students ≥ 80.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans69" class="code-edit" rows="4" spellcheck="false" oninput="mark(69)">marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}
+# filter with a dict comprehension</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(69)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(69)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(69)">Reset</button><span class="runhint" id="rh69"></span><span class="checkres" id="ck69"></span></div>
+<div class="output" id="out69"></div>
+</div><div class="q mcq" id="q70" data-kind="mcq" data-n="70">
+<div class="qhead"><span class="qnum">Q70</span><span class="badge mcq">MCQ</span><span class="status" id="st70"></span><span class="checkres" id="ck70"></span></div>
+<div class="prompt">A <code>set</code> is:</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q70" value="A" onchange="mark(70);checkOne(70)"> <b>A)</b> an ordered list</label>
+<label class="opt"><input type="radio" name="q70" value="B" onchange="mark(70);checkOne(70)"> <b>B)</b> an unordered collection of unique elements</label>
+<label class="opt"><input type="radio" name="q70" value="C" onchange="mark(70);checkOne(70)"> <b>C)</b> a key-value store</label>
+<label class="opt"><input type="radio" name="q70" value="D" onchange="mark(70);checkOne(70)"> <b>D)</b> an immutable sequence</label>
+</div>
+</div><div class="q predict" id="q71" data-kind="predict" data-n="71">
+<div class="qhead"><span class="qnum">Q71</span><span class="badge predict">Predict the output</span><span class="status" id="st71"></span></div>
+<div class="prompt">Sets drop duplicates:</div>
+<pre class="code"><code>print(set([1, 2, 2, 3, 3, 3]))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans71" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(71)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(71)">&#9654; Run &amp; compare</button><span class="runhint" id="rh71"></span><span class="checkres" id="ck71"></span></div>
+<div class="output" id="out71"></div>
+</div><div class="q predict" id="q72" data-kind="predict" data-n="72">
+<div class="qhead"><span class="qnum">Q72</span><span class="badge predict">Predict the output</span><span class="status" id="st72"></span></div>
+<div class="prompt">Set operations:</div>
+<pre class="code"><code>a = {1, 2, 3}
+b = {2, 3, 4}
+print(a &amp; b)
+print(a | b)
+print(a - b)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans72" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(72)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(72)">&#9654; Run &amp; compare</button><span class="runhint" id="rh72"></span><span class="checkres" id="ck72"></span></div>
+<div class="output" id="out72"></div>
+</div><div class="q code" id="q73" data-kind="code" data-n="73">
+<div class="qhead"><span class="qnum">Q73</span><span class="badge code">Short code</span><span class="status" id="st73"></span></div>
+<div class="prompt">Print values common to both lists using sets.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans73" class="code-edit" rows="4" spellcheck="false" oninput="mark(73)">a = [1, 2, 3, 4]
+b = [3, 4, 5, 6]
+# common values</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(73)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(73)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(73)">Reset</button><span class="runhint" id="rh73"></span><span class="checkres" id="ck73"></span></div>
+<div class="output" id="out73"></div>
+</div><div class="q mcq" id="q74" data-kind="mcq" data-n="74">
+<div class="qhead"><span class="qnum">Q74</span><span class="badge mcq">MCQ</span><span class="status" id="st74"></span><span class="checkres" id="ck74"></span></div>
+<div class="prompt">What is the type of <code>{}</code> (empty braces)?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q74" value="A" onchange="mark(74);checkOne(74)"> <b>A)</b> set</label>
+<label class="opt"><input type="radio" name="q74" value="B" onchange="mark(74);checkOne(74)"> <b>B)</b> dict</label>
+<label class="opt"><input type="radio" name="q74" value="C" onchange="mark(74);checkOne(74)"> <b>C)</b> list</label>
+<label class="opt"><input type="radio" name="q74" value="D" onchange="mark(74);checkOne(74)"> <b>D)</b> tuple</label>
+</div>
+</div><div class="q predict" id="q75" data-kind="predict" data-n="75">
+<div class="qhead"><span class="qnum">Q75</span><span class="badge predict">Predict the output</span><span class="status" id="st75"></span></div>
+<div class="prompt">Empty set vs empty dict:</div>
+<pre class="code"><code>print(type({}))
+print(type(set()))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans75" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(75)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(75)">&#9654; Run &amp; compare</button><span class="runhint" id="rh75"></span><span class="checkres" id="ck75"></span></div>
+<div class="output" id="out75"></div>
+</div><div class="q predict" id="q76" data-kind="predict" data-n="76">
+<div class="qhead"><span class="qnum">Q76</span><span class="badge predict">Predict the output</span><span class="status" id="st76"></span></div>
+<div class="prompt">Sets are unordered — no indexing:</div>
+<pre class="code"><code>s = {10, 20, 30}
+try:
+    print(s[0])
+except TypeError:
+    print('not subscriptable')</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans76" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(76)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(76)">&#9654; Run &amp; compare</button><span class="runhint" id="rh76"></span><span class="checkres" id="ck76"></span></div>
+<div class="output" id="out76"></div>
+</div><div class="q mcq" id="q77" data-kind="mcq" data-n="77">
+<div class="qhead"><span class="qnum">Q77</span><span class="badge mcq">MCQ</span><span class="status" id="st77"></span><span class="checkres" id="ck77"></span></div>
+<div class="prompt">Which can be an element of a set?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q77" value="A" onchange="mark(77);checkOne(77)"> <b>A)</b> a list</label>
+<label class="opt"><input type="radio" name="q77" value="B" onchange="mark(77);checkOne(77)"> <b>B)</b> a dict</label>
+<label class="opt"><input type="radio" name="q77" value="C" onchange="mark(77);checkOne(77)"> <b>C)</b> a tuple</label>
+<label class="opt"><input type="radio" name="q77" value="D" onchange="mark(77);checkOne(77)"> <b>D)</b> another set</label>
+</div>
+</div><div class="q code" id="q78" data-kind="code" data-n="78">
+<div class="qhead"><span class="qnum">Q78</span><span class="badge code">Short code</span><span class="status" id="st78"></span></div>
+<div class="prompt">Count unique words in 'the cat sat on the mat'.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans78" class="code-edit" rows="4" spellcheck="false" oninput="mark(78)">sentence = 'the cat sat on the mat'
+# count unique words</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(78)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(78)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(78)">Reset</button><span class="runhint" id="rh78"></span><span class="checkres" id="ck78"></span></div>
+<div class="output" id="out78"></div>
+</div><div class="q predict" id="q79" data-kind="predict" data-n="79">
+<div class="qhead"><span class="qnum">Q79</span><span class="badge predict">Predict the output</span><span class="status" id="st79"></span></div>
+<div class="prompt">Membership speed intuition:</div>
+<pre class="code"><code>s = {1, 2, 3}
+print(2 in s)
+print(9 in s)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans79" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(79)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(79)">&#9654; Run &amp; compare</button><span class="runhint" id="rh79"></span><span class="checkres" id="ck79"></span></div>
+<div class="output" id="out79"></div>
+</div><div class="q code" id="q80" data-kind="code" data-n="80">
+<div class="qhead"><span class="qnum">Q80</span><span class="badge code">Short code</span><span class="status" id="st80"></span></div>
+<div class="prompt">Merge {'a':1} and {'b':2} into one dict.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans80" class="code-edit" rows="4" spellcheck="false" oninput="mark(80)">d1 = {'a': 1}
+d2 = {'b': 2}
+# merge</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(80)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(80)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(80)">Reset</button><span class="runhint" id="rh80"></span><span class="checkres" id="ck80"></span></div>
+<div class="output" id="out80"></div>
+</div><h2 class="section" id="s81">Section 5 · Type conversion, checking &amp; None <span class="srange">(Q81–Q100)</span></h2><div class="q mcq" id="q81" data-kind="mcq" data-n="81">
+<div class="qhead"><span class="qnum">Q81</span><span class="badge mcq">MCQ</span><span class="status" id="st81"></span><span class="checkres" id="ck81"></span></div>
+<div class="prompt">Which reports an object's type as a class?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q81" value="A" onchange="mark(81);checkOne(81)"> <b>A)</b> typeof</label>
+<label class="opt"><input type="radio" name="q81" value="B" onchange="mark(81);checkOne(81)"> <b>B)</b> type</label>
+<label class="opt"><input type="radio" name="q81" value="C" onchange="mark(81);checkOne(81)"> <b>C)</b> kind</label>
+<label class="opt"><input type="radio" name="q81" value="D" onchange="mark(81);checkOne(81)"> <b>D)</b> dtype</label>
+</div>
+</div><div class="q predict" id="q82" data-kind="predict" data-n="82">
+<div class="qhead"><span class="qnum">Q82</span><span class="badge predict">Predict the output</span><span class="status" id="st82"></span></div>
+<div class="prompt">isinstance respects inheritance:</div>
+<pre class="code"><code>print(isinstance(True, int))
+print(isinstance(1, bool))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans82" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(82)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(82)">&#9654; Run &amp; compare</button><span class="runhint" id="rh82"></span><span class="checkres" id="ck82"></span></div>
+<div class="output" id="out82"></div>
+</div><div class="q predict" id="q83" data-kind="predict" data-n="83">
+<div class="qhead"><span class="qnum">Q83</span><span class="badge predict">Predict the output</span><span class="status" id="st83"></span></div>
+<div class="prompt">String to int conversion:</div>
+<pre class="code"><code>print(int('42') + 1)
+try:
+    print(int('42.0'))
+except ValueError:
+    print('ValueError')</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans83" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(83)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(83)">&#9654; Run &amp; compare</button><span class="runhint" id="rh83"></span><span class="checkres" id="ck83"></span></div>
+<div class="output" id="out83"></div>
+</div><div class="q code" id="q84" data-kind="code" data-n="84">
+<div class="qhead"><span class="qnum">Q84</span><span class="badge code">Short code</span><span class="status" id="st84"></span></div>
+<div class="prompt">Convert '3.14' to float and print half of it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans84" class="code-edit" rows="4" spellcheck="false" oninput="mark(84)">s = '3.14'
+# convert and halve</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(84)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(84)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(84)">Reset</button><span class="runhint" id="rh84"></span><span class="checkres" id="ck84"></span></div>
+<div class="output" id="out84"></div>
+</div><div class="q mcq" id="q85" data-kind="mcq" data-n="85">
+<div class="qhead"><span class="qnum">Q85</span><span class="badge mcq">MCQ</span><span class="status" id="st85"></span><span class="checkres" id="ck85"></span></div>
+<div class="prompt">What does <code>list('abc')</code> produce?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q85" value="A" onchange="mark(85);checkOne(85)"> <b>A)</b> ['abc']</label>
+<label class="opt"><input type="radio" name="q85" value="B" onchange="mark(85);checkOne(85)"> <b>B)</b> ['a', 'b', 'c']</label>
+<label class="opt"><input type="radio" name="q85" value="C" onchange="mark(85);checkOne(85)"> <b>C)</b> 'abc'</label>
+<label class="opt"><input type="radio" name="q85" value="D" onchange="mark(85);checkOne(85)"> <b>D)</b> TypeError</label>
+</div>
+</div><div class="q predict" id="q86" data-kind="predict" data-n="86">
+<div class="qhead"><span class="qnum">Q86</span><span class="badge predict">Predict the output</span><span class="status" id="st86"></span></div>
+<div class="prompt">Numeric string trap:</div>
+<pre class="code"><code>print('5' + '3')
+print(int('5') + int('3'))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans86" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(86)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(86)">&#9654; Run &amp; compare</button><span class="runhint" id="rh86"></span><span class="checkres" id="ck86"></span></div>
+<div class="output" id="out86"></div>
+</div><div class="q predict" id="q87" data-kind="predict" data-n="87">
+<div class="qhead"><span class="qnum">Q87</span><span class="badge predict">Predict the output</span><span class="status" id="st87"></span></div>
+<div class="prompt">bool() truthiness:</div>
+<pre class="code"><code>print(bool(0), bool(''), bool([]))
+print(bool(1), bool('a'), bool([0]))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans87" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(87)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(87)">&#9654; Run &amp; compare</button><span class="runhint" id="rh87"></span><span class="checkres" id="ck87"></span></div>
+<div class="output" id="out87"></div>
+</div><div class="q mcq" id="q88" data-kind="mcq" data-n="88">
+<div class="qhead"><span class="qnum">Q88</span><span class="badge mcq">MCQ</span><span class="status" id="st88"></span><span class="checkres" id="ck88"></span></div>
+<div class="prompt">Which is 'falsy' in a boolean context?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q88" value="A" onchange="mark(88);checkOne(88)"> <b>A)</b> 'False'</label>
+<label class="opt"><input type="radio" name="q88" value="B" onchange="mark(88);checkOne(88)"> <b>B)</b> [0]</label>
+<label class="opt"><input type="radio" name="q88" value="C" onchange="mark(88);checkOne(88)"> <b>C)</b> 0.0</label>
+<label class="opt"><input type="radio" name="q88" value="D" onchange="mark(88);checkOne(88)"> <b>D)</b> ' '</label>
+</div>
+</div><div class="q predict" id="q89" data-kind="predict" data-n="89">
+<div class="qhead"><span class="qnum">Q89</span><span class="badge predict">Predict the output</span><span class="status" id="st89"></span></div>
+<div class="prompt">None is a singleton type:</div>
+<pre class="code"><code>x = None
+print(type(x))
+print(x is None)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans89" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(89)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(89)">&#9654; Run &amp; compare</button><span class="runhint" id="rh89"></span><span class="checkres" id="ck89"></span></div>
+<div class="output" id="out89"></div>
+</div><div class="q code" id="q90" data-kind="code" data-n="90">
+<div class="qhead"><span class="qnum">Q90</span><span class="badge code">Short code</span><span class="status" id="st90"></span></div>
+<div class="prompt">Function returning the type name (string) of any value.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans90" class="code-edit" rows="4" spellcheck="false" oninput="mark(90)">def type_name(x):
+    pass
+print(type_name(3.5))</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(90)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(90)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(90)">Reset</button><span class="runhint" id="rh90"></span><span class="checkres" id="ck90"></span></div>
+<div class="output" id="out90"></div>
+</div><div class="q predict" id="q91" data-kind="predict" data-n="91">
+<div class="qhead"><span class="qnum">Q91</span><span class="badge predict">Predict the output</span><span class="status" id="st91"></span></div>
+<div class="prompt">Default function return:</div>
+<pre class="code"><code>def f():
+    x = 5
+print(f())</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans91" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(91)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(91)">&#9654; Run &amp; compare</button><span class="runhint" id="rh91"></span><span class="checkres" id="ck91"></span></div>
+<div class="output" id="out91"></div>
+</div><div class="q mcq" id="q92" data-kind="mcq" data-n="92">
+<div class="qhead"><span class="qnum">Q92</span><span class="badge mcq">MCQ</span><span class="status" id="st92"></span><span class="checkres" id="ck92"></span></div>
+<div class="prompt"><code>str(None)</code> produces:</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q92" value="A" onchange="mark(92);checkOne(92)"> <b>A)</b> '' (empty string)</label>
+<label class="opt"><input type="radio" name="q92" value="B" onchange="mark(92);checkOne(92)"> <b>B)</b> 'None'</label>
+<label class="opt"><input type="radio" name="q92" value="C" onchange="mark(92);checkOne(92)"> <b>C)</b> None</label>
+<label class="opt"><input type="radio" name="q92" value="D" onchange="mark(92);checkOne(92)"> <b>D)</b> raises TypeError</label>
+</div>
+</div><div class="q predict" id="q93" data-kind="predict" data-n="93">
+<div class="qhead"><span class="qnum">Q93</span><span class="badge predict">Predict the output</span><span class="status" id="st93"></span></div>
+<div class="prompt">Converting between collections:</div>
+<pre class="code"><code>t = (1, 2, 2, 3)
+print(list(t))
+print(set(t))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans93" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(93)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(93)">&#9654; Run &amp; compare</button><span class="runhint" id="rh93"></span><span class="checkres" id="ck93"></span></div>
+<div class="output" id="out93"></div>
+</div><div class="q code" id="q94" data-kind="code" data-n="94">
+<div class="qhead"><span class="qnum">Q94</span><span class="badge code">Short code</span><span class="status" id="st94"></span></div>
+<div class="prompt">Unique values keeping original order.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans94" class="code-edit" rows="4" spellcheck="false" oninput="mark(94)">nums = [3, 1, 3, 2, 1, 4]
+# unique, order-preserving</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(94)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(94)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(94)">Reset</button><span class="runhint" id="rh94"></span><span class="checkres" id="ck94"></span></div>
+<div class="output" id="out94"></div>
+</div><div class="q mcq" id="q95" data-kind="mcq" data-n="95">
+<div class="qhead"><span class="qnum">Q95</span><span class="badge mcq">MCQ</span><span class="status" id="st95"></span><span class="checkres" id="ck95"></span></div>
+<div class="prompt">Correct idiomatic None check?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q95" value="A" onchange="mark(95);checkOne(95)"> <b>A)</b> x == None</label>
+<label class="opt"><input type="radio" name="q95" value="B" onchange="mark(95);checkOne(95)"> <b>B)</b> x is None</label>
+<label class="opt"><input type="radio" name="q95" value="C" onchange="mark(95);checkOne(95)"> <b>C)</b> x = None</label>
+<label class="opt"><input type="radio" name="q95" value="D" onchange="mark(95);checkOne(95)"> <b>D)</b> None(x)</label>
+</div>
+</div><div class="q predict" id="q96" data-kind="predict" data-n="96">
+<div class="qhead"><span class="qnum">Q96</span><span class="badge predict">Predict the output</span><span class="status" id="st96"></span></div>
+<div class="prompt">int/float mixing:</div>
+<pre class="code"><code>print(type(2 + 3.0))
+print(type(4 / 2))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans96" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(96)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(96)">&#9654; Run &amp; compare</button><span class="runhint" id="rh96"></span><span class="checkres" id="ck96"></span></div>
+<div class="output" id="out96"></div>
+</div><div class="q predict" id="q97" data-kind="predict" data-n="97">
+<div class="qhead"><span class="qnum">Q97</span><span class="badge predict">Predict the output</span><span class="status" id="st97"></span></div>
+<div class="prompt">round() banker's rounding:</div>
+<pre class="code"><code>print(round(0.5))
+print(round(1.5))
+print(round(2.5))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans97" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(97)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(97)">&#9654; Run &amp; compare</button><span class="runhint" id="rh97"></span><span class="checkres" id="ck97"></span></div>
+<div class="output" id="out97"></div>
+</div><div class="q code" id="q98" data-kind="code" data-n="98">
+<div class="qhead"><span class="qnum">Q98</span><span class="badge code">Short code</span><span class="status" id="st98"></span></div>
+<div class="prompt">Convert {'a':1,'b':2} to a list of (key,value) tuples.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans98" class="code-edit" rows="4" spellcheck="false" oninput="mark(98)">d = {'a': 1, 'b': 2}
+# to list of tuples</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(98)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(98)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(98)">Reset</button><span class="runhint" id="rh98"></span><span class="checkres" id="ck98"></span></div>
+<div class="output" id="out98"></div>
+</div><div class="q mcq" id="q99" data-kind="mcq" data-n="99">
+<div class="qhead"><span class="qnum">Q99</span><span class="badge mcq">MCQ</span><span class="status" id="st99"></span><span class="checkres" id="ck99"></span></div>
+<div class="prompt">What does <code>type(type(5))</code> return?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q99" value="A" onchange="mark(99);checkOne(99)"> <b>A)</b> &lt;class 'int'&gt;</label>
+<label class="opt"><input type="radio" name="q99" value="B" onchange="mark(99);checkOne(99)"> <b>B)</b> &lt;class 'type'&gt;</label>
+<label class="opt"><input type="radio" name="q99" value="C" onchange="mark(99);checkOne(99)"> <b>C)</b> &lt;class 'object'&gt;</label>
+<label class="opt"><input type="radio" name="q99" value="D" onchange="mark(99);checkOne(99)"> <b>D)</b> TypeError</label>
+</div>
+</div><div class="q predict" id="q100" data-kind="predict" data-n="100">
+<div class="qhead"><span class="qnum">Q100</span><span class="badge predict">Predict the output</span><span class="status" id="st100"></span></div>
+<div class="prompt">Everything is an object:</div>
+<pre class="code"><code>def g(): pass
+print(type(g))
+print(type(len))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans100" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(100)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(100)">&#9654; Run &amp; compare</button><span class="runhint" id="rh100"></span><span class="checkres" id="ck100"></span></div>
+<div class="output" id="out100"></div>
+</div><h2 class="section" id="s101">Section 6 · Objects, identity, memory &amp; mixed challenges <span class="srange">(Q101–Q120)</span></h2><div class="q predict" id="q101" data-kind="predict" data-n="101">
+<div class="qhead"><span class="qnum">Q101</span><span class="badge predict">Predict the output</span><span class="status" id="st101"></span></div>
+<div class="prompt">id() reveals object identity:</div>
+<pre class="code"><code>a = [1, 2]
+b = a
+c = [1, 2]
+print(a is b)
+print(a is c)
+print(a == c)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans101" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(101)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(101)">&#9654; Run &amp; compare</button><span class="runhint" id="rh101"></span><span class="checkres" id="ck101"></span></div>
+<div class="output" id="out101"></div>
+</div><div class="q predict" id="q102" data-kind="predict" data-n="102">
+<div class="qhead"><span class="qnum">Q102</span><span class="badge predict">Predict the output</span><span class="status" id="st102"></span></div>
+<div class="prompt">Mutation visible through aliases:</div>
+<pre class="code"><code>x = {'k': 1}
+y = x
+y['k'] = 99
+print(x['k'])</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans102" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(102)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(102)">&#9654; Run &amp; compare</button><span class="runhint" id="rh102"></span><span class="checkres" id="ck102"></span></div>
+<div class="output" id="out102"></div>
+</div><div class="q code" id="q103" data-kind="code" data-n="103">
+<div class="qhead"><span class="qnum">Q103</span><span class="badge code">Short code</span><span class="status" id="st103"></span></div>
+<div class="prompt">Use id() to show reassigning an int makes a new object.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans103" class="code-edit" rows="4" spellcheck="false" oninput="mark(103)">n = 10
+print(id(n))
+n += 1
+# print id again</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(103)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(103)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(103)">Reset</button><span class="runhint" id="rh103"></span><span class="checkres" id="ck103"></span></div>
+<div class="output" id="out103"></div>
+</div><div class="q predict" id="q104" data-kind="predict" data-n="104">
+<div class="qhead"><span class="qnum">Q104</span><span class="badge predict">Predict the output</span><span class="status" id="st104"></span></div>
+<div class="prompt">sys.getsizeof across types:</div>
+<pre class="code"><code>import sys
+print(sys.getsizeof([]))
+print(sys.getsizeof(''))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans104" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(104)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(104)">&#9654; Run &amp; compare</button><span class="runhint" id="rh104"></span><span class="checkres" id="ck104"></span></div>
+<div class="output" id="out104"></div>
+</div><div class="q mcq" id="q105" data-kind="mcq" data-n="105">
+<div class="qhead"><span class="qnum">Q105</span><span class="badge mcq">MCQ</span><span class="status" id="st105"></span><span class="checkres" id="ck105"></span></div>
+<div class="prompt">Which type is <em>immutable</em>?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q105" value="A" onchange="mark(105);checkOne(105)"> <b>A)</b> list</label>
+<label class="opt"><input type="radio" name="q105" value="B" onchange="mark(105);checkOne(105)"> <b>B)</b> dict</label>
+<label class="opt"><input type="radio" name="q105" value="C" onchange="mark(105);checkOne(105)"> <b>C)</b> set</label>
+<label class="opt"><input type="radio" name="q105" value="D" onchange="mark(105);checkOne(105)"> <b>D)</b> frozenset</label>
+</div>
+</div><div class="q predict" id="q106" data-kind="predict" data-n="106">
+<div class="qhead"><span class="qnum">Q106</span><span class="badge predict">Predict the output</span><span class="status" id="st106"></span></div>
+<div class="prompt">range is lazy, not a list:</div>
+<pre class="code"><code>r = range(1000000)
+print(type(r))
+import sys
+print(sys.getsizeof(r) &lt; 100)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans106" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(106)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(106)">&#9654; Run &amp; compare</button><span class="runhint" id="rh106"></span><span class="checkres" id="ck106"></span></div>
+<div class="output" id="out106"></div>
+</div><div class="q code" id="q107" data-kind="code" data-n="107">
+<div class="qhead"><span class="qnum">Q107</span><span class="badge code">Short code</span><span class="status" id="st107"></span></div>
+<div class="prompt">Turn range(5) into an actual list and print it.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans107" class="code-edit" rows="4" spellcheck="false" oninput="mark(107)"># materialise range(5)</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(107)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(107)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(107)">Reset</button><span class="runhint" id="rh107"></span><span class="checkres" id="ck107"></span></div>
+<div class="output" id="out107"></div>
+</div><div class="q predict" id="q108" data-kind="predict" data-n="108">
+<div class="qhead"><span class="qnum">Q108</span><span class="badge predict">Predict the output</span><span class="status" id="st108"></span></div>
+<div class="prompt">Interned string identity:</div>
+<pre class="code"><code>a = 'data'
+b = 'data'
+print(a is b)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans108" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(108)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(108)">&#9654; Run &amp; compare</button><span class="runhint" id="rh108"></span><span class="checkres" id="ck108"></span></div>
+<div class="output" id="out108"></div>
+</div><div class="q mcq" id="q109" data-kind="mcq" data-n="109">
+<div class="qhead"><span class="qnum">Q109</span><span class="badge mcq">MCQ</span><span class="status" id="st109"></span><span class="checkres" id="ck109"></span></div>
+<div class="prompt">Given <code>t = (1, [2, 3])</code>, which is TRUE?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q109" value="A" onchange="mark(109);checkOne(109)"> <b>A)</b> the tuple is fully immutable</label>
+<label class="opt"><input type="radio" name="q109" value="B" onchange="mark(109);checkOne(109)"> <b>B)</b> you can do t[0] = 9</label>
+<label class="opt"><input type="radio" name="q109" value="C" onchange="mark(109);checkOne(109)"> <b>C)</b> you can do t[1].append(4)</label>
+<label class="opt"><input type="radio" name="q109" value="D" onchange="mark(109);checkOne(109)"> <b>D)</b> the list inside cannot be changed</label>
+</div>
+</div><div class="q predict" id="q110" data-kind="predict" data-n="110">
+<div class="qhead"><span class="qnum">Q110</span><span class="badge predict">Predict the output</span><span class="status" id="st110"></span></div>
+<div class="prompt">Mutable inside immutable:</div>
+<pre class="code"><code>t = (1, [2, 3])
+t[1].append(4)
+print(t)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans110" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(110)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(110)">&#9654; Run &amp; compare</button><span class="runhint" id="rh110"></span><span class="checkres" id="ck110"></span></div>
+<div class="output" id="out110"></div>
+</div><div class="q code" id="q111" data-kind="code" data-n="111">
+<div class="qhead"><span class="qnum">Q111</span><span class="badge code">Short code</span><span class="status" id="st111"></span></div>
+<div class="prompt">marks = [88, 72, 95, 60] — max, min, average with built-ins.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans111" class="code-edit" rows="4" spellcheck="false" oninput="mark(111)">marks = [88, 72, 95, 60]
+# max, min, average</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(111)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(111)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(111)">Reset</button><span class="runhint" id="rh111"></span><span class="checkres" id="ck111"></span></div>
+<div class="output" id="out111"></div>
+</div><div class="q predict" id="q112" data-kind="predict" data-n="112">
+<div class="qhead"><span class="qnum">Q112</span><span class="badge predict">Predict the output</span><span class="status" id="st112"></span></div>
+<div class="prompt">enumerate pairs index with value:</div>
+<pre class="code"><code>for i, v in enumerate(['a', 'b', 'c']):
+    print(i, v)</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans112" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(112)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(112)">&#9654; Run &amp; compare</button><span class="runhint" id="rh112"></span><span class="checkres" id="ck112"></span></div>
+<div class="output" id="out112"></div>
+</div><div class="q predict" id="q113" data-kind="predict" data-n="113">
+<div class="qhead"><span class="qnum">Q113</span><span class="badge predict">Predict the output</span><span class="status" id="st113"></span></div>
+<div class="prompt">zip combines sequences:</div>
+<pre class="code"><code>names = ['Asha', 'Ravi']
+scores = [88, 72]
+print(dict(zip(names, scores)))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans113" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(113)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(113)">&#9654; Run &amp; compare</button><span class="runhint" id="rh113"></span><span class="checkres" id="ck113"></span></div>
+<div class="output" id="out113"></div>
+</div><div class="q code" id="q114" data-kind="code" data-n="114">
+<div class="qhead"><span class="qnum">Q114</span><span class="badge code">Short code</span><span class="status" id="st114"></span></div>
+<div class="prompt">Using zip, print each student with their score.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans114" class="code-edit" rows="4" spellcheck="false" oninput="mark(114)">names = ['Asha', 'Ravi', 'Meera']
+scores = [88, 72, 95]
+# pair and print</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(114)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(114)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(114)">Reset</button><span class="runhint" id="rh114"></span><span class="checkres" id="ck114"></span></div>
+<div class="output" id="out114"></div>
+</div><div class="q mcq" id="q115" data-kind="mcq" data-n="115">
+<div class="qhead"><span class="qnum">Q115</span><span class="badge mcq">MCQ</span><span class="status" id="st115"></span><span class="checkres" id="ck115"></span></div>
+<div class="prompt">Type returned by <code>zip(a, b)</code>?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q115" value="A" onchange="mark(115);checkOne(115)"> <b>A)</b> list</label>
+<label class="opt"><input type="radio" name="q115" value="B" onchange="mark(115);checkOne(115)"> <b>B)</b> tuple</label>
+<label class="opt"><input type="radio" name="q115" value="C" onchange="mark(115);checkOne(115)"> <b>C)</b> a lazy zip iterator</label>
+<label class="opt"><input type="radio" name="q115" value="D" onchange="mark(115);checkOne(115)"> <b>D)</b> dict</label>
+</div>
+</div><div class="q predict" id="q116" data-kind="predict" data-n="116">
+<div class="qhead"><span class="qnum">Q116</span><span class="badge predict">Predict the output</span><span class="status" id="st116"></span></div>
+<div class="prompt">Iterator exhaustion:</div>
+<pre class="code"><code>z = zip([1, 2], ['a', 'b'])
+print(list(z))
+print(list(z))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans116" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(116)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(116)">&#9654; Run &amp; compare</button><span class="runhint" id="rh116"></span><span class="checkres" id="ck116"></span></div>
+<div class="output" id="out116"></div>
+</div><div class="q code" id="q117" data-kind="code" data-n="117">
+<div class="qhead"><span class="qnum">Q117</span><span class="badge code">Short code</span><span class="status" id="st117"></span></div>
+<div class="prompt">d = {'a':3,'b':1,'c':2} — print keys sorted by value ascending.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans117" class="code-edit" rows="4" spellcheck="false" oninput="mark(117)">d = {'a': 3, 'b': 1, 'c': 2}
+# sort keys by value</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(117)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(117)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(117)">Reset</button><span class="runhint" id="rh117"></span><span class="checkres" id="ck117"></span></div>
+<div class="output" id="out117"></div>
+</div><div class="q predict" id="q118" data-kind="predict" data-n="118">
+<div class="qhead"><span class="qnum">Q118</span><span class="badge predict">Predict the output</span><span class="status" id="st118"></span></div>
+<div class="prompt">Nested type identification:</div>
+<pre class="code"><code>obj = {'nums': [1, 2], 'meta': (3, 4)}
+print(type(obj))
+print(type(obj['nums']))
+print(type(obj['meta']))</code></pre>
+<label class="fieldlabel">Your prediction (this is your answer):</label>
+<textarea id="ans118" class="ans-in" rows="3" placeholder="Type the exact output you expect..." oninput="mark(118)"></textarea>
+<div class="runrow"><button class="runbtn" onclick="runPredict(118)">&#9654; Run &amp; compare</button><span class="runhint" id="rh118"></span><span class="checkres" id="ck118"></span></div>
+<div class="output" id="out118"></div>
+</div><div class="q mcq" id="q119" data-kind="mcq" data-n="119">
+<div class="qhead"><span class="qnum">Q119</span><span class="badge mcq">MCQ</span><span class="status" id="st119"></span><span class="checkres" id="ck119"></span></div>
+<div class="prompt">Which single line deduplicates list x, keeping it a list?</div>
+<div class="opts">
+<label class="opt"><input type="radio" name="q119" value="A" onchange="mark(119);checkOne(119)"> <b>A)</b> x = set(x)</label>
+<label class="opt"><input type="radio" name="q119" value="B" onchange="mark(119);checkOne(119)"> <b>B)</b> x = list(set(x))</label>
+<label class="opt"><input type="radio" name="q119" value="C" onchange="mark(119);checkOne(119)"> <b>C)</b> x = dict(x)</label>
+<label class="opt"><input type="radio" name="q119" value="D" onchange="mark(119);checkOne(119)"> <b>D)</b> x = tuple(x)</label>
+</div>
+</div><div class="q code" id="q120" data-kind="code" data-n="120">
+<div class="qhead"><span class="qnum">Q120</span><span class="badge code">Short code</span><span class="status" id="st120"></span></div>
+<div class="prompt">Capstone: records=[('Asha',88),('Ravi',72),('Meera',95)] — build dict, print top scorer.</div>
+<label class="fieldlabel">Edit and run your solution:</label>
+<textarea id="ans120" class="code-edit" rows="4" spellcheck="false" oninput="mark(120)">records = [('Asha',88),('Ravi',72),('Meera',95)]
+# build dict, find top scorer</textarea>
+<div class="runrow"><button class="runbtn" onclick="runCode(120)">&#9654; Run</button><button class="checkbtn" onclick="checkOne(120)" title="Practice self-check: run your code and compare to the expected output">&#10003; Check</button><button class="resetbtn" onclick="resetCode(120)">Reset</button><span class="runhint" id="rh120"></span><span class="checkres" id="ck120"></span></div>
+<div class="output" id="out120"></div>
+</div>
+
+  <div class="submitbox">
+    <button id="genbtn" onclick="generate()">&#11015; Generate submission file (.py)</button>
+    <div class="warn" id="subwarn"></div>
+    <div id="fallback" style="display:none;margin-top:14px">
+      <div style="font-size:.85rem;color:#5b6675;margin-bottom:8px">If nothing downloaded, use one of these:</div>
+      <button id="copybtn" class="ghost2" onclick="copyAnswers()">&#128203; Copy answers</button>
+      <button id="tabbtn" class="ghost2" onclick="openInTab()">&#128194; Open in new tab</button>
+      <div style="font-size:.8rem;color:#5b6675;margin-top:8px">Then paste into a file named <code>submission_&lt;roll&gt;.py</code> and upload to Moodle.</div>
+    </div>
+  </div>
+</div>
+
+<footer><div class="wrap">CS3006 &middot; Lab 01 &middot; Python Data Types &middot; CSE DD + Mechanical &middot; IIITDM Kancheepuram &middot; 120 questions</div></footer>
+
+<script>
+const KIND = {"1": "mcq", "2": "predict", "3": "mcq", "4": "predict", "5": "code", "6": "mcq", "7": "predict", "8": "predict", "9": "mcq", "10": "predict", "11": "predict", "12": "mcq", "13": "predict", "14": "code", "15": "mcq", "16": "predict", "17": "predict", "18": "mcq", "19": "predict", "20": "code", "21": "mcq", "22": "predict", "23": "predict", "24": "mcq", "25": "predict", "26": "code", "27": "mcq", "28": "predict", "29": "predict", "30": "mcq", "31": "predict", "32": "predict", "33": "code", "34": "mcq", "35": "predict", "36": "predict", "37": "mcq", "38": "predict", "39": "code", "40": "predict", "41": "mcq", "42": "predict", "43": "predict", "44": "mcq", "45": "predict", "46": "code", "47": "predict", "48": "mcq", "49": "predict", "50": "predict", "51": "code", "52": "mcq", "53": "predict", "54": "predict", "55": "code", "56": "mcq", "57": "predict", "58": "predict", "59": "mcq", "60": "code", "61": "mcq", "62": "predict", "63": "mcq", "64": "predict", "65": "code", "66": "predict", "67": "mcq", "68": "predict", "69": "code", "70": "mcq", "71": "predict", "72": "predict", "73": "code", "74": "mcq", "75": "predict", "76": "predict", "77": "mcq", "78": "code", "79": "predict", "80": "code", "81": "mcq", "82": "predict", "83": "predict", "84": "code", "85": "mcq", "86": "predict", "87": "predict", "88": "mcq", "89": "predict", "90": "code", "91": "predict", "92": "mcq", "93": "predict", "94": "code", "95": "mcq", "96": "predict", "97": "predict", "98": "code", "99": "mcq", "100": "predict", "101": "predict", "102": "predict", "103": "code", "104": "predict", "105": "mcq", "106": "predict", "107": "code", "108": "predict", "109": "mcq", "110": "predict", "111": "code", "112": "predict", "113": "predict", "114": "code", "115": "mcq", "116": "predict", "117": "code", "118": "predict", "119": "mcq", "120": "code"};
+const EXPECTED = {"2": "3\n-4", "4": "0.30000000000000004\nFalse", "7": "2\n5", "8": "28\n28", "10": "2.0 3.0\n3.605551275463989", "11": "True\nFalse", "13": "<class 'int'>\n<class 'float'>", "16": "0.3", "17": "4\n8", "19": "True\nTrue", "22": "HELLO\nhello", "23": "ababab\n----------", "25": "Data\nScience\necneicSataD", "28": "data is oil", "29": "VJ scored 42/50 = 84.0%", "31": "A\nI", "32": "True\nFalse", "35": "a\tb\na\\tb", "36": "True\nTrue", "38": "True\nFalse\nTrue", "40": "age: 20", "42": "[99, 2, 3]", "43": "TypeError", "45": "[1, 2, 3, 4]", "47": "[20, 30, 40]\n[10, 30, 50]", "49": "[1, 2, [3, 4]]\n[1, 2, 3, 4]", "50": "[1]\n[1, 2]", "53": "[[9, 0], [9, 0]]", "54": "[0, 1, 4, 9, 16]", "57": "10 5", "58": "1 [2, 3, 4]", "62": "1\n0", "64": "{'x': 2}", "66": "a 1\nb 2", "68": "{0: 0, 1: 1, 2: 4, 3: 9}", "71": "{1, 2, 3}", "72": "{2, 3}\n{1, 2, 3, 4}\n{1}", "75": "<class 'dict'>\n<class 'set'>", "76": "not subscriptable", "79": "True\nFalse", "82": "True\nFalse", "83": "43\nValueError", "86": "53\n8", "87": "False False False\nTrue True True", "89": "<class 'NoneType'>\nTrue", "91": "None", "93": "[1, 2, 3]  (list keeps dups; set dedupes)", "96": "<class 'float'>\n<class 'float'>", "97": "0\n2\n2", "100": "<class 'function'>\n<class 'builtin_function_or_method'>", "101": "True\nFalse\nTrue", "102": "99", "104": "56\n49  (CPython-version specific)", "106": "<class 'range'>\nTrue", "108": "True", "110": "(1, [2, 3, 4])", "112": "0 a\n1 b\n2 c", "113": "{'Asha': 88, 'Ravi': 72}", "116": "[(1, 'a'), (2, 'b')]\n[]", "118": "<class 'dict'>\n<class 'list'>\n<class 'tuple'>"};
+const SNIPPET = {"2": "print(7 // 2)\nprint(-7 // 2)", "4": "print(0.1 + 0.2)\nprint(0.1 + 0.2 == 0.3)", "7": "print(True + True + False)\nprint(True * 5)", "8": "import sys\nprint(sys.getsizeof(0))\nprint(sys.getsizeof(1))", "10": "z = 2 + 3j\nprint(z.real, z.imag)\nprint(abs(z))", "11": "a = 256\nb = 256\nprint(a is b)\nc = 257\nd = 257\nprint(c is d)", "13": "print(type(2 ** 3))\nprint(type(2 ** -1))", "16": "from decimal import Decimal\nprint(Decimal('0.1') + Decimal('0.2'))", "17": "print((10).bit_length())\nprint((255).bit_length())", "19": "print(1 < 2 < 3)\nprint(3 > 2 == 2)", "22": "s = 'hello'\nprint(s.upper())\nprint(s)", "23": "print('ab' * 3)\nprint('-' * 10)", "25": "s = 'DataScience'\nprint(s[0:4])\nprint(s[4:])\nprint(s[::-1])", "28": "words = ['data', 'is', 'oil']\nprint(' '.join(words))", "29": "name = 'VJ'\nn = 42\nprint(f'{name} scored {n}/50 = {n/50:.1%}')", "31": "for ch in 'AI':\n    print(ch)", "32": "print('Sci' in 'DataScience')\nprint('sci' in 'DataScience')", "35": "print('a\\tb')\nprint(r'a\\tb')", "36": "print('apple' < 'banana')\nprint('Apple' < 'apple')", "38": "print('123'.isdigit())\nprint('12.3'.isdigit())\nprint('abc'.isalpha())", "40": "age = 20\nprint('age: ' + str(age))", "42": "a = [1, 2, 3]\na[0] = 99\nprint(a)", "43": "t = (1, 2, 3)\ntry:\n    t[0] = 99\nexcept TypeError:\n    print('TypeError')", "45": "a = [1, 2, 3]\nb = a\nb.append(4)\nprint(a)", "47": "a = [10, 20, 30, 40, 50]\nprint(a[1:4])\nprint(a[::2])", "49": "a = [1, 2]\na.append([3, 4])\nprint(a)\nb = [1, 2]\nb.extend([3, 4])\nprint(b)", "50": "def f(x, acc=[]):\n    acc.append(x)\n    return acc\nprint(f(1))\nprint(f(2))", "53": "grid = [[0] * 2] * 2\ngrid[0][0] = 9\nprint(grid)", "54": "squares = [x*x for x in range(5)]\nprint(squares)", "57": "a, b = 5, 10\na, b = b, a\nprint(a, b)", "58": "first, *rest = [1, 2, 3, 4]\nprint(first, rest)", "62": "d = {'a': 1, 'b': 2}\nprint(d['a'])\nprint(d.get('c', 0))", "64": "d = {'x': 1, 'x': 2}\nprint(d)", "66": "d = {'a': 1, 'b': 2}\nfor k in d:\n    print(k, d[k])", "68": "sq = {x: x*x for x in range(4)}\nprint(sq)", "71": "print(set([1, 2, 2, 3, 3, 3]))", "72": "a = {1, 2, 3}\nb = {2, 3, 4}\nprint(a & b)\nprint(a | b)\nprint(a - b)", "75": "print(type({}))\nprint(type(set()))", "76": "s = {10, 20, 30}\ntry:\n    print(s[0])\nexcept TypeError:\n    print('not subscriptable')", "79": "s = {1, 2, 3}\nprint(2 in s)\nprint(9 in s)", "82": "print(isinstance(True, int))\nprint(isinstance(1, bool))", "83": "print(int('42') + 1)\ntry:\n    print(int('42.0'))\nexcept ValueError:\n    print('ValueError')", "86": "print('5' + '3')\nprint(int('5') + int('3'))", "87": "print(bool(0), bool(''), bool([]))\nprint(bool(1), bool('a'), bool([0]))", "89": "x = None\nprint(type(x))\nprint(x is None)", "91": "def f():\n    x = 5\nprint(f())", "93": "t = (1, 2, 2, 3)\nprint(list(t))\nprint(set(t))", "96": "print(type(2 + 3.0))\nprint(type(4 / 2))", "97": "print(round(0.5))\nprint(round(1.5))\nprint(round(2.5))", "100": "def g(): pass\nprint(type(g))\nprint(type(len))", "101": "a = [1, 2]\nb = a\nc = [1, 2]\nprint(a is b)\nprint(a is c)\nprint(a == c)", "102": "x = {'k': 1}\ny = x\ny['k'] = 99\nprint(x['k'])", "104": "import sys\nprint(sys.getsizeof([]))\nprint(sys.getsizeof(''))", "106": "r = range(1000000)\nprint(type(r))\nimport sys\nprint(sys.getsizeof(r) < 100)", "108": "a = 'data'\nb = 'data'\nprint(a is b)", "110": "t = (1, [2, 3])\nt[1].append(4)\nprint(t)", "112": "for i, v in enumerate(['a', 'b', 'c']):\n    print(i, v)", "113": "names = ['Asha', 'Ravi']\nscores = [88, 72]\nprint(dict(zip(names, scores)))", "116": "z = zip([1, 2], ['a', 'b'])\nprint(list(z))\nprint(list(z))", "118": "obj = {'nums': [1, 2], 'meta': (3, 4)}\nprint(type(obj))\nprint(type(obj['nums']))\nprint(type(obj['meta']))"};
+const STARTER = {"5": "a = 0.1 + 0.2\n# your check here", "14": "n = 2 ** 100\n# print number of digits", "20": "x = 3.99\n# truncate and round", "26": "s = 'racecar'\n# your check here", "33": "s = 'Mississippi'\n# your count here", "39": "email = 'vj@iiitdm.ac.in'\n# split into user and domain", "46": "a = [1, 2, 3]\n# make a copy b, then modify b", "51": "nums = [3, 1, 4, 1, 5, 9, 2, 6]\n# produce a sorted copy", "55": "# even numbers 0..20", "60": "points = [(1,2), (3,4), (5,6)]\n# loop and unpack", "65": "marks = {'Asha': 88, 'Ravi': 72}\n# add Meera", "69": "marks = {'Asha': 88, 'Ravi': 72, 'Meera': 95}\n# filter with a dict comprehension", "73": "a = [1, 2, 3, 4]\nb = [3, 4, 5, 6]\n# common values", "78": "sentence = 'the cat sat on the mat'\n# count unique words", "80": "d1 = {'a': 1}\nd2 = {'b': 2}\n# merge", "84": "s = '3.14'\n# convert and halve", "90": "def type_name(x):\n    pass\nprint(type_name(3.5))", "94": "nums = [3, 1, 3, 2, 1, 4]\n# unique, order-preserving", "98": "d = {'a': 1, 'b': 2}\n# to list of tuples", "103": "n = 10\nprint(id(n))\nn += 1\n# print id again", "107": "# materialise range(5)", "111": "marks = [88, 72, 95, 60]\n# max, min, average", "114": "names = ['Asha', 'Ravi', 'Meera']\nscores = [88, 72, 95]\n# pair and print", "117": "d = {'a': 3, 'b': 1, 'c': 2}\n# sort keys by value", "120": "records = [('Asha',88),('Ravi',72),('Meera',95)]\n# build dict, find top scorer"};
+const MCQ_KEY = {"1": "B", "3": "B", "6": "B", "9": "C", "12": "A", "15": "C", "18": "B", "21": "B", "24": "A", "27": "B", "30": "C", "34": "B", "37": "B", "41": "B", "44": "B", "48": "B", "52": "B", "56": "B", "59": "B", "61": "B", "63": "C", "67": "C", "70": "B", "74": "B", "77": "C", "81": "B", "85": "B", "88": "C", "92": "B", "95": "B", "99": "B", "105": "D", "109": "C", "115": "C", "119": "B"};
+const CODE_KEY = {"5": {"m": "exact", "e": "True"}, "14": {"m": "exact", "e": "31"}, "20": {"m": "exact", "e": "3\n4"}, "26": {"m": "exact", "e": "True"}, "33": {"m": "exact", "e": "4"}, "39": {"m": "exact", "e": "vj\niiitdm.ac.in"}, "46": {"m": "exact", "e": "[1, 2, 3]\n[1, 2, 3, 4]"}, "51": {"m": "exact", "e": "[9, 6, 5, 4, 3, 2, 1, 1]\n[3, 1, 4, 1, 5, 9, 2, 6]"}, "55": {"m": "exact", "e": "[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]"}, "60": {"m": "exact", "e": "1 2\n3 4\n5 6"}, "65": {"m": "exact", "e": "{'Asha': 88, 'Ravi': 72, 'Meera': 95}"}, "69": {"m": "exact", "e": "{'Asha': 88, 'Meera': 95}"}, "73": {"m": "exact", "e": "{3, 4}"}, "78": {"m": "exact", "e": "5"}, "80": {"m": "exact", "e": "{'a': 1, 'b': 2}"}, "84": {"m": "exact", "e": "1.57"}, "90": {"m": "exact", "e": "float"}, "94": {"m": "exact", "e": "[3, 1, 2, 4]"}, "98": {"m": "exact", "e": "[('a', 1), ('b', 2)]"}, "103": {"m": "manual", "e": ""}, "107": {"m": "exact", "e": "[0, 1, 2, 3, 4]"}, "111": {"m": "exact", "e": "95\n60\n78.75"}, "114": {"m": "exact", "e": "Asha 88\nRavi 72\nMeera 95"}, "117": {"m": "exact", "e": "['b', 'c', 'a']"}, "120": {"m": "exact", "e": "Meera 95"}};
+const NQ = 120;
+let pyodide = null, pyReady = false;
+
+// ---------- Pyodide bootstrap ----------
+async function initPy(){
+  const bar=document.getElementById('pybar');
+  if(location.protocol==='file:'){
+    bar.className='err';
+    bar.innerHTML='\u26A0 <b>Run buttons need the page served over http, not opened directly.</b> '+
+      'You opened this as a local file (file://), where browsers block WebAssembly. '+
+      'Open it from a web address instead (your teacher\u2019s course page / GitHub Pages), '+
+      'or run a quick local server \u2014 see the instructions box below. '+
+      'You can still answer every question and generate your submission here; only the \u25B6 Run buttons are affected.';
+    var help=document.getElementById('serverhelp'); if(help) help.style.display='block';
+    return;
+  }
+  try{
+    bar.textContent='Loading Python (Pyodide)\u2026 first load may take ~10\u201320s.';
+    pyodide = await loadPyodide();
+    pyReady = true;
+    bar.className='ready';
+    bar.innerHTML='\u2713 Python is ready \u2014 use the \u25B6 Run buttons to execute code in your browser.';
+    document.querySelectorAll('.runbtn').forEach(b=>b.disabled=false);
+  }catch(e){
+    bar.className='err';
+    bar.innerHTML='\u26A0 Could not load the Python runtime (needs internet on first load, and the page must be served over http/https). '+
+      'You can still answer and submit; \u25B6 Run buttons are disabled. Details: '+escapeHtml(String(e).slice(0,120));
+    var h2=document.getElementById('serverhelp'); if(h2) h2.style.display='block';
+  }
+}
+
+// Run python source, capture stdout+stderr, return {out, err}
+async function pyRun(src){
+  if(!pyReady) return {out:'', err:'Python is still loading \u2014 please wait for the green bar.'};
+  const wrapped =
+    "import sys, io\n" +
+    "_o=io.StringIO(); _e=io.StringIO()\n" +
+    "_so=sys.stdout; _se=sys.stderr\n" +
+    "sys.stdout=_o; sys.stderr=_e\n" +
+    "try:\n" +
+    "    exec(compile(__USERSRC__, '<cell>', 'exec'), {})\n" +
+    "except Exception:\n" +
+    "    import traceback; traceback.print_exc()\n" +
+    "finally:\n" +
+    "    sys.stdout=_so; sys.stderr=_se\n" +
+    "_out=_o.getvalue(); _err=_e.getvalue()\n";
+  try{
+    pyodide.globals.set('__USERSRC__', src);
+    await pyodide.runPythonAsync(wrapped);
+    const out = pyodide.globals.get('_out');
+    const err = pyodide.globals.get('_err');
+    return {out: out||'', err: err||''};
+  }catch(e){
+    return {out:'', err:String(e)};
+  }
+}
+
+function showOutput(n, out, err){
+  const box=document.getElementById('out'+n);
+  let h='';
+  if(out){ h+='<div class="lbl">output</div><pre>'+escapeHtml(out.replace(/\n$/,''))+'</pre>'; }
+  if(err){ h+='<div class="lbl" style="background:#7f1d1d">error / traceback</div><pre class="err">'+escapeHtml(err.replace(/\n$/,''))+'</pre>'; }
+  if(!out && !err){ h='<div class="lbl">output</div><pre>(no output \u2014 did you use print()?)</pre>'; }
+  box.innerHTML=h; box.classList.add('show');
+}
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// normalise output for comparison (trim trailing ws per line, drop trailing blank lines)
+function norm(s){
+  return String(s).replace(/\r/g,'').split('\n').map(l=>l.replace(/\s+$/,'')).join('\n').replace(/\n+$/,'').trim();
+}
+
+// ---------- order-independent set/dict canonicalisation ----------
+function _normLines(s){
+  s = String(s).replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  let lines = s.split('\n').map(l=>l.replace(/\s+$/,''));
+  while(lines.length && lines[lines.length-1]==='') lines.pop();
+  return lines;
+}
+function _splitTop(s){
+  const out=[]; let d=0,q='',cur='';
+  for(let i=0;i<s.length;i++){ const ch=s[i];
+    if(q){ cur+=ch; if(ch===q) q=''; continue; }
+    if(ch==="'"||ch==='"'){ q=ch; cur+=ch; continue; }
+    if(ch==='{'||ch==='['||ch==='(') d++;
+    if(ch==='}'||ch===']'||ch===')') d--;
+    if(ch===','&&d===0){ out.push(cur); cur=''; } else cur+=ch;
+  }
+  if(cur.trim()!=='') out.push(cur);
+  return out;
+}
+function _topColon(s){
+  let d=0,q='';
+  for(let i=0;i<s.length;i++){ const ch=s[i];
+    if(q){ if(ch===q) q=''; continue; }
+    if(ch==="'"||ch==='"'){ q=ch; continue; }
+    if(ch==='{'||ch==='['||ch==='(') d++;
+    if(ch==='}'||ch===']'||ch===')') d--;
+    if(ch===':'&&d===0) return i;
+  }
+  return -1;
+}
+// Canonicalise a single line if it is a {...} set/dict literal, so element/key order doesn't matter.
+function _canonSetish(line){
+  const t=line.trim();
+  if(!(t.startsWith('{') && t.endsWith('}'))) return line;
+  const inner=t.slice(1,-1).trim();
+  if(inner==='') return line;
+  const parts=_splitTop(inner);
+  let isDict=false;
+  for(const p of parts){ if(_topColon(p)){ isDict=true; break; } }
+  if(isDict){
+    const kv=parts.map(p=>{ const c=_topColon(p); return [p.slice(0,c).trim(), p.slice(c+1).trim()]; });
+    kv.sort((a,b)=> a[0]<b[0]?-1:a[0]>b[0]?1:(a[1]<b[1]?-1:a[1]>b[1]?1:0));
+    return '{'+kv.map(x=>x[0]+': '+x[1]).join(', ')+'}';
+  } else {
+    const items=parts.map(p=>p.trim()).sort();
+    return '{'+items.join(', ')+'}';
+  }
+}
+// Compare two multi-line outputs, treating any {...} line as an order-independent set/dict.
+function cmpOutput(expected, actual){
+  const exp=_normLines(expected).map(_canonSetish);
+  const act=_normLines(actual).map(_canonSetish);
+  return exp.length===act.length && exp.every((x,i)=>x===act[i]);
+}
+
+// ---------- rendering the predict compare panel ----------
+function renderPredictPanel(n, guess, actual, match){
+  const box=document.getElementById('out'+n);
+  const cmp=document.createElement('div');
+  cmp.className='cmp '+(match?'match':'nomatch');
+  cmp.innerHTML =
+    '<div class="row"><div class="k">your guess</div><div class="v">'+escapeHtml(guess||'(empty)')+'</div></div>'+
+    '<div class="row"><div class="k">real output</div><div class="v">'+escapeHtml(norm(actual)||'(none)')+'</div></div>'+
+    '<div class="verdict">'+(match?'\u2713 Your prediction matches the real output!':(norm(guess)===''?'\u2192 Type your prediction above, then Run again to compare.':'\u2717 Not a match \u2014 compare the two and figure out why.'))+'</div>';
+  box.appendChild(cmp);
+}
+
+// ---------- Predict: run the fixed snippet, compare to student's prediction ----------
+async function runPredict(n){
+  const btn=event.target; btn.disabled=true; const hint=document.getElementById('rh'+n);
+  hint.textContent='running\u2026';
+  await checkOne(n, false);
+  hint.textContent=''; btn.disabled=false;
+  mark(n);
+}
+
+// ---------- Code: run the student's edited code (no compare) ----------
+async function runCode(n){
+  const btn=event.target; btn.disabled=true; const hint=document.getElementById('rh'+n);
+  hint.textContent='running\u2026';
+  const src=document.getElementById('ans'+n).value;
+  const {out, err} = await pyRun(src);
+  showOutput(n, out, err);
+  hint.textContent = err ? '' : '\u2713 ran';
+  btn.disabled=false;
+  mark(n);
+}
+function resetCode(n){
+  document.getElementById('ans'+n).value = STARTER[n]||'';
+  const box=document.getElementById('out'+n); box.classList.remove('show'); box.innerHTML='';
+  document.getElementById('rh'+n).textContent='';
+  const ck=document.getElementById('ck'+n); if(ck){ ck.className='checkres'; ck.textContent=''; }
+  mark(n);
+}
+
+// ---------- unified self-check (PRACTICE ONLY - does not affect your grade) ----------
+async function checkOne(n, silent){
+  const kind = KIND[n];
+  const res = document.getElementById('ck'+n);
+
+  if(kind==='mcq'){
+    const guess = getAns(n);
+    if(!guess){ if(res){res.className='checkres wait'; res.textContent='';} return null; }
+    const ok = guess === MCQ_KEY[n];
+    if(res){ res.className='checkres '+(ok?'pass':'fail'); res.textContent = ok?'\u2713 correct':'\u2717 not yet'; }
+    return ok;
+  }
+
+  if(kind==='predict'){
+    const guess = getAns(n)||'';
+    if(norm(guess)===''){ if(res){res.className='checkres wait'; res.textContent='';} return null; }
+    if(!silent && res){ res.className='checkres wait'; res.textContent='checking\u2026'; }
+    const {out, err} = await pyRun(SNIPPET[n]);
+    if(!silent) showOutput(n, out, err);
+    const actual = err ? (out+err) : out;
+    const ok = cmpOutput(actual, guess);
+    if(res){ res.className='checkres '+(ok?'pass':'fail'); res.textContent = ok?'\u2713 correct':'\u2717 not yet'; }
+    if(!silent) renderPredictPanel(n, guess, actual, ok);
+    return ok;
+  }
+
+  // code
+  const k = CODE_KEY[n];
+  if(!k){ if(res){res.className='checkres wait'; res.textContent='';} return null; }
+  if(!silent && res){ res.className='checkres wait'; res.textContent='checking\u2026'; }
+  const src=document.getElementById('ans'+n).value;
+  const {out, err} = await pyRun(src);
+  if(!silent) showOutput(n, out, err);
+  const actual = err ? (out+err) : out;
+  if(k.m==='manual'){ if(res){res.className='checkres wait'; res.textContent='manual review';} return null; }
+  const ok = cmpOutput(k.e, actual);
+  if(res){ res.className='checkres '+(ok?'pass':'fail'); res.textContent = ok?'\u2713 correct':'\u2717 not yet'; }
+  return ok;
+}
+
+async function checkAll(){
+  const btn=document.getElementById('checkallbtn');
+  const bar=document.getElementById('checkallmsg');
+  btn.disabled=true;
+  let pass=0, fail=0, manual=0, blank=0;
+  const failed=[];
+  for(let n=1;n<=NQ;n++){
+    if(KIND[n]!=='mcq' && !pyReady){ bar.textContent='Python is still loading \u2014 wait for the green bar, then try again.'; btn.disabled=false; return; }
+    bar.textContent='Checking Q'+n+' of '+NQ+'\u2026';
+    if(!isAnswered(n)){ blank++;
+      const r=document.getElementById('ck'+n); if(r){r.className='checkres wait'; r.textContent='';}
+      continue; }
+    const ok = await checkOne(n, true);
+    if(ok===null) manual++; else if(ok) pass++; else { fail++; failed.push(n); }
+  }
+  window.__selfcheck={pass,fail,manual,blank,failed,when:new Date().toISOString()};
+  bar.innerHTML='<b>Self-check (practice):</b> \u2713 '+pass+' correct, \u2717 '+fail+' to fix'
+    + (manual?(', '+manual+' manual'):'') + (blank?(', '+blank+' not attempted'):'')
+    + '. '+(failed.length? ('Review: Q'+failed.slice(0,25).join(', Q')+(failed.length>25?'\u2026':'')):'Great work!')
+    + ' <button class="ghost" style="margin-left:8px" onclick="downloadSelfCheck()">\u2b07 Save my self-check</button>';
+  btn.disabled=false;
+}
+
+function downloadSelfCheck(){
+  const sc=window.__selfcheck; if(!sc){ return; }
+  const name=(document.getElementById('stu_name')||{}).value||'';
+  const roll=(document.getElementById('stu_roll')||{}).value||'';
+  const batch=(document.getElementById('stu_batch')||{}).value||'';
+  const L=[];
+  L.push('CS3006 Lab 01 - Self-check (PRACTICE ONLY, not your grade)');
+  L.push('Name : '+name); L.push('Roll : '+roll); L.push('Batch: '+batch);
+  L.push('When : '+new Date().toLocaleString());
+  L.push('----------------------------------------------------');
+  L.push('Correct     : '+sc.pass);
+  L.push('To fix      : '+sc.fail);
+  if(sc.manual) L.push('Manual      : '+sc.manual);
+  L.push('Not attempted: '+sc.blank);
+  if(sc.failed.length){ L.push(''); L.push('Questions to review: Q'+sc.failed.join(', Q')); }
+  L.push(''); L.push('Remember: your real marks come from the instructor grading your');
+  L.push('submitted file. This self-check is only to help you practise.');
+  const rollTag=(roll||'student').replace(/[^A-Za-z0-9_-]/g,'_');
+  triggerDownload(L.join('\n'), 'selfcheck_'+rollTag+'.txt');
+}
+
+// ---------- autosave (this browser) ----------
+const STORAGE_KEY = 'cs3006_lab01_datatypes_v1';
+let _saveTimer = null;
+function storageAvailable(){
+  try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }
+  catch(e){ return false; }
+}
+const CAN_SAVE = storageAvailable();
+
+function collectState(){
+  const ans = {};
+  for(let n=1;n<=NQ;n++){
+    const v = getAns(n);
+    if(KIND[n]==='code'){ if(String(v) !== String(STARTER[n]||'')) ans[n]=v; }
+    else if(String(v)!=='') ans[n]=v;
+  }
+  return {
+    v: 1,
+    name: (document.getElementById('stu_name')||{}).value || '',
+    roll: (document.getElementById('stu_roll')||{}).value || '',
+    batch:(document.getElementById('stu_batch')||{}).value || '',
+    ans: ans,
+    saved: new Date().toISOString()
+  };
+}
+function saveNow(){
+  if(!CAN_SAVE) return;
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState()));
+    flagSaved();
+  }catch(e){ /* quota or private mode: ignore */ }
+}
+function saveSoon(){
+  if(!CAN_SAVE) return;
+  if(_saveTimer) clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveNow, 400);
+}
+function flagSaved(){
+  const el = document.getElementById('saveflag'); if(!el) return;
+  const t = new Date();
+  el.textContent = '\u2713 saved ' + t.toLocaleTimeString();
+  el.style.opacity = '1';
+  setTimeout(()=>{ el.style.opacity = '0.55'; }, 1200);
+}
+function applyAnswer(n, val){
+  if(KIND[n]==='mcq'){
+    const el=document.querySelector('input[name="q'+n+'"][value="'+val+'"]');
+    if(el){ el.checked = true; }
+    else return false;
+  } else {
+    const el=document.getElementById('ans'+n);
+    if(!el) return false;
+    el.value = val;
+  }
+  const st=document.getElementById('st'+n);
+  if(st) st.textContent = isAnswered(n) ? '\u2713 answered' : '';
+  return true;
+}
+function loadSaved(){
+  if(!CAN_SAVE) return false;
+  let raw; try{ raw = localStorage.getItem(STORAGE_KEY); }catch(e){ return false; }
+  if(!raw) return false;
+  let data; try{ data = JSON.parse(raw); }catch(e){ return false; }
+  if(!data || !data.ans) return false;
+  if('name' in data)  { const e=document.getElementById('stu_name');  if(e) e.value=data.name; }
+  if('roll' in data)  { const e=document.getElementById('stu_roll');  if(e) e.value=data.roll; }
+  if('batch' in data) { const e=document.getElementById('stu_batch'); if(e) e.value=data.batch; }
+  let restored = 0;
+  for(const n in data.ans){
+    if(applyAnswer(n, data.ans[n])) restored++;
+  }
+  const b = document.getElementById('restorebar');
+  if(b && (restored>0 || data.name || data.roll)){
+    b.style.display='block';
+    let when=''; try{ when=new Date(data.saved).toLocaleString(); }catch(e){}
+    b.querySelector('.rtext').textContent =
+      'Your earlier work was restored ('+restored+' answer'+(restored===1?'':'s')+
+      ' recovered'+(when?', last saved '+when:'')+'). Keep going where you left off.';
+  }
+  return true;
+}
+function clearSaved(){
+  if(!confirm('Clear all saved answers on THIS browser and reset every question? This cannot be undone.')) return;
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  for(let n=1;n<=NQ;n++){
+    if(KIND[n]==='mcq'){
+      const els=document.querySelectorAll('input[name="q'+n+'"]'); els.forEach(e=>e.checked=false);
+    } else {
+      const el=document.getElementById('ans'+n);
+      if(el) el.value = KIND[n]==='code' ? (STARTER[n]||'') : '';
+    }
+    const box=document.getElementById('out'+n); if(box){ box.classList.remove('show'); box.innerHTML=''; }
+    const rh=document.getElementById('rh'+n); if(rh) rh.textContent='';
+    const st=document.getElementById('st'+n); if(st) st.textContent='';
+    const ck=document.getElementById('ck'+n); if(ck){ ck.className='checkres'; ck.textContent=''; }
+  }
+  const nm=document.getElementById('stu_name'); if(nm) nm.value='';
+  const rl=document.getElementById('stu_roll'); if(rl) rl.value='';
+  const bt=document.getElementById('stu_batch'); if(bt) bt.value='';
+  const rb=document.getElementById('restorebar'); if(rb) rb.style.display='none';
+  updateProgress();
+  const el=document.getElementById('saveflag'); if(el) el.textContent='cleared';
+}
+
+// ---------- portable progress file: continue on another computer ----------
+function saveProgressFile(){
+  const state = collectState();
+  const answered = Object.keys(state.ans).length;
+  const rollTag = (state.roll || 'student').replace(/[^A-Za-z0-9_-]/g,'_');
+  const content = JSON.stringify(state, null, 2);
+  const fname = 'CS3006_Lab01_progress_' + rollTag + '.json';
+  const ok = triggerDownload(content, fname);
+  const msg = document.getElementById('portmsg');
+  if(msg){
+    if(ok){ msg.style.color='#14532d';
+      msg.textContent='\u2713 Saved "'+fname+'" ('+answered+'/120 answered). Carry this file (email it to yourself / pen drive / cloud), then use "Load progress" on the other computer to continue.'; }
+    else { msg.style.color='#b45309';
+      msg.textContent='\u26A0 Download blocked. Try the "Copy answers" button in the submit area instead, or allow downloads for this page.'; }
+  }
+}
+function loadProgressFile(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    let data;
+    try{ data = JSON.parse(ev.target.result); }
+    catch(e){ alert('That file is not a valid progress file (could not read JSON).'); input.value=''; return; }
+    if(!data || typeof data!=='object' || !data.ans){
+      alert('That does not look like a CS3006 progress file (no answers found).'); input.value=''; return;
+    }
+    const incoming = Object.keys(data.ans).length;
+    let existing = 0; for(let n=1;n<=NQ;n++){ if(isAnswered(n)) existing++; }
+    let merge = false;
+    if(existing > 0){
+      const choice = confirm(
+        'This browser already has '+existing+' answer(s).\n\n'+
+        'The file you picked has '+incoming+' answer(s).\n\n'+
+        'OK  = REPLACE: use the file\u2019s answers (your current answers here are discarded).\n'+
+        'Cancel = MERGE: keep your current answers and only fill in questions you have not answered yet.'
+      );
+      merge = !choice;
+    }
+    ['name','roll','batch'].forEach(function(k){
+      const el=document.getElementById('stu_'+k); if(!el) return;
+      if(!merge || !el.value) { if(k in data && data[k]) el.value = data[k]; }
+    });
+    let applied = 0, skipped = 0;
+    for(const n in data.ans){
+      if(merge && isAnswered(n)) { skipped++; continue; }
+      if(applyAnswer(n, data.ans[n])) applied++;
+    }
+    updateProgress();
+    saveNow();
+    input.value='';
+    const msg=document.getElementById('portmsg');
+    if(msg){ msg.style.color='#14532d';
+      let when=''; try{ when=new Date(data.saved).toLocaleString(); }catch(e){}
+      msg.textContent='\u2713 Loaded '+applied+' answer(s)'+(merge?(' (merged; kept '+skipped+' you already had)'):' (replaced)')+
+        (when?', from a file saved '+when:'')+'. You can carry on from where you left off.';
+    }
+  };
+  reader.onerror = function(){ alert('Could not read that file.'); input.value=''; };
+  reader.readAsText(file);
+}
+
+// ---------- answers + progress ----------
+function getAns(n){
+  if(KIND[n]==='mcq'){
+    const el=document.querySelector('input[name="q'+n+'"]:checked');
+    return el ? el.value : '';
+  } else {
+    const el=document.getElementById('ans'+n);
+    return el ? el.value : '';
+  }
+}
+function isAnswered(n){
+  const v=getAns(n);
+  if(KIND[n]==='code'){ return String(v).trim()!=='' && norm(v)!==norm(STARTER[n]||''); }
+  return String(v).trim()!=='';
+}
+function mark(n){
+  document.getElementById('st'+n).textContent = isAnswered(n) ? '\u2713 answered' : '';
+  updateProgress();
+  saveSoon();
+}
+function updateProgress(){
+  let c=0; for(let n=1;n<=NQ;n++){ if(isAnswered(n)) c++; }
+  document.getElementById('done').textContent=c;
+  document.getElementById('fill').style.width=(c/NQ*100)+'%';
+}
+
+// ---------- submission .py ----------
+function pyLiteral(s){
+  s=String(s); let out='';
+  for(const ch of s){
+    if(ch==='\\') out+='\\\\';
+    else if(ch==='"') out+='\\"';
+    else if(ch==='\n') out+='\\n';
+    else if(ch==='\r') out+='';
+    else if(ch==='\t') out+='\\t';
+    else out+=ch;
+  }
+  return '"'+out+'"';
+}
+function triggerDownload(content, fname){
+  try{
+    const blob=new Blob([content],{type:'application/octet-stream'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download=fname; a.rel='noopener'; a.style.display='none';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},4000);
+    return true;
+  }catch(e){
+    try{ const a=document.createElement('a');
+      a.href='data:application/octet-stream;charset=utf-8,'+encodeURIComponent(content);
+      a.download=fname; a.style.display='none'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      return true;
+    }catch(e2){ return false; }
+  }
+}
+function generate(){
+  const name=document.getElementById('stu_name').value.trim();
+  const roll=document.getElementById('stu_roll').value.trim();
+  const batch=document.getElementById('stu_batch').value.trim();
+  const w=document.getElementById('subwarn');
+  if(!name||!roll||!batch){
+    w.style.color='#b45309';
+    w.textContent='\u26A0 Please fill Name, Roll number and Batch before generating.';
+    document.querySelector('.idbar').scrollIntoView({behavior:'smooth'}); return;
+  }
+  let answered=0; const L=[];
+  L.push('# ============================================================');
+  L.push('# CS3006 - Data Types Lab - 120 questions (interactive)');
+  L.push('# AUTO-GENERATED SUBMISSION FILE - do not edit by hand.');
+  L.push('# Generated: '+new Date().toISOString());
+  L.push('# ============================================================');
+  L.push('');
+  L.push('student = {');
+  L.push('    "name": '+pyLiteral(name)+',');
+  L.push('    "roll": '+pyLiteral(roll)+',');
+  L.push('    "batch": '+pyLiteral(batch)+',');
+  L.push('}');
+  L.push('');
+  L.push('# answers[q] : MCQ -> letter ; predict -> predicted output text ; code -> edited Python');
+  L.push('answers = {}');
+  L.push('');
+  for(let n=1;n<=NQ;n++){
+    const val=getAns(n)||'';
+    if(isAnswered(n)) answered++;
+    const tag=(KIND[n]==='mcq')?'  # MCQ':(KIND[n]==='predict')?'  # predict':'  # code';
+    L.push('answers['+n+'] = '+pyLiteral(val)+tag);
+  }
+  L.push('');
+  L.push('meta = {"answered": '+answered+', "total": '+NQ+'}');
+  L.push('');
+  const content=L.join('\n');
+  const safeRoll=(roll.replace(/[^A-Za-z0-9_-]/g,'_'))||'student';
+  const fname='submission_'+safeRoll+'.py';
+  window.__lastContent=content; window.__lastName=fname;
+  const ok=triggerDownload(content, fname);
+  if(ok){ w.style.color='#16a34a';
+    w.textContent='\u2713 "'+fname+'" generated ('+answered+'/120 answered). Check Downloads, then upload to Moodle. If missing, use the buttons below.'; }
+  else { w.style.color='#b45309';
+    w.textContent='\u26A0 Download blocked ('+answered+'/120). Use "Copy answers" or "Open in new tab" below, save as '+fname+'.'; }
+  document.getElementById('fallback').style.display='block';
+}
+function openInTab(){
+  const c=window.__lastContent||''; const t=window.open('','_blank');
+  if(!t){ alert('Popup blocked. Allow popups or use Copy answers.'); return; }
+  const pre=t.document.createElement('pre'); pre.textContent=c;
+  t.document.title=window.__lastName||'submission.py'; t.document.body.appendChild(pre);
+}
+function copyAnswers(){
+  const c=window.__lastContent||'';
+  const done=()=>{const b=document.getElementById('copybtn');const t=b.textContent;b.textContent='\u2713 Copied!';setTimeout(()=>b.textContent=t,2000);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(c).then(done).catch(()=>legacyCopy(c,done)); }
+  else legacyCopy(c,done);
+}
+function legacyCopy(text,cb){
+  const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{ document.execCommand('copy'); cb(); }catch(e){ alert('Copy failed \u2014 select the text manually.'); }
+  document.body.removeChild(ta);
+}
+
+// ---------- init ----------
+function wireUp(){
+  document.querySelectorAll('textarea.code-edit').forEach(function(t){
+    t.addEventListener('keydown', function(e){
+      if(e.key==='Tab'){ e.preventDefault();
+        const s=this.selectionStart, en=this.selectionEnd;
+        this.value=this.value.slice(0,s)+'    '+this.value.slice(en);
+        this.selectionStart=this.selectionEnd=s+4;
+      }
+    });
+  });
+  document.querySelectorAll('.runbtn').forEach(b=>b.disabled=true); // until Pyodide ready
+  // restore any earlier work BEFORE computing progress / marking status
+  loadSaved();
+  ['stu_name','stu_roll','stu_batch'].forEach(function(id){
+    const el=document.getElementById(id);
+    if(el){ el.addEventListener('input', saveSoon); el.addEventListener('change', saveSoon); }
+  });
+  for(let n=1;n<=NQ;n++){
+    const st=document.getElementById('st'+n);
+    if(st) st.textContent = isAnswered(n) ? '\u2713 answered' : '';
+    if(KIND[n]==='mcq'){
+      const guess=getAns(n);
+      if(guess) checkOne(n, true);
+    }
+  }
+  updateProgress();
+  window.addEventListener('beforeunload', saveNow);
+  if(!CAN_SAVE){
+    const bar=document.getElementById('nosavebar'); if(bar) bar.style.display='block';
+  }
+  initPy();
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', wireUp); }
+else { wireUp(); }
+</script>
+</body>
+</html>

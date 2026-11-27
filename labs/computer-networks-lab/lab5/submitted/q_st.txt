@@ -1,0 +1,43 @@
+Write a Single Server-Multiple Client program in which clients can communicate(chat) with other clients using GUI interface, with the following requirements:
+•    Each client connection is handled in a separate thread on the server.
+•   The client should send its username while it connects to the server. The server should return a success message if the username is available; otherwise, it should ask the client to choose a different username.
+•    The client has the following functionalities:
+         (i)   User List Button (/users) – the server will return a list of active users who are currently connected to the server.
+         (ii)  Message Field and user id field (<user1>:msg) – the client wants to send a message msg to user1.
+         (iii) Broadcast Button (<broadcast>:msg)  – the client wants to send a message to all users connected to the server except itself.
+         (iv) Exit Button (/exit) – the client disconnects from the server.
+•    The client should print the message received by it. It should mention the username.
+•    The server should maintain a dynamic list of connected users in the format (socket:user_name). When the user disconnects, the entry should be removed from the current active users. Note that the username for a client is not fixed and can change when the user reconnects again.
+•    The server provides four message functionalities when a user requests:
+        (i)   /users: the server will send the list of active users (user names only) who are currently connected to the server.
+        (ii)  <user1>:msg – the server forwards the message msg to user1. If user1 is not available or has disconnected from the server, an appropriate message (“User Not Online”) should be sent back to the client.
+       (iii) <broadcast>:msg – the server broadcasts the message msg to all the active users except from which the request was received.
+        (iv) /exit – the connection to the client is closed and its entry in the active users is removed.
+•  The server displays the count and list of active client connections(both socket address and username) whenever a client connects or disconnects on its terminal.                      
+•  The server maintains a log file (log.txt) recording
+       (i)   Username conflicts
+       (ii)  each user’s joining time (if no username conflict);
+       (iii) leaving time and the session time after the user leaves.  
+       (iv) Which user sent a message to which user, size of message and the status (send/failed with reason)            
+  Sample:
+     [2026-09-03 19:32:40] : 172.16.222.244:65214, Username: user1, Activity: joined
+     [2026-09-03 19:33:32] : 172.16.222.245:45121, Username: user2, Activity: joined
+     [2026-09-03 19:33:45] : 172.16.222.246:35210, AttemptedUsername: user1, Status: Rejected (Username already in use)
+     [2026-09-03 19:34:40] : From: user1 (172.16.222.244:65214)), To: user2(172.16.222.245:45121), Size: 20Bytes, Status: Sent
+     [2026-08-20 19:35:45] : 172.16.222.244:65214, Username: user1, Activity: left, session_duration: [00:03:05]
+     [2026-09-03 19:36:10] : From: user2(172.16.222.245:45121),  To:user1 (172.16.222.244:65214), Size: 10Bytes, Status: Failed (User Not Online)
+
+INSTRUCTIONS:
+
+ 1. Write both the client program and server program on your own system. Include your name and roll number as comments at the top of each program file.
+ 2. Test the entire operation on your local system using GUI for both server and client (for local execution) with one server and three clients (using separate terminals-user1, user2, user3). Use Network IPv4 address (eg, 192.168.x.x or 172.16.x.x) and hardcode it in server and client programs wherever necessary (should be visible in output). Do not use the gethostbyname() function or '0.0.0.0' IP, localhost, or '127.0.0.1'. Execute all four types of functionalities available with the server, along with sending existing usernames and sending messages to offline/non-existing users.
+ 3. Next, ask your friend (for network execution) sitting next to you for their system’s IP address and port number. Modify the client program accordingly and connect to your friend’s server program. Ask another friend to connect to the same server as a client. Now try to send and receive messages (chat) with the client friend through the server friend. Execute all four types of functionalities available with the server, along with sending existing usernames and sending messages to offline/non-existing users.
+ 4. Then reverse roles: run your server program on your machine (your IP address should be hardcoded and visible in output; Do not use the gethostbyname() function or '0.0.0.0' IP)  and ask two friends to connect with their client programs. Provide your IP and port number to them. Ask your two client friends to execute all four types of functionalities available with the server, along with sending existing usernames and sending messages to offline/non-existing users.
+5. Your client should execute all the four functions available at the server along with existing username and sending message to offline users. Initially the client should print its complete socket address and the server's socket address. The server should print the active user count and active user list whenever a client joins or leaves the server. Further, all the activities such as user joining and leaving, checking of duplicate usernames and declining, sending messages to another user and declining if the user is offline should be logged in the log file. The above tasks should be performed for both the local execution and network execution separately.
+6. Take screenshots of your client.py program’s output and server.py program’s output from the console for both the local execution and network execution. Screenshots of the program are not required in PDF.
+    7.  Compile all screenshots into a single PDF document, with your name and roll number clearly mentioned on every page. There should be two sets of screenshots - one performed on your local system (local execution) and another performed with friends’ system (network
+      execution).
+8. Submit the PDF document along with your client.py (any local or network), server.py (any local or network), local_log.txt (log for using your server in the local system) and network_log.txt (log for using your server in the network system) files as five separate files (do not zip or compress).
+
+To learn more about GUI in Python refer to :
+https://youtu.be/6aKmTV6eYt8?si=FiPW2obehGjWBKRY

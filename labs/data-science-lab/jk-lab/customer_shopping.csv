@@ -1,0 +1,16 @@
+Customer_ID,Membership,Payment_Method,Product_Category,Delivery_Mode,Purchase_Amount
+C101,Gold,Credit Card,Electronics,Express,4500
+C102,Silver,UPI,Clothing,Standard,1200
+C103,Bronze,Cash,Groceries,Standard,800
+C104,Gold,UPI,Books,Express,650
+C105,Silver,Credit Card,Electronics,Same-Day,7200
+C106,Bronze,Cash,Books,Standard,500
+C107,Gold,UPI,Clothing,Same-Day,1800
+C108,Silver,Credit Card,Groceries,Express,950
+C109,Bronze,Cash,Electronics,Standard,5600
+C110,Gold,UPI,Clothing,Same-Day,2400
+C111,Silver,Credit Card,Books,Express,750
+C112,Gold,Cash,Groceries,Standard,1100
+C113,Bronze,UPI,Electronics,Same-Day,6300
+C114,Silver,Credit Card,Clothing,Express,2100
+C115,Gold,UPI,Books,Standard,900

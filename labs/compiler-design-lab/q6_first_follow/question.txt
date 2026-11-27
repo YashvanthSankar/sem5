@@ -1,0 +1,48 @@
+Question 6: FIRST and FOLLOW Sets
+
+Write a C program to compute the FIRST and FOLLOW sets for all non-terminals
+in a given Context-Free Grammar (CFG).
+
+Assumptions and Constraints
+  1. The grammar is unambiguous, non-left-recursive, and left-factored.
+  2. Non-terminals are uppercase letters (A-Z).
+  3. Terminals are lowercase letters or symbols (e.g., +, *, (, ), i).
+  4. Epsilon is represented by #.
+  5. The start symbol is the LHS of the very first production.
+  6. The end-of-input marker is $.
+
+Input Format
+  First line: integer N, the number of production rules.
+  Next N lines: productions in the format A=RHS.
+
+Output Format
+  FIRST sets for all unique non-terminals in the order they were introduced:
+      FIRST(A) = { a b c }
+  FOLLOW sets in the same order:
+      FOLLOW(A) = { x y z }
+
+Sample Input
+8
+E=TX
+X=+TX
+X=#
+T=FY
+Y=*FY
+Y=#
+F=(E)
+F=i
+
+Sample Output
+--- FIRST SETS ---
+FIRST(E) = { ( i }
+FIRST(X) = { + # }
+FIRST(T) = { ( i }
+FIRST(Y) = { * # }
+FIRST(F) = { ( i }
+
+--- FOLLOW SETS ---
+FOLLOW(E) = { $ ) }
+FOLLOW(X) = { $ ) }
+FOLLOW(T) = { + $ ) }
+FOLLOW(Y) = { + $ ) }
+FOLLOW(F) = { * + $ ) }

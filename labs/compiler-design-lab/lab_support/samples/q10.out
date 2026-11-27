@@ -1,0 +1,7 @@
+=== Calculator Active (Input expressions / assignments, Ctrl+D to exit) ===
+Result = 11
+Result = 14
+Assigned: a = 25
+Assigned: b = 20
+Result = 0
+Result = 5

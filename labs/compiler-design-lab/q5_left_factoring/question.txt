@@ -1,0 +1,36 @@
+Question 5: Left Factoring of a CFG
+
+Question
+Write a C program that performs left factoring on a given Context-Free Grammar
+(CFG) to remove common prefixes and make it suitable for top-down parsing.
+Your program should be able to:
+
+Input: Accept a single grammar rule from the user in the format A->abc | abd | e.
+
+The program should assume the input is correctly formatted and does not need to
+handle multi-rule grammars or validation.
+
+Output: Print the original grammar rule. Print the newly generated, left-factored
+grammar rules.
+
+Sample 1:
+Input:
+A->abc | abd | e
+
+Output:
+Original grammar rule: A -> abc | abd | e
+
+Left-factored grammar rules:
+
+A -> abA1 | e A1 -> c | d
+
+Sample 2:
+Input:
+A->aB|aC|aD
+
+Output:
+Original grammar rule: A -> aB | aC | aD
+
+Left-factored grammar rules:
+
+A -> aA1 A1 -> B | C | D

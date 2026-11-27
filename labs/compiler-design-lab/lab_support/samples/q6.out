@@ -1,0 +1,13 @@
+--- FIRST SETS ---
+FIRST(E) = { ( i }
+FIRST(X) = { + # }
+FIRST(T) = { ( i }
+FIRST(Y) = { * # }
+FIRST(F) = { ( i }
+
+--- FOLLOW SETS ---
+FOLLOW(E) = { $ ) }
+FOLLOW(X) = { $ ) }
+FOLLOW(T) = { + $ ) }
+FOLLOW(Y) = { + $ ) }
+FOLLOW(F) = { * + $ ) }

@@ -1,0 +1,12 @@
+Question 1: Basic Lexical Analyzer
+
+Write a C program that acts as a basic lexical analyzer. The program should read
+a C code file and identify the following tokens:
+
+  1. Keywords (e.g., int, if)
+  2. Identifiers (e.g., myVar, count)
+  3. Operators (e.g., +, =)
+  4. Punctuation (e.g., {, ;)
+  5. Literals (e.g., 10, 'a')
+
+For each token found, the program should print its type and lexeme.

@@ -1,0 +1,55 @@
+Question 7: LL(1) Parsing Table
+
+1. Complete the previous Lab Assignment (FIRST and FOLLOW - see q6).
+2. Write a C program to construct the LL(1) parsing table for a given CFG.
+
+The program should use the FIRST and FOLLOW sets of the grammar to determine
+the appropriate production for each entry of the LL(1) parsing table.
+
+Assumptions
+  - The grammar is guaranteed to be LL(1).
+  - Non-terminals are uppercase letters (A-Z).
+  - Terminals are lowercase letters or symbols such as +, *, ( and ).
+  - Epsilon is represented by #.
+  - The start symbol is the LHS of the first production.
+  - The FIRST and FOLLOW sets are assumed to be available from the previous
+    assignment.
+
+Input Format
+  First line: integer N, the number of production rules.
+  Next N lines: productions in the format A=RHS
+  The FIRST and FOLLOW sets for the non-terminals are then provided.
+
+Output Format
+--- LL(1) PARSING TABLE ---
+
+        a       b       c       $
+A       A=...   A=...   error   A=...
+B       error   B=...   B=...   error
+
+Use error for an empty table entry.
+
+Sample Input
+4
+S=aA
+A=bA
+A=#
+A=c
+
+FIRST(S) = { a  }
+FIRST(A) = { b c # }
+
+FOLLOW(S) = { $ }
+FOLLOW(A) = { $ }
+
+Sample Output
+--- LL(1) PARSING TABLE ---
+
+        a       b       c       $
+S       S=aA    error   error   error
+A       error   A=bA    A=c     A=#
+
+Requirements
+  - For a production A -> alpha, place it in M[A,a] for every a in FIRST(alpha) - {#}.
+  - If # is in FIRST(alpha), place the production in M[A,b] for every b in FOLLOW(A).
+  - Display error for empty entries.

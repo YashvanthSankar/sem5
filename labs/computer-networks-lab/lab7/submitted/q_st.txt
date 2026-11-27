@@ -1,0 +1,55 @@
+Q1. Develop a multiplayer game of your choice (where at least two users are needed to play)
+
+using python socket programming with the following properties:
+
+• Make use of the Python GUI to interact with the game.
+
+• Initially, provide a username to connect to the game. If a username already exists on the server,
+
+then the player is prompted to choose another username. Have a provision to select a
+
+random username (which is not existing) which will be provided by the server.
+
+• Prepare a chatbox on the side of the game GUI where the players can chat with each other.
+
+• For a 2 player game, if the 1st player joins then the player has to wait for the 2nd player to join.
+
+Until that time the game does not start. Similarly if the 3rd player joins, he/she has to wait for
+
+the 4th player to join. Note that the players joining the game are in a FIFO order i.e. 1st player
+
+will play with 2nd and 3rd with 4th and so on. If any player leaves the game, then declare the
+
+persisting player on the server as winner and end the game.
+
+• Provide an option to either REPLAY or EXIT the game, when the game ends for the players.
+
+Instructions:
+
+1. Write both the client program and server program on your own system. Include your name
+
+and roll number as comments at the top of each program file.
+
+2. Test YOUR server with atleast two clients (friends). Also test YOUR client with one server
+
+(friend) and atleast one client (friend).
+
+3. Take screenshots of YOUR server GUI where logs and other necessary actions are displayed
+
+by the server (user joining/leaving with their socket address, player's session duration, etc) .
+
+Take screenshots of your client game GUI where you need to show the player actions (3 to 4
+
+screenshots) along with other functionalities such as messaging other players, waiting for
+
+player to join, game ending message, option to EXIT or REPLAY game, etc.
+
+4. Compile all screenshots into a single PDF document, with your name and roll number clearly
+
+mentioned on every page.
+
+5. Submit the PDF document along with your client.py, server.py as three separate files (do not
+
+zip or compress).
+
+6. Make sure to submit before the deadline. Late submissions will not be accepted.

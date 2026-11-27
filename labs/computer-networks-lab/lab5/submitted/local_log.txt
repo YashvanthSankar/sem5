@@ -1,0 +1,10 @@
+[2026-09-08 16:10:53] : 172.16.14.28:54016, Username: user1, Activity: joined
+[2026-09-08 16:10:59] : 172.16.14.28:57516, Username: user2, Activity: joined
+[2026-09-08 16:11:09] : 172.16.14.28:47902, Username: user3, Activity: joined
+[2026-09-08 16:11:59] : From: user1(172.16.14.28:54016), To: user2(172.16.14.28:57516), Size: 2Bytes, Status: Sent
+[2026-09-08 16:17:38] : From: user1(172.16.14.28:54016), To: user2(172.16.14.28:57516), Size: 8Bytes, Status: Sent
+[2026-09-08 16:19:39] : From: user1(172.16.14.28:54016), To: user2(172.16.14.28:57516), Size: 27Bytes, Status: Sent
+[2026-09-08 16:19:39] : From: user1(172.16.14.28:54016), To: user3(172.16.14.28:47902), Size: 27Bytes, Status: Sent
+[2026-09-08 16:21:24] : 172.16.14.28:57516, Username: user2, Activity: left, session_duration: [00:10:24]
+[2026-09-08 16:21:25] : 172.16.14.28:54016, Username: user1, Activity: left, session_duration: [00:10:31]
+[2026-09-08 16:21:26] : 172.16.14.28:47902, Username: user3, Activity: left, session_duration: [00:10:16]

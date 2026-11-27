@@ -1,0 +1,87 @@
+Question 8: Canonical Collection of LR(0) Items
+
+Write a program to generate the canonical collection of LR(0) items for a
+given Context-Free Grammar (CFG). This involves augmenting the grammar,
+implementing the CLOSURE function, and using the GOTO function to find all
+valid states (item sets).
+
+Program Requirements
+  - Grammar Augmentation: if the start symbol is S, automatically add the
+    augmented production Z->S (Z is a new non-terminal) as the 0th rule.
+  - CLOSURE: add all applicable items where the dot . precedes a non-terminal.
+  - GOTO: compute transitions from an item set on grammar symbols and generate
+    new states until no new states can be produced.
+  - Use the period character . to represent the dot.
+
+Assumptions & Constraints
+  - LHS of any production is a single uppercase letter.
+  - RHS: uppercase letters (non-terminals), lowercase letters/symbols (terminals).
+  - The first production defines the start symbol.
+  - No duplicate states. Two states are identical if they contain the exact
+    same set of items, regardless of order.
+
+Input Format
+  Line 1: integer N, the number of productions.
+  Lines 2..N+1: productions in the format A->XYZ
+
+Output Format
+  Print each state labeled I0:, I1:, ... with its items one per line and a
+  blank line between states. (Order of items / state numbering may vary.)
+
+Sample Input 1
+2
+S->(S)
+S->a
+
+Sample Output 1
+I0:
+Z->.S
+S->.(S)
+S->.a
+
+I1:
+Z->S.
+
+I2:
+S->(.S)
+S->.(S)
+S->.a
+
+I3:
+S->a.
+
+I4:
+S->(S.)
+
+I5:
+S->(S).
+
+Sample Input 2
+3
+E->E+T
+E->T
+T->i
+
+Sample Output 2
+I0:
+Z->.E
+E->.E+T
+E->.T
+T->.i
+
+I1:
+Z->E.
+E->E.+T
+
+I2:
+E->T.
+
+I3:
+T->i.
+
+I4:
+E->E+.T
+T->.i
+
+I5:
+E->E+T.

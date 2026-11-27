@@ -1,0 +1,66 @@
+Question 9: SLR Parsing  (from "SLR Parsing.docx")
+
+Aim: design and implement a C program that constructs the SLR(1) parsing table
+for a given CFG and verifies whether a given input string can be parsed using
+this table.
+
+  1. First construct the ACTION and GOTO table.
+  2. After completing the first task, implement the parsing logic.
+
+In the previous lab you constructed LR(0) items (q8). Extend that to an SLR(1)
+parser by incorporating FOLLOW sets and generating ACTION and GOTO tables.
+
+Input
+  - A context-free grammar (CFG) in standard format.
+  - A test string to be parsed.
+
+Process
+  - Compute FOLLOW sets for all non-terminals.
+  - Construct SLR(1) parsing tables: ACTION and GOTO.
+  - Implement the SLR(1) parsing algorithm to decide whether the input string
+    is accepted by the grammar.
+
+Output
+  - The computed FOLLOW sets.
+  - The ACTION and GOTO tables in a readable tabular format.
+  - The parsing steps for the input string: stack, input and action per step.
+  - A message saying whether the string is Accepted or Rejected.
+
+Input grammar:
+  0:  S -> E
+  1:  E -> E + T
+  2:  E -> T
+  3:  T -> T * F
+  4:  T -> F
+  5:  F -> ( E )
+  6:  F -> id
+
+Sample string: id + id * id
+
+Expected output:
+  FOLLOW(S) = { $ }
+  FOLLOW(E) = { +, ), $ }
+  FOLLOW(T) = { +, *, ), $ }
+  FOLLOW(F) = { +, *, ), $ }
+  ACTION and GOTO tables
+  Stepwise parsing trace
+  Input string is accepted.
+
+------------------------------------------------------------------
+Input format used by solution.c:
+  line 1      : N (number of productions)
+  next N lines: productions, e.g.  E->E+T   (spaces, "->", "=", the arrow
+                character, and "0:" style numbering are all accepted;
+                "id" is treated as one terminal; # means epsilon)
+  last line   : the string to parse, e.g.  id + id * id
+
+  Sample input (input.txt):
+7
+S->E
+E->E+T
+E->T
+T->T*F
+T->F
+F->(E)
+F->id
+id + id * id

@@ -1,0 +1,11 @@
+[2026-10-25 16:00:27] : 127.0.0.1:60339, Username: hi, Activity: joined
+[2026-10-25 16:01:28] : From: hi(127.0.0.1:60339), To: hj, Size: 3Bytes, Status: Failed (User Not Online)
+[2026-10-25 16:01:50] : 127.0.0.1:61115, Username: hi2, Activity: joined
+[2026-10-25 16:02:04] : From: hi(127.0.0.1:60339), To: hi2(127.0.0.1:61115), Size: 5Bytes, Status: Sent
+[2026-10-25 16:02:18] : From: hi2(127.0.0.1:61115), To: hi(127.0.0.1:60339), Size: 6Bytes, Status: Sent
+[2026-10-25 16:02:25] : From: hi2(127.0.0.1:61115), To: hi(127.0.0.1:60339), Size: 2Bytes, Status: Sent
+[2026-10-25 16:02:29] : From: hi2(127.0.0.1:61115), To: hi(127.0.0.1:60339), Size: 0Bytes, Status: Sent
+[2026-10-25 16:02:31] : 127.0.0.1:61115, Username: hi2, Activity: left, session_duration: [0:00:41]
+[2026-10-25 16:02:33] : 127.0.0.1:60339, Username: hi, Activity: left, session_duration: [0:02:05]
+[2026-10-25 16:23:05] : 127.0.0.1:63503, Username: /exit, Activity: joined
+[2026-10-25 16:23:05] : 127.0.0.1:63503, Username: /exit, Activity: left, session_duration: [0:00:00]

@@ -1,0 +1,45 @@
+Question 3: NFA to DFA (Subset Construction)
+
+Please find the problem statement below:
+
+Write a program in C that takes an NFA as input and constructs an equivalent
+DFA using the subset construction algorithm.
+
+The NFA may contain epsilon-transitions.
+
+Your program should:
+  1. Read the number of states of the NFA.
+  2. Read the input alphabet.
+  3. Read the transition function, including epsilon-transitions.
+  4. Read the initial state.
+  5. Read the set of final states.
+  6. Compute epsilon-closures whenever required.
+  7. Construct the DFA using the subset construction algorithm.
+  8. Assign a unique DFA state number to every distinct subset of NFA states.
+  9. Determine the final states of the DFA.
+ 10. Display the resulting DFA transition table.
+
+Input Format:
+
+Number of NFA states: 4
+States:
+0 1 2 3
+Alphabet:
+a b
+Initial state:
+0
+Final states:
+3
+Transitions:
+0 a 0
+0 e 1
+1 b 2
+2 a 3
+Here, for example,
+0 a 0
+means
+delta(0,a)={0}.
+and
+0 e 1
+means
+delta(0,e)={1}.

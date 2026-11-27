@@ -1,0 +1,10 @@
+Write a client-server program using Python to convert text to lowercase which involves 
+a server listening for connections and a client sending text to the server. The server receives the text from the client, converts it to lowercase, and sends it back to the client.
+Instructions: 
+1.  Write both the client program and server program on your system. Mention your name and roll number as comments at the beginning of the program.
+2.   Ask your friend (adjacent to you) for his/her system's IP address and port number. Send the data from your client program to your friend's server program. Print all the necessary steps like what data you sent, what data you received, server's socket address (ip address and port number), client's socket address (ip address and port number).
+3.  Next run your server program and ask your friend to send the data from his/her client program. Provide your IP address and port number to him/her. After receiving the data print the necessary details such as - from which client (client ip and port i.e. socket address) data is received, what data is received, what operation you (server) performed and which data was sent to the client. [Just Reverse your roles]
+4. Take the screenshot of your client.py program and its corresponding output. Similarly take the screenshot of your server.py program and its corresponding output.
+5 - Compile all your screenshots and your comments/notes into one PDF document. Ensure your name and roll number are clearly mentioned on ALL the pdf page(s).
+6 - Upload the PDF file as your assignment submission along with your client.py and server.py program files.
+7 - Each student must submit the assignment individually. Submissions will not be awarded after the deadline.
